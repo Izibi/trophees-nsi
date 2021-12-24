@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
+
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+
 }

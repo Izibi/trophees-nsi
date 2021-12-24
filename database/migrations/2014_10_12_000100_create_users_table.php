@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade')->onUpdate('cascade');
             $table->boolean('validated')->default(false);
             $table->enum('role', ['teacher', 'jury', 'admin'])->default('teacher');
+            $table->timestamp('last_login_at')->nullable();
         });
     }
 
