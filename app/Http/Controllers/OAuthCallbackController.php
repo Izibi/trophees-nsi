@@ -14,15 +14,14 @@ class OAuthCallbackController extends Controller
     
 
     public function login(Request $request) {
+        Session::flush();
+        Auth::logout();        
         try {
             $client = new Client(config('login_module_client'));
             $authorization_helper = $client->getAuthorizationHelper();
             $authorization_helper->handleRequestParams($_GET);
             $user_data = $authorization_helper->queryUser();
             if(!$this->validateUserData($user_data)) {
-                dd($user_data);
-                Session::flush();
-                Auth::logout();
                 throw new \Exception('Login available for verified teachers only.');
             }
             $user = $this->refreshUser($user_data);
