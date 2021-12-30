@@ -15,15 +15,12 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('secondary_email');
-            $table->bigInteger('region_id')->unsigned();
+            $table->timestamps();            
+            $table->string('email')->nullable();
+            $table->string('secondary_email')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->bigInteger('region_id')->unsigned()->nullable();
             $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade')->onUpdate('cascade');
             $table->boolean('validated')->default(false);
             $table->enum('role', ['teacher', 'jury', 'admin'])->default('teacher');

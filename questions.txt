@@ -1,0 +1,7 @@
+1. user role
+login module user roles: [teacher, student, other]
+reject users with role = student or role = other ?
+
+2. no info about user region in login module db
+
+3. logout user at login-module if user click logout at trophees site?

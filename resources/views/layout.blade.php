@@ -15,7 +15,7 @@
 
     <body>
         @include('nav')
-        <main class="container">
+        <main class="container mt-3">
             @yield('content')
         </main>        
     </body>

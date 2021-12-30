@@ -24,7 +24,13 @@
                         <tr>
                             <td>{{ $user->first_name }}</td>
                             <td>{{ $user->last_name }}</td>
-
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->secondary_email }}</td>
+                            <td>{{ $user->validated ? 'validated' : '' }}</td>
+                            <td>{{ $user->role }}</td>
+                            <td>{{ $user->region->name }}</td>
+                            <td>{{ $user->created_at }}</td>
+                            <td>{{ $user->last_login_at }}</td>
                         </tr>
                     @endforeach
                 </table>
