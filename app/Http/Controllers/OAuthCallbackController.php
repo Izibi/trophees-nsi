@@ -60,6 +60,7 @@ class OAuthCallbackController extends Controller
         if(!$user) {
             $user = new User();
             $user->id = $user_data['id'];
+            $user->role = 'teacher';
         }
         $attributes = $this->getUserAttributes($user_data);
         $user->fill($attributes);
@@ -74,8 +75,7 @@ class OAuthCallbackController extends Controller
             'email' => $user_data['primary_email'],
             'secondary_email' => $user_data['secondary_email'],
             'first_name' => $user_data['first_name'],
-            'last_name' => $user_data['last_name'],
-            'role' => 'teacher'
+            'last_name' => $user_data['last_name']
         ];
     }
 

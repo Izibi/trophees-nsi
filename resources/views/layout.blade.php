@@ -14,7 +14,9 @@
     </head>
 
     <body>
-        @include('nav')
+        @if (Auth::check())
+            @include('nav')
+        @endif
         <main class="container mt-3">
             @yield('content')
         </main>        
