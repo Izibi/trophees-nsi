@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+use Illuminate\Support\Facades\DB;
 
 class ProjectsController extends Controller
 {
@@ -14,7 +15,12 @@ class ProjectsController extends Controller
      */
     public function index(Request $request)
     {
-        $projects = Project::with(['school', 'school.region'])->paginate()->appends($request->all());
+        $projects = DB::table('projects')
+            ->select(DB::raw('projects.id, projects.name, schools.name as school_name, regions.name as region_name, projects.created_at, projects.status'))
+            ->leftJoin('schools', 'projects.school_id', '=', 'schools.id')
+            ->leftJoin('regions', 'schools.region_id', '=', 'regions.id')            
+            ->paginate()
+            ->appends($request->all());
         return view('projects.index', [
             'rows' => $projects
         ]);

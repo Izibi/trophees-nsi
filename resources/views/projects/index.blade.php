@@ -6,7 +6,7 @@
             <div class="card-header">Projects</div>
 
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-striped active-table">
                     <thead>
                         <tr>
                             <th>Number</th>
@@ -18,17 +18,23 @@
                         </tr>
                     </thead>
                     @foreach ($rows as $project)
-                        <tr>
+                        <tr data-row-id="{{ $project->id }}">
                             <td>{{ $project->id }}</td>
                             <td>{{ $project->name }}</td>
-                            <td>{{ $project->school->name }}</td>
-                            <td>{{ $project->school->region->name }}</td>
+                            <td>{{ $project->school_name }}</td>
+                            <td>{{ $project->region_name }}</td>
                             <td>{{ $project->created_at }}</td>
                             <td>{{ $project->status }}</td>
                         </tr>
                     @endforeach
                 </table>
             </div>
+        </div>
+
+        <div class="mt-3 mb-3">
+            <button class="btn btn-primary active-button" action="/projects/:id/edit" method="GET">Edit selected project</button>
+            <button class="btn btn-primary active-button" action="/projects/:id" method="GET">View selected project</button>
+            <a class="btn btn-primary" href="/projects/create">Deposit new project</a>
         </div>
 
         @include('common.paginator')
