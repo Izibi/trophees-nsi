@@ -30,7 +30,7 @@ class UsersSeeder extends Seeder
             'id' => 100002092,
             'first_name' => 'nsi',
             'last_name' => 'admin',
-            'role' => 'jury'
+            'role' => 'admin'
         ]);
         
     }
