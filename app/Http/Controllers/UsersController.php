@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -14,7 +15,11 @@ class UsersController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::with(['primary_email', 'secondary_email', 'region', 'grade'])->paginate()->appends($request->all());
+        $users = DB::table('users')
+            ->select(DB::raw('users.first_name, users.last_name, users.email, users.secondary_email, users.validated, users.role, regions.name as region_name, users.created_at, users.last_login_at'))
+            ->leftJoin('regions', 'users.region_id', '=', 'regions.id')
+            ->paginate()
+            ->appends($request->all());
         return view('users.index', [
             'rows' => $users
         ]);

@@ -24,8 +24,8 @@
                             <td>{{ $school->address }}</td>
                             <td>{{ $school->city }}</td>
                             <td>{{ $school->zip }}</td>
-                            <td>{{ $school->country->name }}</td>
-                            <td>{{ $school->region->name }}</td>
+                            <td>{{ $school->country_name }}</td>
+                            <td>{{ $school->region_name }}</td>
                             <td>{{ $school->uai }}</td>
                         </tr>
                     @endforeach
