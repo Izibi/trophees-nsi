@@ -6,7 +6,7 @@
             <div class="card-header">Users</div>
 
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-striped active-table">
                     <thead>
                         <tr>
                             <th>Last name</th>
@@ -21,7 +21,7 @@
                         </tr>
                     </thead>
                     @foreach ($rows as $user)
-                        <tr>
+                        <tr data-row-id="{{ $user->id }}">
                             <td>{{ $user->first_name }}</td>
                             <td>{{ $user->last_name }}</td>
                             <td>{{ $user->email }}</td>
@@ -35,6 +35,10 @@
                     @endforeach
                 </table>
             </div>
+        </div>
+
+        <div class="mt-3 mb-3">
+            <button class="btn btn-primary active-button" action="/users/:id" method="GET">Edit selected user</button>        
         </div>
 
         @include('common.paginator')

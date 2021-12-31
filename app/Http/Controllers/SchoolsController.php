@@ -16,7 +16,7 @@ class SchoolsController extends Controller
     public function index(Request $request)
     {
         $schools = DB::table('schools')
-            ->select(DB::raw('schools.name, schools.address, schools.city, schools.zip, countries.name as country_name, regions.name as region_name, schools.uai'))
+            ->select(DB::raw('schools.id, schools.name, schools.address, schools.city, schools.zip, countries.name as country_name, regions.name as region_name, schools.uai'))
             ->leftJoin('regions', 'schools.region_id', '=', 'regions.id')
             ->leftJoin('countries', 'schools.country_id', '=', 'countries.id')
             ->paginate()

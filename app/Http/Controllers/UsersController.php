@@ -16,7 +16,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         $users = DB::table('users')
-            ->select(DB::raw('users.first_name, users.last_name, users.email, users.secondary_email, users.validated, users.role, regions.name as region_name, users.created_at, users.last_login_at'))
+            ->select(DB::raw('users.id, users.first_name, users.last_name, users.email, users.secondary_email, users.validated, users.role, regions.name as region_name, users.created_at, users.last_login_at'))
             ->leftJoin('regions', 'users.region_id', '=', 'regions.id')
             ->paginate()
             ->appends($request->all());
