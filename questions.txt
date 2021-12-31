@@ -5,3 +5,6 @@ reject users with role = student or role = other ?
 2. no info about user region in login module db
 
 3. logout user at login-module if user click logout at trophees site?
+
+
+4. user with role!="teacher" looged in login module, Login or Register btn click -> redirect back with error. Is it issue?
