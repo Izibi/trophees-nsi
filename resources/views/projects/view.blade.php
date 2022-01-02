@@ -15,6 +15,19 @@
         </p>
     @endif    
 
+    <p>
+        Project composition:
+        @if(!is_null($project->team_girls))
+            {{ $project->team_girls }} girls;
+        @endif
+        @if(!is_null($project->team_boys))
+            {{ $project->team_boys }} boys;
+        @endif            
+        @if(!is_null($project->team_not_provided))
+            {{ $project->team_not_provided }} not provided
+        @endif                        
+    </p>
+
     @if(!is_null($project->description))
         <p>
             <pre>{{ $project->description }}</pre>
