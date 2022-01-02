@@ -34,7 +34,7 @@
         <div class="mt-3 mb-3">
             <button class="btn btn-primary active-button" action="/projects/:id/edit" method="GET">Edit selected project</button>
             <button class="btn btn-primary active-button" action="/projects/:id" method="GET">View selected project</button>
-            <a class="btn btn-primary" href="/projects/create">Deposit new project</a>
+            <button class="btn btn-primary active-button" action="/projects/create" method="GET">Deposit new project</button>
         </div>
 
         @include('common.paginator')

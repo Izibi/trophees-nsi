@@ -35,13 +35,15 @@ function init() {
   }); // buttons
 
   function redirect(action, method) {
-    console.log(action, method, selection);
+    //console.log(action, method, selection)
+    if (action.indexOf(':id') !== -1) {
+      if (!selection) {
+        return;
+      }
 
-    if (!selection) {
-      return;
+      action = action.replace(':id', selection.id);
     }
 
-    action = action.replace(':id', selection.id);
     var form = $('<form>');
     form.attr('action', action);
     form.attr('method', method || 'GET');

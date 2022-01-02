@@ -21,12 +21,12 @@ class CreateProjectsTable extends Migration
             $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade')->onUpdate('cascade');
             $table->bigInteger('grade_id')->unsigned();
             $table->foreign('grade_id')->references('id')->on('grades')->onDelete('cascade')->onUpdate('cascade');
-            $table->smallInteger('team_girls')->default(0);
-            $table->smallInteger('team_boys')->default(0);
-            $table->smallInteger('team_not_provided')->default(0);
-            $table->text('description');
-            $table->string('video_url');
-            $table->string('presentation_file');
+            $table->smallInteger('team_girls')->nullable();
+            $table->smallInteger('team_boys')->nullable();
+            $table->smallInteger('team_not_provided')->nullable();
+            $table->text('description')->nullable();
+            $table->string('video_url')->nullable();
+            $table->string('presentation_file')->nullable();
             $table->enum('status', ['draft', 'finalised', 'validated', 'masked'])->default('draft');
         });
     }

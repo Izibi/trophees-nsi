@@ -18,6 +18,9 @@
             @include('nav')
         @endif
         <main class="container mt-3">
+            @if (\Session::has('message'))
+                <div class="alert alert-success">{!! \Session::get('message') !!}</div>
+            @endif            
             @yield('content')
         </main>        
     </body>

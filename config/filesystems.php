@@ -42,6 +42,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'presentation_files' => [
+            'driver' => 'local',
+            'root' => public_path('presentation_files'),
+            'url' => env('APP_URL').'/presentation_files',
+            'visibility' => 'public',
+        ],        
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

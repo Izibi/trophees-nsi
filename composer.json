@@ -12,12 +12,13 @@
     ],    
     "require": {
         "php": "^7.3|^8.0",
+        "franceioi/login-module-client": "^2.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "franceioi/login-module-client": "^2.0"
+        "netojose/laravel-bootstrap-4-forms": "^3.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
