@@ -34,4 +34,10 @@ class User extends Authenticatable
         return 'User #'.$this->id;
     }    
 
+    
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
 }

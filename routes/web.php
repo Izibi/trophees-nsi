@@ -17,5 +17,5 @@ Route::resource('projects', App\Http\Controllers\ProjectsController::class);
 
 Route::middleware(['role:admin'])->group(function() {
     Route::resource('schools', App\Http\Controllers\SchoolsController::class);
-    Route::resource('users', App\Http\Controllers\UsersController::class);
+    Route::resource('users', App\Http\Controllers\UsersController::class)->only(['index', 'edit', 'update', 'destroy']);
 });
