@@ -9,13 +9,13 @@
                 <table class="table table-striped active-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>City</th>
-                            <th>Zipcode</th>
-                            <th>Country</th>
-                            <th>Region</th>
-                            <th>UAI</th>
+                            <th>{!! SortableTable::th('name', 'Name') !!}</th>
+                            <th>{!! SortableTable::th('address', 'Address') !!}</th>
+                            <th>{!! SortableTable::th('city', 'City') !!}</th>
+                            <th>{!! SortableTable::th('zip', 'Zipcode') !!}</th>
+                            <th>{!! SortableTable::th('country', 'Country') !!}</th>
+                            <th>{!! SortableTable::th('region', 'Region') !!}</th>
+                            <th>{!! SortableTable::th('uai', 'UAI') !!}</th>
                         </tr>
                     </thead>
                     <tbody>

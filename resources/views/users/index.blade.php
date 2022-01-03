@@ -9,21 +9,21 @@
                 <table class="table table-striped active-table">
                     <thead>
                         <tr>
-                            <th>Last name</th>
-                            <th>First name</th>
-                            <th>Professional email</th>
-                            <th>Secondary email</th>
-                            <th>Teacher status</th>
-                            <th>Role</th>
-                            <th>Region</th>
-                            <th>Registration date</th>
-                            <th>Last login date</th>
+                            <th>{!! SortableTable::th('last_name', 'Last name') !!}</th>
+                            <th>{!! SortableTable::th('first_name', 'First name') !!}</th>
+                            <th>{!! SortableTable::th('email', 'Professional email') !!}</th>
+                            <th>{!! SortableTable::th('secondary_email', 'Secondary email') !!}</th>
+                            <th>{!! SortableTable::th('validated', 'Teacher status') !!}</th>
+                            <th>{!! SortableTable::th('role', 'Role') !!}</th>
+                            <th>{!! SortableTable::th('region', 'Region') !!}</th>
+                            <th>{!! SortableTable::th('created_at', 'Registration date') !!}</th>
+                            <th>{!! SortableTable::th('last_login_at', 'Last login date') !!}</th>
                         </tr>
                     </thead>
                     @foreach ($rows as $user)
                         <tr data-row-id="{{ $user->id }}">
-                            <td>{{ $user->first_name }}</td>
                             <td>{{ $user->last_name }}</td>
+                            <td>{{ $user->first_name }}</td>                            
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->secondary_email }}</td>
                             <td>{{ $user->validated ? 'validated' : 'not validated' }}</td>

@@ -9,19 +9,30 @@ use App\Models\Grade;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePojectRequest;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\SortableTable;
 
 class ProjectsController extends Controller
 {
 
 
+    private $sort_fields = [
+        'id' => 'projects.id',
+        'name' => 'projects.name',
+        'school_name' => 'schools.name',
+        'region_name' => 'regions.name',
+        'created_at' => 'projects.created_at',
+        'status' => 'projects.status'
+    ];
+
+
     public function index(Request $request)
     {
-        $projects = DB::table('projects')
+        $q = DB::table('projects')
             ->select(DB::raw('projects.id, projects.name, schools.name as school_name, regions.name as region_name, projects.created_at, projects.status'))
             ->leftJoin('schools', 'projects.school_id', '=', 'schools.id')
-            ->leftJoin('regions', 'schools.region_id', '=', 'regions.id')            
-            ->paginate()
-            ->appends($request->all());
+            ->leftJoin('regions', 'schools.region_id', '=', 'regions.id');
+        SortableTable::orderBy($q, $this->sort_fields);
+        $projects = $q->paginate()->appends($request->all());
         return view('projects.index', [
             'rows' => $projects
         ]);

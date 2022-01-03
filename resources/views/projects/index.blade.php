@@ -9,12 +9,12 @@
                 <table class="table table-striped active-table">
                     <thead>
                         <tr>
-                            <th>Number</th>
-                            <th>Name</th>
-                            <th>School</th>
-                            <th>Region</th>
-                            <th>Submission date</th>
-                            <th>Status</th>
+                            <th>{!! SortableTable::th('id', 'Number') !!}</th>
+                            <th>{!! SortableTable::th('name', 'Name') !!}</th>
+                            <th>{!! SortableTable::th('school', 'School') !!}</th>
+                            <th>{!! SortableTable::th('region', 'Region') !!}</th>
+                            <th>{!! SortableTable::th('created_at', 'Submission date') !!}</th>
+                            <th>{!! SortableTable::th('status', 'Status') !!}</th>
                         </tr>
                     </thead>
                     @foreach ($rows as $project)

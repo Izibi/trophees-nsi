@@ -5,22 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\School;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\SortableTable;
 
 class SchoolsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    private $sort_fields = [
+        'name' => 'schools.name',
+        'address' => 'schools.address',
+        'city' => 'schools.city',
+        'zip' => 'schools.zip',
+        'country' => 'countries.name',
+        'region' => 'regions.name',
+        'uai' => 'schools.uai'
+    ];
+
+
     public function index(Request $request)
     {
-        $schools = DB::table('schools')
+        $q = DB::table('schools')
             ->select(DB::raw('schools.id, schools.name, schools.address, schools.city, schools.zip, countries.name as country_name, regions.name as region_name, schools.uai'))
             ->leftJoin('regions', 'schools.region_id', '=', 'regions.id')
-            ->leftJoin('countries', 'schools.country_id', '=', 'countries.id')
-            ->paginate()
-            ->appends($request->all());
+            ->leftJoin('countries', 'schools.country_id', '=', 'countries.id');
+        SortableTable::orderBy($q, $this->sort_fields);
+        $schools = $q->paginate()->appends($request->all());
         return view('schools.index', [
             'rows' => $schools
         ]);
