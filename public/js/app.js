@@ -46,10 +46,18 @@ function init() {
 
     var form = $('<form>');
     form.attr('action', action);
-    form.attr('method', method || 'GET');
+    method = method || 'GET';
+    form.attr('method', method);
     var hidden = $('<input type="hidden" name="refer_page"/>');
     hidden.val(location.href);
     form.append(hidden);
+
+    if (method == 'POST') {
+      var hidden = $('<input type="hidden" name="_token"/>');
+      hidden.val($('meta[name="csrf-token"]').attr('content'));
+      form.append(hidden);
+    }
+
     $(document.body).append(form);
     form.submit();
   }

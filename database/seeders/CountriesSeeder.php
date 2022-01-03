@@ -17,5 +17,8 @@ class CountriesSeeder extends Seeder
         Country::create([
             'name' => 'France'
         ]);
+        Country::create([
+            'name' => 'Test country 1'
+        ]);        
     }
 }

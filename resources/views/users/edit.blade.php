@@ -17,7 +17,7 @@
     @endif
 
 
-    <div id="user-form">
+    <div id="edit-form">
         {!! Form::open()
             ->route('users.update', ['user' => $user]) 
             ->fill($user)            
@@ -38,13 +38,14 @@
                     'admin' => 'Admin',
                 ]
             )!!}
-            
-            <div class="mt-5">
-                <a class="btn btn-primary" id="btn-ok" href="#">Ok</a>
-                <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
-                <a class="btn btn-primary" id="btn-delete" href="#">Delete user</a>
-            </div>        
+           
         {!! Form::close() !!}
+
+        <div class="mt-5">
+            <a class="btn btn-primary" id="btn-ok" href="#">Ok</a>
+            <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
+            <a class="btn btn-primary" id="btn-delete" href="#">Delete user</a>
+        </div>        
     </div>
 
 
@@ -58,7 +59,7 @@
 
     <script>
         $(document).ready(function() {
-            var form = $('#user-form>form').first();
+            var form = $('#edit-form>form').first();
            
             $('#btn-ok').click(function(e) {
                 e.preventDefault();

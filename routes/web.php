@@ -16,6 +16,7 @@ Route::get('results', [App\Http\Controllers\ResultsController::class, 'index']);
 Route::resource('projects', App\Http\Controllers\ProjectsController::class);
 
 Route::middleware(['role:admin'])->group(function() {
-    Route::resource('schools', App\Http\Controllers\SchoolsController::class);
+    Route::resource('schools', App\Http\Controllers\SchoolsController::class)->only(['index', 'edit', 'update', 'destroy']);
+    Route::post('schools/{school}/hide', [App\Http\Controllers\SchoolsController::class, 'hide'])->name('schools.hide');
     Route::resource('users', App\Http\Controllers\UsersController::class)->only(['index', 'edit', 'update', 'destroy']);
 });

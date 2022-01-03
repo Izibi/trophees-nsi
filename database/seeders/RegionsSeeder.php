@@ -15,14 +15,27 @@ class RegionsSeeder extends Seeder
      */
     public function run()
     {
-        $fr = Country::where('name', 'France')->first();
+        $countries = Country::get();
         Region::create([
-            'country_id' => $fr->id,
+            'country_id' => $countries[0]->id,
             'name' => 'Bourgogne'
         ]);
         Region::create([
-            'country_id' => $fr->id,
+            'country_id' => $countries[0]->id,
             'name' => 'Aix-Marseille'
-        ]);        
+        ]);
+
+        Region::create([
+            'country_id' => $countries[1]->id,
+            'name' => 'Test region 1'
+        ]);
+        Region::create([
+            'country_id' => $countries[1]->id,
+            'name' => 'Test region 2'
+        ]);
+        Region::create([
+            'country_id' => $countries[1]->id,
+            'name' => 'Test region 3'
+        ]);
     }
 }

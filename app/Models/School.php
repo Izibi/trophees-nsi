@@ -9,6 +9,15 @@ class School extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'address',
+        'city',
+        'zip',
+        'country_id',
+        'region_id',
+        'uai',
+    ];
 
     public function country()
     {

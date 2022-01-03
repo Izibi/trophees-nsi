@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <div id="project-form">
+    <div id="edit-form">
         {!! Form::open()
             ->multipart()
             ->route($project ? 'projects.update' : 'projects.store', ['project' => $project]) 
@@ -59,7 +59,7 @@
 
     <script>
         $(document).ready(function() {
-            var form = $('#project-form>form').first();
+            var form = $('#edit-form>form').first();
            
             $('#btn-save-draft').click(function(e) {
                 e.preventDefault();
