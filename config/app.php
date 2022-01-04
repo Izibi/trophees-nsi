@@ -231,6 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'SortableTable' => App\Helpers\SortableTable::class,
+        'Rating' => App\Helpers\Rating::class,
     ],
 
 ];

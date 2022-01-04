@@ -15,6 +15,10 @@ Route::get('results', [App\Http\Controllers\ResultsController::class, 'index']);
 
 Route::resource('projects', App\Http\Controllers\ProjectsController::class);
 
+Route::middleware(['role:jury'])->group(function() {
+    Route::post('projects/{project}/set_rating', [App\Http\Controllers\ProjectsController::class, 'setRating'])->name('projects.set_rating');
+});
+
 Route::middleware(['role:admin'])->group(function() {
     Route::resource('schools', App\Http\Controllers\SchoolsController::class)->only(['index', 'edit', 'update', 'destroy']);
     Route::post('schools/{school}/hide', [App\Http\Controllers\SchoolsController::class, 'hide'])->name('schools.hide');

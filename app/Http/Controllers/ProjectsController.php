@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\School;
 use App\Models\Grade;
+use App\Models\Rating;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePojectRequest;
+use App\Http\Requests\SetRatingRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\SortableTable;
 
@@ -64,11 +66,17 @@ class ProjectsController extends Controller
     }
 
 
-    public function show(Project $project)
+    public function show(Request $request, Project $project)
     {
-        return view('projects.view', [
+        $data = [
+            'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project
-        ]);
+        ];
+        $user = $request->user();
+        if($user->role == 'jury') {
+            $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
+        }
+        return view('projects.show-'.$user->role, $data);
     }
 
 
@@ -97,6 +105,22 @@ class ProjectsController extends Controller
         $url = $request->get('refer_page', '/projects');
         return redirect($url)->withMessage('Project updated');        
     }
+
+
+    public function setRating(SetRatingRequest $request, Project $project)
+    {
+        $user = $request->user();
+        $rating = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
+        if(!$rating) {
+            $rating = new Rating([
+                'user_id' => $user->id,
+                'project_id' => $project->id
+            ]);
+        }
+        $rating->fill($request->all());
+        $rating->save();
+        return redirect()->back()->withMessage('Rating updated');        
+    }    
 
 
     public function destroy(Request $request, Project $project)
