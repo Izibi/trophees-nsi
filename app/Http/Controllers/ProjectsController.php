@@ -45,7 +45,7 @@ class ProjectsController extends Controller
     {
         return view('projects.edit', [
             'project' => null,
-            'schools' => School::get()->pluck('name', 'id')->toArray(),
+            'schools' => $this->getUserSchools($request->user()),
             'grades' => Grade::get()->pluck('name', 'id')->toArray(),            
             'refer_page' => $request->get('refer_page', '/projects')
         ]);
@@ -85,7 +85,7 @@ class ProjectsController extends Controller
         return view('projects.edit', [
             'submit_route' => 'projects.update',
             'project' => $project,
-            'schools' => School::get()->pluck('name', 'id')->toArray(),
+            'schools' => $this->getUserSchools($request->user()),
             'grades' => Grade::get()->pluck('name', 'id')->toArray(),
             'refer_page' => $request->get('refer_page', '/projects')
         ]);
@@ -130,4 +130,17 @@ class ProjectsController extends Controller
         return redirect($url)->withMessage('Project deleted');
     }
 
+
+
+    private function getUserSchools($user) {
+        $data = $user->schools()->with('country', 'region')->get();
+        $options = [];
+        foreach($data as $school) {
+            $options[$school->id] = $school->name.', '.$school->zip.' '.$school->city.', '.$school->country->name;
+        }
+        return [
+            'data' => $data,
+            'options' => $options
+        ];
+    }
 }

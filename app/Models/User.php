@@ -40,4 +40,8 @@ class User extends Authenticatable
         return $this->belongsTo(Region::class);
     }
 
+    public function schools() {
+        return $this->belongsToMany(School::class);
+    }
+
 }

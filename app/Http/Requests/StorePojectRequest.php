@@ -25,7 +25,7 @@ class StorePojectRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            'school_id' => 'exists:schools,id',
+            'school_id' => 'required|exists:schools,id',
             'grade_id' => 'exists:grades,id',
             'team_girls' => 'nullable|integer|min:0|max:1000',
             'team_boys' => 'nullable|integer|min:0|max:1000',

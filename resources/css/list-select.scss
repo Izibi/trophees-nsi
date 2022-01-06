@@ -1,0 +1,19 @@
+.list-select {
+    height: 300px;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid #dee2e6;
+    border-radius: $border-radius;
+}
+
+.list-select .list-item {
+    width: auto;
+    padding: 0.25rem 0.5rem;
+    cursor: default;
+}
+
+.list-select .list-item:hover,
+.list-select .list-item-selected {
+    background-color: $primary;
+    color: $white;
+}

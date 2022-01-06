@@ -11,18 +11,19 @@
 
             {!! Form::text('name', 'Project name') !!}
 
-            {!! Form::select('school_id', 'School', $schools) !!}
+            {!! Form::select('school_id', 'School', $schools['options'])->help('<a id="btn-open-schools-manager" href="#">Edit my list of schools</a>') !!}
+
             {!! Form::select('grade_id', 'Grade', $grades) !!}
 
             <div class="row">
                 <div class="col-4">
-                    {!! Form::text('team_girls', 'Team girls') !!}
+                    {!! Form::text('team_girls', 'Team girls')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
                 <div class="col-4">
-                    {!! Form::text('team_boys', 'Team boys') !!}
+                    {!! Form::text('team_boys', 'Team boys')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
                 <div class="col-4">
-                    {!! Form::text('team_not_provided', 'Not provided') !!}
+                    {!! Form::text('team_not_provided', 'Not provided')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>        
             </div>
             <p><small class="form-text text-muted">We have a separate prize for girls to encourage female participation.</small></p>
@@ -46,6 +47,12 @@
             </div>
         {!! Form::close() !!}   
     </div>
+
+
+    <script>
+        window.user_schools = {!! json_encode($schools['data']) !!}
+    </script>
+    @include('projects.school-popup')
 
 
     @if($project)
@@ -80,6 +87,13 @@
                     del_form.submit();
                 }
             });            
+
+
+            // schools popup
+            $('#btn-open-schools-manager').on('click', function() {
+                schools_manager.show();
+            });
+
         });
     </script>
 @endsection
