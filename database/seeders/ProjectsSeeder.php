@@ -30,7 +30,7 @@ class ProjectsSeeder extends Seeder
             'team_not_provided' => 3,
             'description' => 'description text',
             'video_url' => 'http://video.url',
-            'presentation_file' => '123',
+            //'presentation_file' => '123',
             'status' => 'draft'
         ]);
 
@@ -44,7 +44,7 @@ class ProjectsSeeder extends Seeder
             'team_not_provided' => 1,
             'description' => 'description text',
             'video_url' => 'http://video.url',
-            'presentation_file' => '123',
+            //'presentation_file' => '123',
             'status' => 'draft'
         ]);
 
@@ -58,7 +58,7 @@ class ProjectsSeeder extends Seeder
             'team_not_provided' => 1,
             'description' => 'description text',
             'video_url' => 'http://video.url',
-            'presentation_file' => '123',
+            //'presentation_file' => '123',
             'status' => 'draft'
         ]);        
     }

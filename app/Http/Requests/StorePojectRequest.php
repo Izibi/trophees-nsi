@@ -30,7 +30,8 @@ class StorePojectRequest extends FormRequest
             'team_girls' => 'nullable|integer|min:0|max:1000',
             'team_boys' => 'nullable|integer|min:0|max:1000',
             'team_not_provided' => 'nullable|integer|min:0|max:1000',
-            'presentation_file' => 'mimes:pdf'
+            'presentation_file' => 'mimes:pdf',
+            'image_file' => 'mimes:jpg,jpeg,png,gif',
         ];
     }
 }

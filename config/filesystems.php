@@ -42,10 +42,10 @@ return [
             'visibility' => 'public',
         ],
 
-        'presentation_files' => [
+        'uploads' => [
             'driver' => 'local',
-            'root' => public_path('presentation_files'),
-            'url' => env('APP_URL').'/presentation_files',
+            'root' => public_path('uploads'),
+            'url' => env('APP_URL').'/uploads',
             'visibility' => 'public',
         ],        
 

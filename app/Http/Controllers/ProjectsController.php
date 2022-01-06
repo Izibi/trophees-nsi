@@ -58,8 +58,14 @@ class ProjectsController extends Controller
         if($request->hasFile('presentation_file')) {
             $file = $request->file('presentation_file');
             $project->presentation_file = $file->hashName();
-            $file->storeAs('/', $project->presentation_file, 'presentation_files');
+            $file->storeAs('/', $project->presentation_file, 'uploads');
         }
+        if($request->hasFile('image_file')) {
+            $file = $request->file('image_file');
+            $project->image_file = $file->hashName();
+            $file->storeAs('/', $project->image_file, 'uploads');
+        }        
+        $project->user_id = $request->user()->id;
         $project->save();
         $url = $request->get('refer_page', '/projects');
         return redirect($url)->withMessage('Project created');
@@ -97,7 +103,12 @@ class ProjectsController extends Controller
         if($request->hasFile('presentation_file')) {
             $file = $request->file('presentation_file');
             $project->presentation_file = $file->hashName();
-            $file->storeAs('/', $project->presentation_file, 'presentation_files');
+            $file->storeAs('/', $project->presentation_file, 'uploads');
+        }
+        if($request->hasFile('image_file')) {
+            $file = $request->file('image_file');
+            $project->image_file = $file->hashName();
+            $file->storeAs('/', $project->image_file, 'uploads');
         }
 
         $project->fill($request->all());

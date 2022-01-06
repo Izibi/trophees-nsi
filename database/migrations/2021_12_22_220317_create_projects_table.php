@@ -29,6 +29,7 @@ class CreateProjectsTable extends Migration
             $table->text('description')->nullable();
             $table->string('video_url')->nullable();
             $table->string('presentation_file')->nullable();
+            $table->string('image_file')->nullable();
             $table->enum('status', ['draft', 'finalised', 'validated', 'masked'])->default('draft');
         });
     }

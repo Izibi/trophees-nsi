@@ -18,8 +18,7 @@ class Project extends Model
         'team_boys',
         'team_not_provided',
         'description',
-        'video_url',
-//        'presentation_file',
+        'video_url'
     ];
 
 
@@ -27,15 +26,22 @@ class Project extends Model
         parent::boot();
         static::deleting(function($project) {
             if(!is_null($project->presentation_file)) {
-                Storage::disk('presentation_files')->delete($project->presentation_file);
+                Storage::disk('uploads')->delete($project->presentation_file);
             }
+            if(!is_null($project->image_file)) {
+                Storage::disk('uploads')->delete($project->image_file);
+            }            
         });
 
         static::updating(function($project) {
             $old_file = $project->getOriginal('presentation_file');
             if(!is_null($old_file) && $project->presentation_file != $old_file) {
-                Storage::disk('presentation_files')->delete($old_file);
+                Storage::disk('uploads')->delete($old_file);
             }
+            $old_image = $project->getOriginal('image_file');
+            if(!is_null($old_image) && $project->image_file != $old_image) {
+                Storage::disk('uploads')->delete($old_image);
+            }            
         });
     }
 
