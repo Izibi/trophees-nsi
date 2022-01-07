@@ -18,6 +18,7 @@ class CreateSchoolUserTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');;
             $table->bigInteger('school_id')->unsigned();
             $table->foreign('school_id')->references('id')->on('schools')->onUpdate('cascade')->onDelete('cascade');;
+            $table->unique(['user_id', 'school_id']);
         });
     }
 
