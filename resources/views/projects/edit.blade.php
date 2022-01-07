@@ -64,7 +64,9 @@
 
     <script>
         window.user_schools = {!! json_encode($schools['data']) !!}
+        window.regions = {!! json_encode($regions) !!}
     </script>
+    
     @include('projects.school-popup')
 
 
@@ -101,8 +103,9 @@
                 }
             });            
 
-
             // schools popup
+            var schools_manager = SchoolsManager();
+
             $('#btn-open-schools-manager').on('click', function() {
                 schools_manager.show();
             });
