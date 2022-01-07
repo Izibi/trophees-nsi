@@ -10081,6 +10081,10 @@ h3 {
   max-width: 90% !important;
 }
 
+.card .table:last-child {
+  margin-bottom: 0;
+}
+
 table.active-table tr.active-row,
 table.active-table tr[data-row-id]:hover {
   background-color: #007bff;
