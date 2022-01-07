@@ -7,6 +7,8 @@ use App\Models\Project;
 use App\Models\School;
 use App\Models\Grade;
 use App\Models\Rating;
+use App\Models\Country;
+use App\Models\Region;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePojectRequest;
 use App\Http\Requests\SetRatingRequest;
@@ -46,7 +48,9 @@ class ProjectsController extends Controller
         return view('projects.edit', [
             'project' => null,
             'schools' => $this->getUserSchools($request->user()),
-            'grades' => Grade::get()->pluck('name', 'id')->toArray(),            
+            'grades' => Grade::orderBy('name')->get(),
+            'countries' => Country::orderBy('name')->get(),
+            'regions' => Region::orderBy('country_id')->orderBy('name')->get(),
             'refer_page' => $request->get('refer_page', '/projects')
         ]);
     }
@@ -92,7 +96,9 @@ class ProjectsController extends Controller
             'submit_route' => 'projects.update',
             'project' => $project,
             'schools' => $this->getUserSchools($request->user()),
-            'grades' => Grade::get()->pluck('name', 'id')->toArray(),
+            'grades' => Grade::orderBy('name')->get(),
+            'countries' => Country::orderBy('name')->get(),
+            'regions' => Region::orderBy('country_id')->orderBy('name')->get(),            
             'refer_page' => $request->get('refer_page', '/projects')
         ]);
     }

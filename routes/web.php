@@ -28,5 +28,6 @@ Route::middleware('auth')->group(function() {
 
     Route::get('user_schools/search', [App\Http\Controllers\UserSchoolsController::class, 'search']);
     Route::post('user_schools/add', [App\Http\Controllers\UserSchoolsController::class, 'add']);
+    Route::post('user_schools/create', [App\Http\Controllers\UserSchoolsController::class, 'create']);
     Route::post('user_schools/remove', [App\Http\Controllers\UserSchoolsController::class, 'remove']);
 });

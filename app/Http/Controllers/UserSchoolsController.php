@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\School;
+use App\Http\Requests\StoreSchoolRequest;
 
 class UserSchoolsController extends Controller
 {
@@ -30,6 +31,19 @@ class UserSchoolsController extends Controller
     }
 
 
+    public function create(StoreSchoolRequest $request) {
+        $user = $request->user();
+        $school = new School();
+        $school->fill($request->all());
+        $school->save();
+        $user->schools()->attach($school->id);
+        return response()->json([
+            'success' => true,
+            'schools' => $this->getUserSchools($user)
+        ]);        
+    }    
+
+
     private function getUserSchools($user) {
         return $user->schools()->with('country', 'region')->get();
     }
@@ -48,4 +62,5 @@ class UserSchoolsController extends Controller
         }
         return response()->json($res);
     }    
+
 }
