@@ -37,11 +37,13 @@ class OAuthCallbackController extends Controller
         $client = new Client(config('login_module_client'));
         $authorization_helper = $client->getAuthorizationHelper();
         $user_data = $authorization_helper->queryUser();
+        if($request->user()->id != $user_data['id']) {
+            return redirect('/logout');
+        }
         $this->refreshUser($user_data);
         $user = User::find($user_data['id']);
         $user->fill($user_data);
         $user->save();
-        
         $url = $request->session()->pull('refer_page', '/');
         return redirect($url);
     }

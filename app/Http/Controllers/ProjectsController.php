@@ -31,10 +31,7 @@ class ProjectsController extends Controller
 
     public function index(Request $request)
     {
-        $q = DB::table('projects')
-            ->select(DB::raw('projects.id, projects.name, schools.name as school_name, regions.name as region_name, projects.created_at, projects.status'))
-            ->leftJoin('schools', 'projects.school_id', '=', 'schools.id')
-            ->leftJoin('regions', 'schools.region_id', '=', 'regions.id');
+        $q = $this->getProjectsQuery($request->user());
         SortableTable::orderBy($q, $this->sort_fields);
         $projects = $q->paginate()->appends($request->all());
         return view('projects.index', [
@@ -43,11 +40,27 @@ class ProjectsController extends Controller
     }
 
 
+    private function getProjectsQuery($user) {
+        $q = DB::table('projects')
+            ->select(DB::raw('projects.id, projects.name, schools.name as school_name, regions.name as region_name, projects.created_at, projects.status'))
+            ->leftJoin('schools', 'projects.school_id', '=', 'schools.id')
+            ->leftJoin('regions', 'schools.region_id', '=', 'regions.id');
+        if($user->role == 'teacher') {
+            $q->where('projects.user_id', '=', $user->id);
+        }
+        return $q;
+    }
+
+
     public function create(Request $request)
     {
+        $user = $request->user();
+        if(!$this->accessible($user, null, 'create')) {
+            return $this->accessDeniedResponse();
+        }        
         return view('projects.edit', [
             'project' => null,
-            'schools' => $this->getUserSchools($request->user()),
+            'schools' => $this->getUserSchools($user),
             'grades' => Grade::orderBy('name')->get(),
             'countries' => Country::orderBy('name')->get(),
             'regions' => Region::orderBy('country_id')->orderBy('name')->get(),
@@ -58,6 +71,10 @@ class ProjectsController extends Controller
 
     public function store(StorePojectRequest $request)
     {
+        $user = $request->user();
+        if(!$this->accessible($user, null, 'create')) {
+            return $this->accessDeniedResponse();
+        }
         $project = new Project($request->all());
         if($request->hasFile('presentation_file')) {
             $file = $request->file('presentation_file');
@@ -69,7 +86,7 @@ class ProjectsController extends Controller
             $project->image_file = $file->hashName();
             $file->storeAs('/', $project->image_file, 'uploads');
         }        
-        $project->user_id = $request->user()->id;
+        $project->user_id = $user->id;
         $project->save();
         $url = $request->get('refer_page', '/projects');
         return redirect($url)->withMessage('Project created');
@@ -78,11 +95,14 @@ class ProjectsController extends Controller
 
     public function show(Request $request, Project $project)
     {
+        $user = $request->user();        
+        if(!$this->accessible($user, $project, 'view')) {
+            return $this->accessDeniedResponse();
+        }        
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project
         ];
-        $user = $request->user();
         if($user->role == 'jury') {
             $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
         }
@@ -92,10 +112,14 @@ class ProjectsController extends Controller
 
     public function edit(Request $request, Project $project)
     {
+        $user = $request->user();
+        if(!$this->accessible($user, $project, 'edit')) {
+            return $this->accessDeniedResponse();
+        }
         return view('projects.edit', [
             'submit_route' => 'projects.update',
             'project' => $project,
-            'schools' => $this->getUserSchools($request->user()),
+            'schools' => $this->getUserSchools($user),
             'grades' => Grade::orderBy('name')->get(),
             'countries' => Country::orderBy('name')->get(),
             'regions' => Region::orderBy('country_id')->orderBy('name')->get(),            
@@ -106,6 +130,9 @@ class ProjectsController extends Controller
 
     public function update(StorePojectRequest $request, Project $project)
     {
+        if(!$this->accessible($request->user(), $project, 'edit')) {
+            return $this->accessDeniedResponse();
+        }
         if($request->hasFile('presentation_file')) {
             $file = $request->file('presentation_file');
             $project->presentation_file = $file->hashName();
@@ -127,6 +154,9 @@ class ProjectsController extends Controller
     public function setRating(SetRatingRequest $request, Project $project)
     {
         $user = $request->user();
+        if(!$this->accessible($user, $project, 'rate')) {
+            return $this->accessDeniedResponse();
+        }
         $rating = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
         if(!$rating) {
             $rating = new Rating([
@@ -142,6 +172,9 @@ class ProjectsController extends Controller
 
     public function destroy(Request $request, Project $project)
     {
+        if(!$this->accessible($request->user(), $project, 'edit')) {
+            return $this->accessDeniedResponse();
+        }
         $project->delete();
         $url = $request->get('refer_page', '/projects');
         return redirect($url)->withMessage('Project deleted');
@@ -159,5 +192,33 @@ class ProjectsController extends Controller
             'data' => $data,
             'options' => $options
         ];
+    }
+
+
+    private function accessible($user, $project, $action) {
+        switch($action) {
+            case 'create':
+                return $user->role == 'teacher';
+                break;            
+            case 'view':
+                return $user->role == 'admin' || 
+                    ($user->role == 'teacher' && $user->id == $project->user_id) || 
+                    ($user->role == 'jury' && $user->region_id == $project->region_id);
+                break;
+            case 'edit':
+                return $user->role == 'teacher' && $user->id == $project->user_id;
+                break;
+            case 'change_status':
+                return $user->role == 'admin';
+                break;
+            case 'rate':
+                return $user->role == 'jury' && $user->region_id == $project->region_id;
+                break;
+        }
+    }
+
+
+    private function accessDeniedResponse() {
+        return redirect('/');
     }
 }

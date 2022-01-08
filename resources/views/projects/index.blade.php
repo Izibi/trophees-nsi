@@ -30,15 +30,18 @@
                 </table>
             </div>
         </div>
-
-        <div class="mt-3 mb-3">
-            <button class="btn btn-primary active-button" action="/projects/:id/edit" method="GET">Edit selected project</button>
-            <button class="btn btn-primary active-button" action="/projects/:id" method="GET">View selected project</button>
-            <button class="btn btn-primary active-button" action="/projects/create" method="GET">Deposit new project</button>
-        </div>
-
         @include('common.paginator')
     @else
         @include('common.empty_list')
     @endif    
+
+    <div class="mt-3 mb-3">
+        @if(count($rows))
+            <button class="btn btn-primary active-button" action="/projects/:id/edit" method="GET">Edit selected project</button>
+            <button class="btn btn-primary active-button" action="/projects/:id" method="GET">View selected project</button>
+        @endif
+        @if(Auth::user()->role == 'teacher')
+            <button class="btn btn-primary active-button" action="/projects/create" method="GET">Deposit new project</button>
+        @endif
+    </div>    
 @endsection
