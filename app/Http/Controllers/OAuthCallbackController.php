@@ -22,7 +22,7 @@ class OAuthCallbackController extends Controller
             $authorization_helper->handleRequestParams($_GET);
             $user_data = $authorization_helper->queryUser();
             if(!$this->validateUserData($user_data)) {
-                throw new \Exception('Login available for verified teachers only.');
+                throw new \Exception('Login available for teachers only.');
             }
             $user = $this->refreshUser($user_data);
             Auth::login($user);        
@@ -49,9 +49,7 @@ class OAuthCallbackController extends Controller
 
 
     private function validateUserData($user_data) {
-        if($user_data['role'] == 'teacher' && 
-            isset($user_data['verification']['role']) && 
-            $user_data['verification']['role'] == 'VERIFIED') {
+        if($user_data['role'] == 'teacher') {
             return true;
         }
         return false;
@@ -78,7 +76,8 @@ class OAuthCallbackController extends Controller
             'email' => $user_data['primary_email'],
             'secondary_email' => $user_data['secondary_email'],
             'first_name' => $user_data['first_name'],
-            'last_name' => $user_data['last_name']
+            'last_name' => $user_data['last_name'],
+            'validated' => isset($user_data['verification']['role']) && $user_data['verification']['role'] == 'VERIFIED'
         ];
     }
 
