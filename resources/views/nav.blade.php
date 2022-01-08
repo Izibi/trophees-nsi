@@ -18,12 +18,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/results">Results</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/users">Users</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/schools">Schools</a>
-                    </li>                                                                                
+                    @if(Auth::user()->role == 'admin')
+                        <li class="nav-item">
+                            <a class="nav-link" href="/users">Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/schools">Schools</a>
+                        </li>
+                    @endif
                 </ul>
                 
                 <ul class="navbar-nav ml-auto">
@@ -32,7 +34,7 @@
                             {{ Auth::user()->screen_name }}
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/profile">Edit profile</a>
+                            <a class="dropdown-item" href="/profile?refer_page={{ urlencode(Request::url()) }}">Edit profile</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/logout">Logout</a>
                         </div>

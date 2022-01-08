@@ -13,9 +13,18 @@ class AuthController extends Controller
     public function login() {
         $this->logoutUser();
         $client = new Client(config('login_module_client'));
-        $redirect_helper = $client->getRedirectHelper();
         $authorization_helper = $client->getAuthorizationHelper();
-        $url = $authorization_helper->getUrl(); // ['locale' => 'en']
+        $url = $authorization_helper->getUrl();
+        return redirect($url);
+    }
+
+    
+    public function profile(Request $request) {
+        $client = new Client(config('login_module_client'));
+        $redirect_helper = $client->getRedirectHelper();
+        $refer_page = $request->get('refer_page', '/');
+        $request->session()->flash('refer_page', $refer_page);
+        $url = $redirect_helper->getProfileUrl(config('app.url').'/oauth_callback/profile');
         return redirect($url);
     }
 

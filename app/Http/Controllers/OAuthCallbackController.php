@@ -41,6 +41,9 @@ class OAuthCallbackController extends Controller
         $user = User::find($user_data['id']);
         $user->fill($user_data);
         $user->save();
+        
+        $url = $request->session()->pull('refer_page', '/');
+        return redirect($url);
     }
 
 
