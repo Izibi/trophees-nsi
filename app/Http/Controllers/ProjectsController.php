@@ -47,6 +47,8 @@ class ProjectsController extends Controller
             ->leftJoin('regions', 'schools.region_id', '=', 'regions.id');
         if($user->role == 'teacher') {
             $q->where('projects.user_id', '=', $user->id);
+        } else if($user->role == 'jury') {
+            $q->where('projects.region_id', '=', $user->region_id);
         }
         return $q;
     }
