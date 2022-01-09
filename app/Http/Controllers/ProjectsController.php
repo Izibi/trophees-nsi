@@ -48,7 +48,8 @@ class ProjectsController extends Controller
         if($user->role == 'teacher') {
             $q->where('projects.user_id', '=', $user->id);
         } else if($user->role == 'jury') {
-            $q->where('projects.region_id', '=', $user->region_id);
+            $q->where('projects.region_id', '=', $user->region_id)
+                ->where('projects.status', '=', 'validated');
         }
         return $q;
     }
@@ -78,6 +79,9 @@ class ProjectsController extends Controller
             return $this->accessDeniedResponse();
         }
         $project = new Project($request->all());
+        if($request->has('finalize')) {
+            $project->status = 'finalized';
+        }        
         if($request->hasFile('presentation_file')) {
             $file = $request->file('presentation_file');
             $project->presentation_file = $file->hashName();
@@ -134,6 +138,9 @@ class ProjectsController extends Controller
     {
         if(!$this->accessible($request->user(), $project, 'edit')) {
             return $this->accessDeniedResponse();
+        }
+        if($request->has('finalize')) {
+            $project->status = 'finalized';
         }
         if($request->hasFile('presentation_file')) {
             $file = $request->file('presentation_file');
@@ -208,13 +215,13 @@ class ProjectsController extends Controller
                     ($user->role == 'jury' && $user->region_id == $project->region_id);
                 break;
             case 'edit':
-                return $user->role == 'teacher' && $user->id == $project->user_id;
+                return $user->role == 'teacher' && $user->id == $project->user_id && $project->status == 'draft';
                 break;
             case 'change_status':
                 return $user->role == 'admin';
                 break;
             case 'rate':
-                return $user->role == 'jury' && $user->region_id == $project->region_id;
+                return $user->role == 'jury' && $user->region_id == $project->region_id && $project->status == 'validated';
                 break;
         }
     }

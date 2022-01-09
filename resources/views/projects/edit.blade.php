@@ -52,7 +52,7 @@
 
             <div class="mt-5">
                 <a class="btn btn-primary" id="btn-save-draft" href="#">Save Draft</a>
-                <a class="btn btn-primary" id="btn-submit" href="#">Submit</a>
+                <a class="btn btn-primary" id="btn-submit-finalized" href="#">Submit finalized project</a>
                 @if($project)
                     <a class="btn btn-primary" id="btn-delete" href="#">Delete</a>
                 @endif
@@ -85,14 +85,16 @@
            
             $('#btn-save-draft').click(function(e) {
                 e.preventDefault();
-                form.append('<input type="hidden" name="status" value="draft"/>');
                 form.submit();
             })
 
 
-            $('#btn-submit').click(function(e) {
+            $('#btn-submit-finalized').click(function(e) {
                 e.preventDefault();
-                form.submit();
+                if(confirm('This will change project status to finalized, cancellation will not be possible. Continue?')) {
+                    form.append('<input type="hidden" name="finalize" value="1"/>');
+                    form.submit();
+                }
             });
 
             $('#btn-delete').click(function(e) {

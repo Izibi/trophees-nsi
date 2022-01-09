@@ -38,7 +38,7 @@
         </div>
 
         <div class="mt-3 mb-3">
-            <button class="btn btn-primary active-button" action="/users/:id/edit" method="GET">Edit selected user</button>        
+            <button class="btn btn-primary active-button" data-action="/users/:id/edit" data-method="GET">Edit selected user</button>        
         </div>
 
         @include('common.paginator')

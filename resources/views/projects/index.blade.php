@@ -18,7 +18,7 @@
                         </tr>
                     </thead>
                     @foreach ($rows as $project)
-                        <tr data-row-id="{{ $project->id }}">
+                        <tr data-row-id="{{ $project->id }}" @if($project->status != 'draft') data-actions-disabled="edit" @endif>
                             <td>{{ $project->id }}</td>
                             <td>{{ $project->name }}</td>
                             <td>{{ $project->school_name }}</td>
@@ -37,11 +37,11 @@
 
     <div class="mt-3 mb-3">
         @if(count($rows))
-            <button class="btn btn-primary active-button" action="/projects/:id/edit" method="GET">Edit selected project</button>
-            <button class="btn btn-primary active-button" action="/projects/:id" method="GET">View selected project</button>
+            <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Edit selected project</button>
+            <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">View selected project</button>
         @endif
         @if(Auth::user()->role == 'teacher')
-            <button class="btn btn-primary active-button" action="/projects/create" method="GET">Deposit new project</button>
+            <button class="btn btn-primary active-button" data-action="/projects/create" data-method="GET">Deposit new project</button>
         @endif
     </div>    
 @endsection

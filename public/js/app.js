@@ -7,7 +7,8 @@
 /***/ (() => {
 
 function init() {
-  var selection = null; // tables
+  var selection = null;
+  var buttons = $('.active-button'); // tables
 
   function select(tr) {
     var id = tr.data('row-id');
@@ -25,9 +26,22 @@ function init() {
       el: tr
     };
     tr.addClass('active-row');
+    buttons.each(function () {
+      $(this).prop('disabled', false);
+    });
+    var disabled_actions = tr.data('actions-disabled');
+
+    if (typeof disabled_actions !== 'undefined') {
+      disabled_actions = disabled_actions.split(',');
+      buttons.each(function () {
+        var btn = $(this);
+        var action = btn.data('action-name');
+        btn.prop('disabled', action && disabled_actions.indexOf(action) !== -1);
+      });
+    }
   }
 
-  $('table.active-table>tbody>tr').each(function () {
+  $('table.active-table tr').each(function () {
     var tr = $(this);
     tr.on('click', function () {
       select(tr);
@@ -62,10 +76,10 @@ function init() {
     form.submit();
   }
 
-  $('button.active-button').each(function () {
+  buttons.each(function () {
     var btn = $(this);
     btn.on('click', function () {
-      redirect(btn.attr('action'), btn.attr('method'));
+      redirect(btn.data('action'), btn.data('method'));
     });
   });
 }
