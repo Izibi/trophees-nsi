@@ -11,8 +11,8 @@
                         <tr>
                             <th>{!! SortableTable::th('id', 'Number') !!}</th>
                             <th>{!! SortableTable::th('name', 'Name') !!}</th>
-                            <th>{!! SortableTable::th('school', 'School') !!}</th>
-                            <th>{!! SortableTable::th('region', 'Region') !!}</th>
+                            <th>{!! SortableTable::th('school_name', 'School') !!}</th>
+                            <th>{!! SortableTable::th('region_name', 'Region') !!}</th>
                             <th>{!! SortableTable::th('created_at', 'Submission date') !!}</th>
                             <th>{!! SortableTable::th('status', 'Status') !!}</th>
                         </tr>
