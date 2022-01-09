@@ -11,7 +11,7 @@ use App\Models\Country;
 use App\Models\Region;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePojectRequest;
-use App\Http\Requests\SetRatingRequest;
+use App\Http\Requests\SetProjectRatingRequest;
 use App\Http\Requests\SetProjectStatusRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\SortableTable;
@@ -161,7 +161,7 @@ class ProjectsController extends Controller
     }
 
 
-    public function setRating(SetRatingRequest $request, Project $project)
+    public function setRating(SetProjectRatingRequest $request, Project $project)
     {
         $user = $request->user();
         if(!$this->accessible($user, $project, 'rate')) {
