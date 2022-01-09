@@ -31,7 +31,7 @@ class ProjectsSeeder extends Seeder
             'description' => 'description text',
             'video_url' => 'http://video.url',
             //'presentation_file' => '123',
-            'status' => 'draft'
+            'status' => 'validated'
         ]);
 
         Project::create([

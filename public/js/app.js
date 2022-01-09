@@ -26,9 +26,7 @@ function init() {
       el: tr
     };
     tr.addClass('active-row');
-    buttons.each(function () {
-      $(this).prop('disabled', false);
-    });
+    refreshButtons();
     var disabled_actions = tr.data('actions-disabled');
 
     if (typeof disabled_actions !== 'undefined') {
@@ -47,6 +45,17 @@ function init() {
       select(tr);
     });
   }); // buttons
+
+  function refreshButtons() {
+    buttons.each(function () {
+      var btn = $(this);
+      var action = btn.data('action');
+      var require_selection = action.indexOf(':id') !== -1;
+      $(this).prop('disabled', require_selection && !selection);
+    });
+  }
+
+  refreshButtons();
 
   function redirect(action, method) {
     //console.log(action, method, selection)

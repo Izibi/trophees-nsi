@@ -37,7 +37,9 @@
 
     <div class="mt-3 mb-3">
         @if(count($rows))
-            <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Edit selected project</button>
+            @if(Auth::user()->role == 'teacher')
+                <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Edit selected project</button>
+            @endif
             <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">View selected project</button>
         @endif
         @if(Auth::user()->role == 'teacher')

@@ -3,24 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Project;
 
 class ResultsController extends Controller
 {
     
-    public function index(Request $request) {
-        $q = $this->getProjectsQuery();
-        $projects = $q->paginate();
+    public function index() {
         return view('results.index', [
-            'projects' => $projects
+            'rows' => Project::whereNotNull('score_total')
+                ->orderBy('score_total', 'desc')
+                ->paginate()
         ]);
     }
 
-
-    private function getProjectsQuery() {
-        $q = DB::table('projects')
-            ->select(DB::raw('projects.id, projects.name'))
-            ->where('projects.status', '=', 'validated');
-        return $q;
-    }    
 }

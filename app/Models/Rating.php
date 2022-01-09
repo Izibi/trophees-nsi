@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Project;
+use Illuminate\Support\Facades\DB;
 
 class Rating extends Model
 {
@@ -38,5 +40,47 @@ class Rating extends Model
                 $rating->score_operationality +
                 $rating->score_ouverture;
         });
+
+        static::saved(function($rating) {
+            $rating->refreshProjectRatings($rating->project_id);
+        });
+    }
+
+
+
+
+
+    private function refreshProjectRatings($project_id) {
+        $project = Project::find($project_id);
+        $res = DB::table('ratings')
+            ->select(DB::raw('
+                avg(score_total) as score_total,
+                avg(score_idea) as score_idea,
+                avg(score_communication) as score_communication,
+                avg(score_presentation) as score_presentation,
+                avg(score_image) as score_image,
+                avg(score_logic) as score_logic,
+                avg(score_creativity) as score_creativity,
+                avg(score_organisation) as score_organisation,
+                avg(score_operationality) as score_operationality,
+                avg(score_ouverture) as score_ouverture,
+                count(*) as ratings_amount
+            '))
+            ->groupBy('project_id')
+            ->where('project_id', '=', $project_id)
+            ->first();
+
+        $project->score_total = $res->score_total;
+        $project->score_idea = $res->score_idea;
+        $project->score_communication = $res->score_communication;
+        $project->score_presentation = $res->score_presentation;
+        $project->score_image = $res->score_image;
+        $project->score_logic = $res->score_logic;
+        $project->score_creativity = $res->score_creativity;
+        $project->score_organisation = $res->score_organisation;
+        $project->score_operationality = $res->score_operationality;
+        $project->score_ouverture = $res->score_ouverture;
+        $project->ratings_amount = $res->ratings_amount;
+        $project->save();
     }
 }

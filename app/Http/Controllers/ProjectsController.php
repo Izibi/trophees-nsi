@@ -48,7 +48,7 @@ class ProjectsController extends Controller
         if($user->role == 'teacher') {
             $q->where('projects.user_id', '=', $user->id);
         } else if($user->role == 'jury') {
-            $q->where('projects.region_id', '=', $user->region_id)
+            $q->where('schools.region_id', '=', $user->region_id)
                 ->where('projects.status', '=', 'validated');
         }
         return $q;
@@ -212,7 +212,7 @@ class ProjectsController extends Controller
             case 'view':
                 return $user->role == 'admin' || 
                     ($user->role == 'teacher' && $user->id == $project->user_id) || 
-                    ($user->role == 'jury' && $user->region_id == $project->region_id);
+                    ($user->role == 'jury' && $user->region_id == $project->school->region_id);
                 break;
             case 'edit':
                 return $user->role == 'teacher' && $user->id == $project->user_id && $project->status == 'draft';
@@ -221,7 +221,7 @@ class ProjectsController extends Controller
                 return $user->role == 'admin';
                 break;
             case 'rate':
-                return $user->role == 'jury' && $user->region_id == $project->region_id && $project->status == 'validated';
+                return $user->role == 'jury' && $user->region_id == $project->school->region_id && $project->status == 'validated';
                 break;
         }
     }

@@ -18,7 +18,8 @@
             Total: <span id="rating-total">--</span> of <span id="rating-max">--</span>
         </div>
         <div class="mt-3">
-            {!! Form::submit('Submit') !!}
+            {!! Form::submit('Submit rating') !!}
+            <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
         </div>
     {!! Form::close() !!}   
 </div>
@@ -34,7 +35,6 @@
                 var el = $(this);
                 max += parseInt(el.find('option:last').val(), 10) || 0;
                 total += parseInt(el.val(), 10) || 0;
-                console.log(el.find('option:last').val())
             })
             $('#rating-total').text(total);
             $('#rating-max').text(max);

@@ -24,7 +24,8 @@ class UsersSeeder extends Seeder
             'id' => 100002091,
             'first_name' => 'nsi',
             'last_name' => 'jury',
-            'role' => 'jury'
+            'role' => 'jury',
+            'region_id' => 3
         ]);
         User::create([
             'id' => 100002092,
