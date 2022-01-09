@@ -12,6 +12,7 @@ use App\Models\Region;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StorePojectRequest;
 use App\Http\Requests\SetRatingRequest;
+use App\Http\Requests\SetProjectStatusRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\SortableTable;
 
@@ -175,8 +176,22 @@ class ProjectsController extends Controller
         }
         $rating->fill($request->all());
         $rating->save();
-        return redirect()->back()->withMessage('Rating updated');        
+        $url = $request->get('refer_page', '/projects');
+        return redirect($url)->withMessage('Rating updated');        
     }    
+
+
+    public function setStatus(SetProjectStatusRequest $request, Project $project)
+    {
+        $user = $request->user();
+        if(!$this->accessible($user, $project, 'change_status')) {
+            return $this->accessDeniedResponse();
+        }
+        $project->status = $request->get('status');
+        $project->save();
+        $url = $request->get('refer_page', '/projects');
+        return redirect($url)->withMessage('Status updated');        
+    }        
 
 
     public function destroy(Request $request, Project $project)

@@ -7,6 +7,6 @@
         </div>
         <div class="col-6">
             @include('projects.rating-form')
-        </div>        
+        </div>
     </div>
 @endsection
