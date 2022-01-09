@@ -1,15 +1,18 @@
 @extends('layout')
 
 @section('content')
-    @if(count($rows))
-        <div class="card mt-3 mb-3">
-            <div class="card-header">Projects</div>
 
+    <div class="card mt-3 mb-3">
+        <div class="card-header">
+            <strong>Projects</strong>
+            @include('projects.filter')
+        </div>
+        @if(count($rows))
             <div class="table-responsive">
                 <table class="table table-striped active-table">
                     <thead>
                         <tr>
-                            <th>{!! SortableTable::th('id', 'Number') !!}</th>
+                            <th>{!! SortableTable::th('id', 'ID') !!}</th>
                             <th>{!! SortableTable::th('name', 'Name') !!}</th>
                             <th>{!! SortableTable::th('school_name', 'School') !!}</th>
                             <th>{!! SortableTable::th('region_name', 'Region') !!}</th>
@@ -29,11 +32,13 @@
                     @endforeach
                 </table>
             </div>
-        </div>
-        @include('common.paginator')
-    @else
-        @include('common.empty_list')
-    @endif    
+        @else
+            @include('common.empty_list')
+        @endif    
+    </div>
+    
+    @include('common.paginator')
+
 
     <div class="mt-3 mb-3">
         @if(count($rows))

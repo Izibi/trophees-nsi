@@ -32,7 +32,7 @@ class ProjectsController extends Controller
 
     public function index(Request $request)
     {
-        $q = $this->getProjectsQuery($request->user());
+        $q = $this->getProjectsQuery($request);
         SortableTable::orderBy($q, $this->sort_fields);
         $projects = $q->paginate()->appends($request->all());
         return view('projects.index', [
@@ -41,11 +41,34 @@ class ProjectsController extends Controller
     }
 
 
-    private function getProjectsQuery($user) {
+    private function getProjectsQuery($request) {
+        $user = $request->user();
         $q = DB::table('projects')
             ->select(DB::raw('projects.id, projects.name, schools.name as school_name, regions.name as region_name, projects.created_at, projects.status'))
             ->leftJoin('schools', 'projects.school_id', '=', 'schools.id')
             ->leftJoin('regions', 'schools.region_id', '=', 'regions.id');
+        if($request->has('filter')) {
+            $filter_id = $request->get('filter_id');
+            if(strlen($filter_id) > 0) {
+                $q->where('projects.id', '=', $filter_id);
+            }
+            $filter_name = $request->get('filter_name');
+            if(strlen($filter_name) > 0) {
+                $q->where('projects.name', 'LIKE', '%'.$filter_name.'%');
+            }
+            $filter_school = $request->get('filter_school');
+            if(strlen($filter_school) > 0) {
+                $q->where('schools.name', 'LIKE', '%'.$filter_school.'%');
+            }
+            $filter_region = $request->get('filter_region');
+            if(strlen($filter_region) > 0) {
+                $q->where('regions.name', 'LIKE', '%'.$filter_region.'%');
+            }
+            $filter_status = $request->get('filter_status');
+            if(strlen($filter_status) > 0) {
+                $q->where('projects.status', '=', $filter_status);
+            }                        
+        }
         if($user->role == 'teacher') {
             $q->where('projects.user_id', '=', $user->id);
         } else if($user->role == 'jury') {
@@ -54,6 +77,7 @@ class ProjectsController extends Controller
         }
         return $q;
     }
+
 
 
     public function create(Request $request)

@@ -3,7 +3,9 @@
 @section('content')
     @if(count($rows))
         <div class="card mt-3 mb-3">
-            <div class="card-header">Users</div>
+            <div class="card-header">
+                <strong>Users</strong>
+            </div>
 
             <div class="table-responsive">
                 <table class="table table-striped active-table">
