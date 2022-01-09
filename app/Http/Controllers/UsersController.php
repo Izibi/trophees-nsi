@@ -20,7 +20,7 @@ class UsersController extends Controller
         'secondary_email' => 'users.secondary_email',
         'validated' => 'users.validated',
         'role' => 'users.role',
-        'region' => 'region.name',
+        'region' => 'regions.name',
         'created_at' => 'users.created_at',
         'last_login_at' => 'users.last_login_at'
     ];
