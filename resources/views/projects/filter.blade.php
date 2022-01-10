@@ -11,9 +11,15 @@
             @endif
             {!! Form::hidden('filter', '1') !!}            
             {!! Form::text('filter_id', 'Project ID') !!}
-            {!! Form::text('filter_name', 'Name') !!}
-            {!! Form::text('filter_school', 'School') !!}
-            {!! Form::text('filter_region', 'Region') !!}
+            {!! Form::text('filter_name', 'Name') !!}            
+
+            @if(Auth::user()->role == 'teacher' || Auth::user()->role == 'admin')
+                {!! Form::text('filter_school', 'School') !!}
+            @endif
+            @if(Auth::user()->role == 'admin')
+                {!! Form::text('filter_region', 'Region') !!}
+                {!! Form::text('filter_user_name', 'Teacher') !!}
+            @endif            
             {!! Form::select('filter_status', 'Status')->options([
                 '' => '',
                 'draft' => 'Draft',

@@ -2,7 +2,7 @@
 
 @section('content')
     <p>
-        {{ $user->first_name }} {{ $user->last_name }} 
+        {{ $user->name }}
     </p>
     <p>
         {{ $user->email }}

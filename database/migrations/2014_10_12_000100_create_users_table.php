@@ -18,8 +18,7 @@ class CreateUsersTable extends Migration
             $table->timestamps();            
             $table->string('email')->nullable();
             $table->string('secondary_email')->nullable();
-            $table->string('first_name')->nullable();
-            $table->string('last_name')->nullable();
+            $table->string('name')->nullable();
             $table->bigInteger('region_id')->unsigned()->nullable();
             $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade')->onUpdate('cascade');
             $table->boolean('validated')->default(false);

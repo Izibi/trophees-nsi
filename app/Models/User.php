@@ -15,8 +15,7 @@ class User extends Authenticatable
     protected $fillable = [
         'email',
         'secondary_email',
-        'first_name',
-        'last_name',
+        'name',
         'region_id',
         'validated',
         'role',        
@@ -24,11 +23,11 @@ class User extends Authenticatable
 
     public function getScreenNameAttribute()
     {
-        if($this->first_name || $this->last_name) {
-            return ($this->first_name ? $this->first_name.' ' : '').$this->last_name;
-        } else if($this->email) {
+        if(strlen($this->name) > 0) {
+            return $this->name;
+        } else if(strlen($this->email) > 0) {
             return $this->email;
-        } else if($this->secondary_email) {
+        } else if(strlen($this->secondary_email) > 0) {
             return $this->secondary_email;
         }
         return 'User #'.$this->id;

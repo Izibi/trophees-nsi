@@ -77,8 +77,7 @@ class OAuthCallbackController extends Controller
         return [
             'email' => $user_data['primary_email'],
             'secondary_email' => $user_data['secondary_email'],
-            'first_name' => $user_data['first_name'],
-            'last_name' => $user_data['last_name'],
+            'name' => $user_data['first_name'].' '.$user_data['last_name'],
             'validated' => isset($user_data['verification']['role']) && $user_data['verification']['role'] == 'VERIFIED'
         ];
     }

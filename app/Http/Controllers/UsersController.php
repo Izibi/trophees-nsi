@@ -14,8 +14,7 @@ class UsersController extends Controller
 
 
     private $sort_fields = [
-        'first_name' => 'users.first_name',
-        'last_name' => 'users.last_name',
+        'name' => 'users.name',
         'email' => 'users.email',
         'secondary_email' => 'users.secondary_email',
         'validated' => 'users.validated',
@@ -29,7 +28,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         $q = DB::table('users')
-            ->select(DB::raw('users.id, users.first_name, users.last_name, users.email, users.secondary_email, users.validated, users.role, regions.name as region_name, users.created_at, users.last_login_at'))
+            ->select(DB::raw('users.id, users.name, users.email, users.secondary_email, users.validated, users.role, regions.name as region_name, users.created_at, users.last_login_at'))
             ->leftJoin('regions', 'users.region_id', '=', 'regions.id');
         SortableTable::orderBy($q, $this->sort_fields);
         $users = $q->paginate()->appends($request->all());

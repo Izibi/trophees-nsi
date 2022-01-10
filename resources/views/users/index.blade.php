@@ -11,8 +11,7 @@
                 <table class="table table-striped active-table">
                     <thead>
                         <tr>
-                            <th>{!! SortableTable::th('last_name', 'Last name') !!}</th>
-                            <th>{!! SortableTable::th('first_name', 'First name') !!}</th>
+                            <th>{!! SortableTable::th('name', 'Name') !!}</th>
                             <th>{!! SortableTable::th('email', 'Professional email') !!}</th>
                             <th>{!! SortableTable::th('secondary_email', 'Secondary email') !!}</th>
                             <th>{!! SortableTable::th('validated', 'Teacher status') !!}</th>
@@ -24,8 +23,7 @@
                     </thead>
                     @foreach ($rows as $user)
                         <tr data-row-id="{{ $user->id }}">
-                            <td>{{ $user->last_name }}</td>
-                            <td>{{ $user->first_name }}</td>                            
+                            <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->secondary_email }}</td>
                             <td>{{ $user->validated ? 'validated' : 'not validated' }}</td>

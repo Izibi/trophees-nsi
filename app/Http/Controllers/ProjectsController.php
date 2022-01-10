@@ -19,21 +19,10 @@ use App\Helpers\SortableTable;
 class ProjectsController extends Controller
 {
 
-
-    private $sort_fields = [
-        'id' => 'projects.id',
-        'name' => 'projects.name',
-        'school_name' => 'schools.name',
-        'region_name' => 'regions.name',
-        'created_at' => 'projects.created_at',
-        'status' => 'projects.status'
-    ];
-
-
     public function index(Request $request)
     {
         $q = $this->getProjectsQuery($request);
-        SortableTable::orderBy($q, $this->sort_fields);
+        SortableTable::orderBy($q, $this->getSortFields($request));
         $projects = $q->paginate()->appends($request->all());
         return view('projects.index', [
             'rows' => $projects
@@ -41,12 +30,45 @@ class ProjectsController extends Controller
     }
 
 
+    private function getSortFields($request) {
+        $user_role = $request->user()->role;
+        $res = [];
+        $res['id'] = 'projects.id';
+        $res['name'] = 'projects.name';
+        if($user_role == 'teacher' || $user_role == 'admin') {
+            $res['school_name'] = 'schools.name';
+        }
+        if($user_role == 'admin') {
+            $res['region_name'] = 'regions.name';
+            $res['user_name'] = 'users.name';
+        }
+        $res['created_at'] = 'projects.created_at';
+        $res['status'] = 'projects.status';
+        return $res;        
+    }
+
+
     private function getProjectsQuery($request) {
         $user = $request->user();
-        $q = DB::table('projects')
-            ->select(DB::raw('projects.id, projects.name, schools.name as school_name, regions.name as region_name, projects.created_at, projects.status'))
-            ->leftJoin('schools', 'projects.school_id', '=', 'schools.id')
-            ->leftJoin('regions', 'schools.region_id', '=', 'regions.id');
+
+        $q = DB::table('projects');
+       
+        if($user->role == 'teacher') {
+            $q->select(DB::raw('projects.id, projects.name, schools.name as school_name, projects.created_at, projects.status'));
+            $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
+            $q->where('projects.user_id', '=', $user->id);
+        } else if($user->role == 'jury') {
+            $q->select(DB::raw('projects.id, projects.name, projects.created_at, projects.status'));
+            $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
+            $q->where('schools.region_id', '=', $user->region_id);
+            $q->where('projects.status', '=', 'validated');
+        } else if($user->role == 'admin') {
+            $q->select(DB::raw('projects.id, projects.name, schools.name as school_name, users.name as user_name, regions.name as region_name, projects.created_at, projects.status'));
+            $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
+            $q->leftJoin('users', 'projects.user_id', '=', 'users.id');
+            $q->leftJoin('regions', 'schools.region_id', '=', 'regions.id');            
+        }
+
         if($request->has('filter')) {
             $filter_id = $request->get('filter_id');
             if(strlen($filter_id) > 0) {
@@ -68,12 +90,6 @@ class ProjectsController extends Controller
             if(strlen($filter_status) > 0) {
                 $q->where('projects.status', '=', $filter_status);
             }                        
-        }
-        if($user->role == 'teacher') {
-            $q->where('projects.user_id', '=', $user->id);
-        } else if($user->role == 'jury') {
-            $q->where('schools.region_id', '=', $user->region_id)
-                ->where('projects.status', '=', 'validated');
         }
         return $q;
     }
