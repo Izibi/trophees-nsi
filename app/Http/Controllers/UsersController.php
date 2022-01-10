@@ -7,7 +7,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreUserRequest;
 use App\Helpers\SortableTable;
-
+use App\Models\Country;
+use App\Models\Region;
 
 class UsersController extends Controller
 {
@@ -19,6 +20,7 @@ class UsersController extends Controller
         'secondary_email' => 'users.secondary_email',
         'validated' => 'users.validated',
         'role' => 'users.role',
+        'country' => 'country.name',
         'region' => 'regions.name',
         'created_at' => 'users.created_at',
         'last_login_at' => 'users.last_login_at'
@@ -28,7 +30,8 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         $q = DB::table('users')
-            ->select(DB::raw('users.id, users.name, users.email, users.secondary_email, users.validated, users.role, regions.name as region_name, users.created_at, users.last_login_at'))
+            ->select(DB::raw('users.id, users.name, users.email, users.secondary_email, users.validated, users.role, countries.name as country_name, regions.name as region_name, users.created_at, users.last_login_at'))
+            ->leftJoin('countries', 'users.country_id', '=', 'countries.id')
             ->leftJoin('regions', 'users.region_id', '=', 'regions.id');
         SortableTable::orderBy($q, $this->sort_fields);
         $users = $q->paginate()->appends($request->all());
@@ -42,7 +45,9 @@ class UsersController extends Controller
     {
         return view('users.edit', [
             'refer_page' => $request->get('refer_page', '/users'),
-            'user' => $user
+            'user' => $user,
+            'countries' => Country::orderBy('name')->get(),
+            'regions' => Region::orderBy('country_id')->orderBy('name')->get()            
         ]);
     }
 

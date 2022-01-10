@@ -16,6 +16,7 @@ class User extends Authenticatable
         'email',
         'secondary_email',
         'name',
+        'country_id',
         'region_id',
         'validated',
         'role',        
@@ -33,6 +34,10 @@ class User extends Authenticatable
         return 'User #'.$this->id;
     }    
 
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }    
     
     public function region()
     {

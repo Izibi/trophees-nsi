@@ -10,11 +10,6 @@
     <p>
         {{ $user->secondary_email }}
     </p>
-    @if($user->region_id)
-        <p>
-            {{ $user->region->name }}
-        </p>    
-    @endif
 
 
     <div id="edit-form">
@@ -38,6 +33,10 @@
                     'admin' => 'Admin',
                 ]
             )!!}
+
+            {!! Form::select('country_id', 'Country', $countries) !!}
+            {!! Form::hidden('region_id') !!}
+            {!! Form::select('region', 'Region', []) !!}
            
         {!! Form::close() !!}
 
@@ -73,6 +72,9 @@
                     del_form.submit();
                 }
             });            
+
+            var regions = {!! json_encode($regions) !!}
+            RegionSelector($('#edit-form'), regions);            
         });
     </script>    
 @endsection

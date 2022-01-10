@@ -16,6 +16,7 @@
                             <th>{!! SortableTable::th('secondary_email', 'Secondary email') !!}</th>
                             <th>{!! SortableTable::th('validated', 'Teacher status') !!}</th>
                             <th>{!! SortableTable::th('role', 'Role') !!}</th>
+                            <th>{!! SortableTable::th('country', 'Country') !!}</th>
                             <th>{!! SortableTable::th('region', 'Region') !!}</th>
                             <th>{!! SortableTable::th('created_at', 'Registration date') !!}</th>
                             <th>{!! SortableTable::th('last_login_at', 'Last login date') !!}</th>
@@ -28,6 +29,7 @@
                             <td>{{ $user->secondary_email }}</td>
                             <td>{{ $user->validated ? 'validated' : 'not validated' }}</td>
                             <td>{{ $user->role }}</td>
+                            <td>{{ $user->country_name }}</td>
                             <td>{{ $user->region_name }}</td>
                             <td>{{ $user->created_at }}</td>
                             <td>{{ $user->last_login_at }}</td>
