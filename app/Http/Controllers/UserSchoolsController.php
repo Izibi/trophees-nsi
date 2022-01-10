@@ -55,9 +55,12 @@ class UserSchoolsController extends Controller
         if(strlen($q) > 0) {
             $like_q = '%'.$request->get('q').'%';
             $res = School::with('country', 'region')
-                ->where('name', 'LIKE', $like_q)
-                ->orWhere('city', 'LIKE', $like_q)
-                ->orWhere('zip', 'LIKE', $like_q)
+                ->where('hidden', '=', '0')
+                ->where(function($q) use($like_q) {
+                    $q->where('name', 'LIKE', $like_q)
+                        ->orWhere('city', 'LIKE', $like_q)
+                        ->orWhere('zip', 'LIKE', $like_q);
+                })
                 ->get();
         }
         return response()->json($res);
