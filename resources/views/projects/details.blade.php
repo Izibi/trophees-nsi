@@ -36,11 +36,19 @@
     <div class="border" style="height: 300px; background: center / contain no-repeat url({{ Storage::disk('uploads')->url($project->image_file) }})"></div>
 @endif            
 
+@if(!is_null($project->presentation_file))
+    <p>
+        <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}">Download presentation</a>
+    </p>
+@endif
+
 @if(!is_null($project->video_url))
     <p>
         Video: <a href="{{ $project->video_url }}">{{ $project->video_url }}</a>
     </p>
 @endif
+
+
 
 
 <p>
