@@ -17,7 +17,7 @@
         @if (Auth::check())
             @include('nav')
         @endif
-        <main class="container mt-3">
+        <main class="container mt-3 mb-5">
             @if (\Session::has('message'))
                 <div class="alert alert-success">{!! \Session::get('message') !!}</div>
             @endif            

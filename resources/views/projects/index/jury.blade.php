@@ -14,7 +14,6 @@
                             <th>{!! SortableTable::th('id', 'ID') !!}</th>
                             <th>{!! SortableTable::th('name', 'Name') !!}</th>
                             <th>{!! SortableTable::th('created_at', 'Submission date') !!}</th>
-                            <th>{!! SortableTable::th('status', 'Status') !!}</th>
                         </tr>
                     </thead>
                     @foreach ($rows as $project)
@@ -22,7 +21,6 @@
                             <td>{{ $project->id }}</td>
                             <td>{{ $project->name }}</td>
                             <td>{{ $project->created_at }}</td>
-                            <td>{{ $project->status }}</td>
                         </tr>
                     @endforeach
                 </table>
