@@ -11,7 +11,7 @@
                 <div class="row" id="section-schools-manager">
                     <div class="col-6">
                         <h2>My schools</h2>
-                        <div class="list-select" id="schools-my" style="height: 348px"></div>
+                        <div class="list-select" id="schools-my" style="height: 354px"></div>
                         <div class="mt-3">
                             <button class="btn btn-primary" id="btn-school-use">Use this school</button>
                             <button class="btn btn-primary" id="btn-school-delete">Delete from my schools</button>
