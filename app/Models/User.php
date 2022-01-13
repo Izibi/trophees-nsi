@@ -16,10 +16,11 @@ class User extends Authenticatable
         'email',
         'secondary_email',
         'name',
+        'login',
         'country_id',
         'region_id',
         'validated',
-        'role',        
+        'role',
     ];
 
     public function getScreenNameAttribute()

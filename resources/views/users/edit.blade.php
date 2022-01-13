@@ -1,18 +1,29 @@
 @extends('layout')
 
 @section('content')
-    <p>
-        {{ $user->name }}
-    </p>
-    <p>
-        {{ $user->email }}
-    </p>
-    <p>
-        {{ $user->secondary_email }}
-    </p>
+    <table class="table table-bordered">
+        <tbody>
+        <tr>
+            <td>Name</td>
+            <td>{{ $user->name }}</td>
+        </tr>
+        <tr>
+            <td>Login</td>
+            <td>{{ $user->login }} </td>
+        </tr>
+        <tr>            
+            <td>Professional email</td>
+            <td>{{ $user->email }}</td>
+        </tr>
+        <tr>            
+            <td>Secondary email</td>
+            <td>{{ $user->secondary_email }}</td>
+        </tr>
+        </tbody>
+    </table>
 
 
-    <div id="edit-form">
+    <div id="edit-form" class="mt-3">
         {!! Form::open()
             ->route('users.update', ['user' => $user]) 
             ->fill($user)            
