@@ -7,16 +7,7 @@
             <div class="navbar-collapse collapse" id="navbar-menu">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="/presentation">Presentation</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/reglament">Reglament</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="/projects">Projects</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/results">Results</a>
                     </li>
                     @if(Auth::user()->role == 'admin')
                         <li class="nav-item">

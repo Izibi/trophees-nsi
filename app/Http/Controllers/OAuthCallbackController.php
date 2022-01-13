@@ -29,7 +29,7 @@ class OAuthCallbackController extends Controller
         } catch(\Exception $e) {
             return redirect('/')->with('error_message', $e->getMessage());
         }
-        return redirect('/presentation');
+        return redirect('/projects');
     }
 
 
