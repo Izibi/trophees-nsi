@@ -123,16 +123,7 @@ class ProjectsController extends Controller
         if($request->has('finalize')) {
             $project->status = 'finalized';
         }        
-        if($request->hasFile('presentation_file')) {
-            $file = $request->file('presentation_file');
-            $project->presentation_file = $file->hashName();
-            $file->storeAs('/', $project->presentation_file, 'uploads');
-        }
-        if($request->hasFile('image_file')) {
-            $file = $request->file('image_file');
-            $project->image_file = $file->hashName();
-            $file->storeAs('/', $project->image_file, 'uploads');
-        }        
+        $project->uploadFiles($request);
         $project->user_id = $user->id;
         $project->save();
         $url = $request->get('refer_page', '/projects');
@@ -183,17 +174,7 @@ class ProjectsController extends Controller
         if($request->has('finalize')) {
             $project->status = 'finalized';
         }
-        if($request->hasFile('presentation_file')) {
-            $file = $request->file('presentation_file');
-            $project->presentation_file = $file->hashName();
-            $file->storeAs('/', $project->presentation_file, 'uploads');
-        }
-        if($request->hasFile('image_file')) {
-            $file = $request->file('image_file');
-            $project->image_file = $file->hashName();
-            $file->storeAs('/', $project->image_file, 'uploads');
-        }
-
+        $project->uploadFiles($request);
         $project->fill($request->all());
         $project->save();
         $url = $request->get('refer_page', '/projects');
@@ -243,7 +224,6 @@ class ProjectsController extends Controller
         $url = $request->get('refer_page', '/projects');
         return redirect($url)->withMessage('Project deleted');
     }
-
 
 
     private function getUserSchools($user) {

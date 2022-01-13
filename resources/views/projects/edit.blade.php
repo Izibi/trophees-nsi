@@ -34,20 +34,26 @@
 
 
             <div class="row">
-                <div class="col-6">
-                    {!! Form::file('presentation_file', 'Presentation PDF')->attrs(['accept' => '.pdf']) !!}
-                    @if($project && !is_null($project->presentation_file))
-                        <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">View uploaded file</a>
-                    @endif
-                </div>
-                <div class="col-6">
+                <div class="col-4">
                     {!! Form::file('image_file', 'Image')->attrs(['accept' => '.jpg,.jpeg,.png,.gif']) !!}
                     @if($project && !is_null($project->image_file))
                         <a href="{{ Storage::disk('uploads')->url($project->image_file) }}" target="_blank" class="border d-block" 
                             style="width: 160px; height: 120px; background: center / contain no-repeat url({{ Storage::disk('uploads')->url($project->image_file) }})">
                         </a>
                     @endif            
+                </div>                
+                <div class="col-4">
+                    {!! Form::file('presentation_file', 'Presentation PDF')->attrs(['accept' => '.pdf']) !!}
+                    @if($project && !is_null($project->presentation_file))
+                        <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">Download</a>
+                    @endif
                 </div>
+                <div class="col-4">
+                    {!! Form::file('zip_file', 'Zip of project')->attrs(['accept' => '.zip']) !!}
+                    @if($project && !is_null($project->zip_file))
+                        <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">Download</a>
+                    @endif
+                </div>                
             </div>
 
             <div class="mt-5">
