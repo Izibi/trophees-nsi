@@ -39,7 +39,7 @@
 <div class="row mt-3">
     @if(!is_null($project->presentation_file))
         <div class="col-6">
-            <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}">
+            <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">
                 <i class="icon-file-pdf"></i>
                 PDF presentation
             </a>
@@ -47,7 +47,7 @@
     @endif
     @if(!is_null($project->zip_file))
         <div class="col-6">
-            <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}">
+            <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">
                 <i class="icon-file-archive"></i>
                 ZIP file
             </a>
