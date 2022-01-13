@@ -1,3 +1,5 @@
 
 .icon-down:before { content: '\f175'; } /* '' */
 .icon-up:before { content: '\f176'; } /* '' */
+.icon-file-pdf:before { content: '\f1c1'; } /* '' */
+.icon-file-archive:before { content: '\f1c6'; } /* '' */

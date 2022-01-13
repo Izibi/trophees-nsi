@@ -34,7 +34,7 @@ class StorePojectRequest extends FormRequest
             'zip_file' => 'required_if:finalize,1|mimes:zip',
             'image_file' => 'required_if:finalize,1|mimes:jpg,jpeg,png,gif',
             'description' => 'required_if:finalize,1',
-            'video_url' => 'required_if:finalize,1',
+            'video' => 'required_if:finalize,1',
         ];
     }
 }

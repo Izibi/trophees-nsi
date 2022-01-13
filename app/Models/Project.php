@@ -18,7 +18,7 @@ class Project extends Model
         'team_boys',
         'team_not_provided',
         'description',
-        'video_url'
+        'video'
     ];
 
     public $upload_attributes = [

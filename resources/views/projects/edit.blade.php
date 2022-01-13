@@ -30,7 +30,8 @@
 
             {!! Form::textarea('description', 'Description') !!}
 
-            {!! Form::urlInput('video_url', 'Video')->help('Please upload your video to freetube and put link here') !!}
+            {!! Form::textarea('video', 'Video')
+                ->help('Please upload your video to <a href="https://peertube.fr" target="_blank">peertube.fr</a> and copy/paste embed code here.') !!}
 
 
             <div class="row">
