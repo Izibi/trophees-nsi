@@ -24,7 +24,7 @@ class ProjectsController extends Controller
         $q = $this->getProjectsQuery($request);
         SortableTable::orderBy($q, $this->getSortFields($request));
         $projects = $q->paginate()->appends($request->all());
-        return view('projects.index', [
+        return view('projects.index.'.$request->user()->role, [
             'rows' => $projects
         ]);
     }
@@ -144,7 +144,7 @@ class ProjectsController extends Controller
         if($user->role == 'jury') {
             $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
         }
-        return view('projects.show-'.$user->role, $data);
+        return view('projects.show.'.$user->role, $data);
     }
 
 
