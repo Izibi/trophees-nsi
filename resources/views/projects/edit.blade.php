@@ -49,7 +49,8 @@
                     @endif
                 </div>
                 <div class="col-4">
-                    {!! Form::file('zip_file', 'Zip of project')->attrs(['accept' => '.zip']) !!}
+                    {!! Form::file('zip_file', 'Zip of project')->attrs(['accept' => '.zip'])
+                        ->help('Should include executable, source codes and documentation. See <a href="#">here</a> for details.') !!}
                     @if($project && !is_null($project->zip_file))
                         <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">Download</a>
                     @endif
