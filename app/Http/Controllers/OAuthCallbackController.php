@@ -41,9 +41,6 @@ class OAuthCallbackController extends Controller
             return redirect('/logout');
         }
         $this->refreshUser($user_data);
-        $user = User::find($user_data['id']);
-        $user->fill($user_data);
-        $user->save();
         $url = $request->session()->pull('refer_page', '/');
         return redirect($url);
     }
