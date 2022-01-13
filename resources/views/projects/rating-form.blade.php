@@ -12,11 +12,39 @@
         {!! Form::select('score_organisation', 'Organisation')->options(Rating::rangeOptions(5))->help('Composition de l\'équipe/tâche/répartition<br>Dont 2 points pour la mixité dans l\'équipe') !!}
         {!! Form::select('score_operationality', 'Fonctionnement et opérationnalité')->options(Rating::rangeOptions(5)) !!}
         {!! Form::select('score_ouverture', 'Ouverture')->options(Rating::rangeOptions(3))->help('Idées d\'améliorations, de diffusion et pistes de développement') !!}
-
-
         <div class="mt-3">
             Total: <span id="rating-total">--</span> of <span id="rating-max">--</span>
         </div>
+        <div class="mt-3">
+            To consider for awards:
+            <div class="row">
+                <div class="col-4">
+                    <input type="hidden" name="cb_award_mixed" value="0"/>
+                    {!! Form::checkbox('cb_award_mixed', 'Mixité')->checked($rating->award_mixed) !!}
+                </div>
+                <div class="col-4">
+                    <input type="hidden" name="cb_award_citizenship" value="0"/>
+                    {!! Form::checkbox('cb_award_citizenship', 'Citoyenneté')->checked($rating->award_citizenship) !!}
+                </div>
+                <div class="col-4">
+                    <input type="hidden" name="cb_award_engineering" value="0"/>
+                    {!! Form::checkbox('cb_award_engineering', 'Ingénierie')->checked($rating->award_engineering) !!}
+                </div>
+                <div class="col-4">
+                    <input type="hidden" name="cb_award_heart" value="0"/>
+                    {!! Form::checkbox('cb_award_heart', 'Coup de coeur')->checked($rating->award_heart) !!}
+                </div>
+                <div class="col-4">
+                    <input type="hidden" name="cb_award_originality" value="0"/>
+                    {!! Form::checkbox('cb_award_originality', 'Originalité')->checked($rating->award_originality) !!}
+                </div>                                                                
+            </div>
+        </div>
+
+        <div class="mt-3">
+            {!! Form::textarea('comment', 'Comment') !!}
+        </div>
+
         <div class="mt-3">
             {!! Form::submit('Submit rating') !!}
             <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>

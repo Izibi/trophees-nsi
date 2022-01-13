@@ -18,7 +18,9 @@ class Project extends Model
         'team_boys',
         'team_not_provided',
         'description',
-        'video'
+        'video',
+        'tested_by_teacher',
+        'cb_tested_by_teacher'
     ];
 
     public $upload_attributes = [
@@ -75,6 +77,11 @@ class Project extends Model
     public function grade()
     {
         return $this->belongsTo(Grade::class);
+    }    
+
+
+    public function setCbTestedByTeacherAttribute($v) {
+        $this->attributes['tested_by_teacher'] = !empty($v);
     }    
 
 }
