@@ -1,13 +1,13 @@
 @extends('layout')
 
 @section('content')
-    
+
 <h1>Edit school</h1>
-    
+
     <div id="edit-form">
         {!! Form::open()
             ->multipart()
-            ->route('schools.update', ['school' => $school]) 
+            ->route('schools.update', ['school' => $school])
             ->fill($school)
             !!}
             {{ method_field('PUT') }}
@@ -18,11 +18,10 @@
             {!! Form::text('city', 'Name') !!}
             {!! Form::text('zip', 'Name') !!}
 
-            {!! Form::select('country_id', 'Country', $countries) !!}
-            {!! Form::hidden('region_id') !!}
-            {!! Form::select('region', 'Region', []) !!}
+            {!! Form::select('region_id', 'Region', $regions) !!}
+            {!! Form::select('country_id', 'Country', [null => ''] + $countries->pluck('name', 'id')->toArray()) !!}
             {!! Form::text('uai', 'UAI') !!}
-        {!! Form::close() !!}   
+        {!! Form::close() !!}
         <div class="mt-5">
             <a class="btn btn-primary" id="btn-ok" href="#">Ok</a>
             <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
@@ -35,13 +34,17 @@
         {!! Form::open()->route('schools.destroy', ['school' => $school]) !!}
         {{ method_field('DELETE') }}
         {!! Form::hidden('refer_page', $refer_page) !!}
-        {!! Form::close() !!}   
+        {!! Form::close() !!}
     </div>
 
     <script>
+        window.regions = {!! json_encode($regions) !!}
+        window.countries = {!! json_encode($countries) !!}
+
+
         $(document).ready(function() {
             var form = $('#edit-form>form').first();
-           
+
             $('#btn-ok').click(function(e) {
                 e.preventDefault();
                 form.submit();
@@ -53,10 +56,8 @@
                     var del_form = $('#delete-form>form').first();
                     del_form.submit();
                 }
-            });  
-            
-            var regions = {!! json_encode($regions) !!}
-            RegionSelector($('#edit-form'), regions);
+            });
+            RegionSelector($('#edit-form'));
         });
     </script>
 @endsection

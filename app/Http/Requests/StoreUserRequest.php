@@ -25,7 +25,8 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'validated' => 'required|in:0,1',
-            'role' => 'required|in:teacher,jury,admin'
+            'role' => 'required|in:teacher,jury,admin',
+            'country_id' => 'required_with:region_id'
         ];
     }
 }

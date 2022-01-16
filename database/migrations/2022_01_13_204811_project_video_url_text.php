@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class ProjectVideoUrlText extends Migration
 {
@@ -31,6 +32,7 @@ class ProjectVideoUrlText extends Migration
         Schema::table('projects', function (Blueprint $table) {
             $table->renameColumn('video', 'video_url');
         });
+        DB::table('projects')->where(DB::raw('LENGTH(video_url) > 255'))->update(['video_url' => '']);
         Schema::table('projects', function (Blueprint $table) {
             $table->string('video_url')->nullable()->change();
         });

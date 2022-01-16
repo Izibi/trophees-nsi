@@ -130,36 +130,49 @@ window.overlay = {
   \********************************************/
 /***/ (() => {
 
-window.RegionSelector = function (form, regions) {
-  var region_id_inp = form.find('input[name=region_id]').first();
-  var region_sel = form.find('select[name=region]').first();
-  var country_id_sel = form.find('select[name=country_id]').first();
-  var initial_region_id = region_id_inp.val();
+// reqire window.regions and window.countries arrays
+window.RegionSelector = function (form) {
+  var region_sel = form.find('select[name=region_id]').first();
+  var country_sel = form.find('select[name=country_id]').first();
+  var main_country_id = window.regions.find(function (r) {
+    return r.country_id !== null;
+  }).id;
 
-  function refreshRegions() {
-    region_sel.empty();
-    var country_id = country_id_sel.val();
-    var option;
-
-    for (var i = 0; i < regions.length; i++) {
-      if (regions[i].country_id != country_id) {
-        continue;
-      }
-
-      option = $('<option/>').attr('value', regions[i].id).text(regions[i].name);
-      region_sel.append(option);
-    }
+  function getRegion(id) {
+    return window.regions.find(function (r) {
+      return r.id == id;
+    });
   }
 
-  country_id_sel.on('change', function () {
-    refreshRegions();
-    region_id_inp.val(region_sel.val());
-  });
-  refreshRegions();
-  region_sel.val(region_id_inp.val());
+  function onRegionChange(initial) {
+    var region_id = region_sel.val();
+    var region = getRegion(region_id);
+    var is_main_country = region && region.country_id !== null;
+
+    if (!initial && region) {
+      country_sel.val(is_main_country ? region.country_id : '');
+    }
+
+    country_sel.find('option[value="' + main_country_id + '"]').prop('disabled', !is_main_country);
+    country_sel.attr('readonly', is_main_country);
+    country_sel.closest('.form-group').toggle(region && !is_main_country);
+  }
+
   region_sel.on('change', function () {
-    region_id_inp.val(region_sel.val());
+    onRegionChange();
   });
+  onRegionChange(true);
+  return {
+    reset: function reset() {
+      if (!window.regions.length) {
+        return;
+      }
+
+      var r = window.regions[0];
+      region_sel.val(r.id);
+      onRegionChange();
+    }
+  };
 };
 
 /***/ }),
@@ -171,7 +184,14 @@ window.RegionSelector = function (form, regions) {
 /***/ (() => {
 
 function formatSchoolName(school) {
-  return school.name + ', ' + school.zip + ' ' + school.city + ', ' + school.country.name;
+  var res = school.name + ', ' + school.zip + ' ' + school.city + ', ';
+
+  if (school.region.country_id !== null) {
+    res += school.region.name + ', ';
+  }
+
+  res += school.country.name;
+  return res;
 }
 
 function UserSchools() {
@@ -371,7 +391,7 @@ function FormSchool(options) {
   function _reset() {
     resetErrors();
     resetValues();
-    refreshRegions();
+    region_selector.reset();
   }
 
   function collectFormData() {
@@ -412,33 +432,31 @@ function FormSchool(options) {
     });
   }
 
-  var region_sel = $('#section-schools-editor select[name=region_id]').first();
-  var country_sel = $('#section-schools-editor select[name=country_id]').first();
-
-  function refreshRegions() {
-    region_sel.empty();
-    var country_id = country_sel.val();
-    var first_region_id = null;
-    var option;
-
-    for (var i = 0; i < regions.length; i++) {
-      if (regions[i].country_id != country_id) {
-        continue;
+  var region_selector = RegionSelector($('#section-schools-editor'));
+  /*
+      var region_sel = $('#section-schools-editor select[name=region_id]').first();
+      var country_sel = $('#section-schools-editor select[name=country_id]').first();
+      function refreshRegions() {
+          region_sel.empty();
+          var country_id = country_sel.val();
+          var first_region_id = null;
+          var option;
+          for(var i=0; i<regions.length; i++) {
+              if(regions[i].country_id != country_id) {
+                  continue;
+              }
+              if(first_region_id === null) {
+                  first_region_id = regions[i].id;
+              }
+              option = $('<option/>').attr('value', regions[i].id).text(regions[i].name);
+              region_sel.append(option);
+          }
+          region_sel.val(first_region_id);
       }
+      country_sel.on('change', refreshRegions);
+      refreshRegions();
+  */
 
-      if (first_region_id === null) {
-        first_region_id = regions[i].id;
-      }
-
-      option = $('<option/>').attr('value', regions[i].id).text(regions[i].name);
-      region_sel.append(option);
-    }
-
-    region_sel.val(first_region_id);
-  }
-
-  country_sel.on('change', refreshRegions);
-  refreshRegions();
   return {
     reset: function reset() {
       _reset();
@@ -502,9 +520,7 @@ window.SchoolsManager = function () {
       modal_el.modal('hide');
     }
   };
-}; //schools_manager.show();    
-//$('#section-schools-manager').hide();
-//$('#section-schools-editor').show();
+};
 
 /***/ }),
 

@@ -1,5 +1,10 @@
 function formatSchoolName(school) {
-    return school.name + ', ' + school.zip + ' ' + school.city + ', ' + school.country.name;
+    var res = school.name + ', ' + school.zip + ' ' + school.city + ', ';
+    if(school.region.country_id !== null) {
+        res += school.region.name + ', ';
+    }
+    res += school.country.name;
+    return res;
 }
 
 
@@ -126,7 +131,7 @@ function SearchSchool() {
             var id = $(this).data('school-id');
             select(id);
         })
-    }        
+    }
 
     function load(q) {
         select(null);
@@ -172,7 +177,7 @@ function FormSchool(options) {
 
     function hideGroupError(form_group) {
         form_group.find('.invalid-feedback').remove();
-        form_group.find('.form-control').removeClass('is-invalid');                
+        form_group.find('.form-control').removeClass('is-invalid');
     }
 
     function displayErrors(errors) {
@@ -208,7 +213,7 @@ function FormSchool(options) {
     function reset() {
         resetErrors()
         resetValues();
-        refreshRegions();
+        region_selector.reset();
     }
 
 
@@ -233,7 +238,7 @@ function FormSchool(options) {
             success: function(data) {
                 overlay.hide();
                 if(data.success) {
-                    reset();                        
+                    reset();
                     options.onCreate(data.schools);
                 }
             },
@@ -247,7 +252,8 @@ function FormSchool(options) {
         });
     }
 
-
+    var region_selector = RegionSelector($('#section-schools-editor'));
+/*
     var region_sel = $('#section-schools-editor select[name=region_id]').first();
     var country_sel = $('#section-schools-editor select[name=country_id]').first();
     function refreshRegions() {
@@ -269,7 +275,7 @@ function FormSchool(options) {
     }
     country_sel.on('change', refreshRegions);
     refreshRegions();
-    
+*/
     return {
 
         reset: function() {
@@ -297,13 +303,13 @@ window.SchoolsManager = function() {
             $('#section-schools-manager').show();
         }
     });
-    
+
 
     // schools manager section
     $('#btn-school-use').on('click', function() {
         user_schools.refreshParentSelect();
         modal_el.modal('hide');
-    })        
+    })
 
     $('#btn-school-search').on('click', function() {
         var q = $('#inp-school-search-q').val().trim();
@@ -319,7 +325,7 @@ window.SchoolsManager = function() {
 
     $('#btn-school-delete').on('click', function() {
         user_schools.removeSeleted();
-    });        
+    });
 
 
     // create school editor section
@@ -350,8 +356,3 @@ window.SchoolsManager = function() {
         }
     }
 }
-
-
-//schools_manager.show();    
-//$('#section-schools-manager').hide();
-//$('#section-schools-editor').show();

@@ -15,27 +15,39 @@ class RegionsSeeder extends Seeder
      */
     public function run()
     {
-        $countries = Country::get();
-        Region::create([
-            'country_id' => $countries[0]->id,
-            'name' => 'Bourgogne'
-        ]);
-        Region::create([
-            'country_id' => $countries[0]->id,
-            'name' => 'Aix-Marseille'
-        ]);
+        $regions = [
+            'Auvergne-Rhône-Alpes',
+            'Bourgogne-Franche-Comté',
+            'Bretagne',
+            'Centre-Val de Loire',
+            'Corse',
+            'Grand Est',
+            'Guadeloupe',
+            'Guyane',
+            'Hauts-de-France',
+            'Réunion',
+            'Martinique',
+            'Mayotte',
+            'Normandie',
+            'Nouvelle-Aquitaine',
+            'Occitanie',
+            'Pays de la Loire',
+            'Provence-Alpes-Côte d\'Azur',
+            'Paris',
+            'Versailles',
+            'Créteil'
+        ];
+
+        $fr = Country::find(1);
+        foreach($regions as $region) {
+            Region::create([
+                'name' => $region,
+                'country_id' => $fr->id
+            ]);
+        }
 
         Region::create([
-            'country_id' => $countries[1]->id,
-            'name' => 'Test region 1'
-        ]);
-        Region::create([
-            'country_id' => $countries[1]->id,
-            'name' => 'Test region 2'
-        ]);
-        Region::create([
-            'country_id' => $countries[1]->id,
-            'name' => 'Test region 3'
+            'name' => 'Étranger (AEFE)'
         ]);
     }
 }

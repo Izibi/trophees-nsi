@@ -1,33 +1,50 @@
-window.RegionSelector = function(form, regions) {
+// reqire window.regions and window.countries arrays
+
+window.RegionSelector = function(form) {
 
 
-    var region_id_inp = form.find('input[name=region_id]').first();
-    var region_sel = form.find('select[name=region]').first();
-    var country_id_sel = form.find('select[name=country_id]').first();
+    var region_sel = form.find('select[name=region_id]').first();
+    var country_sel = form.find('select[name=country_id]').first();
 
-    var initial_region_id = region_id_inp.val();    
+    var main_country_id = window.regions.find(function(r) {
+        return r.country_id !== null;
+    }).id;
 
-    function refreshRegions() {
-        region_sel.empty();
-        var country_id = country_id_sel.val();
-        var option;
-        for(var i=0; i<regions.length; i++) {
-            if(regions[i].country_id != country_id) {
-                continue;
-            }
-            option = $('<option/>').attr('value', regions[i].id).text(regions[i].name);
-            region_sel.append(option);
-        }
+    function getRegion(id) {
+        return window.regions.find(function(r) {
+            return r.id == id;
+        })
     }
-    country_id_sel.on('change', function() {
-        refreshRegions();
-        region_id_inp.val(region_sel.val());
-    });
-    refreshRegions();
-    region_sel.val(region_id_inp.val());
+
+    function onRegionChange(initial) {
+        var region_id  = region_sel.val();
+        var region = getRegion(region_id);
+        var is_main_country = region && region.country_id !== null;
+        if(!initial && region) {
+            country_sel.val(is_main_country ? region.country_id : '');
+        }
+        country_sel.find('option[value="' + main_country_id + '"]').prop('disabled', !is_main_country);
+        country_sel.attr('readonly', is_main_country);
+        country_sel.closest('.form-group').toggle(region && !is_main_country);
+    }
+
 
     region_sel.on('change', function() {
-        region_id_inp.val(region_sel.val());
-    })
+        onRegionChange();
+    });
+    onRegionChange(true);
+
+
+    return {
+
+        reset: function() {
+            if(!window.regions.length) {
+                return;
+            }
+            var r = window.regions[0];
+            region_sel.val(r.id);
+            onRegionChange();
+        }
+    }
 
 }

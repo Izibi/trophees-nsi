@@ -33,6 +33,6 @@ class UsersSeeder extends Seeder
             'name' => 'nsi admin',
             'role' => 'admin'
         ]);
-        
+
     }
 }

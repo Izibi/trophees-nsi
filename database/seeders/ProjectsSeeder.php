@@ -29,7 +29,7 @@ class ProjectsSeeder extends Seeder
             'team_boys' => 2,
             'team_not_provided' => 3,
             'description' => 'description text',
-            'video' => '<iframe width="560" height="315" sandbox="allow-same-origin allow-scripts allow-popups" title="Cette erreur idiote qu&#39;on fait tous au sujet des Bogdanoff... • la parenthèse - #2" src="https://peertube.fr/videos/embed/33c242ed-566c-49a0-a2d8-2f332c6dcdd0" frameborder="0" allowfullscreen></iframe>',
+            'video' => 'https://peertube.fr/w/kkGMgK9ZtnKfYAgnEtQxbv',
             //'presentation_file' => '123',
             'status' => 'validated'
         ]);
@@ -43,9 +43,9 @@ class ProjectsSeeder extends Seeder
             'team_boys' => 2,
             'team_not_provided' => 1,
             'description' => 'description text',
-            'video' => '<iframe width="560" height="315" sandbox="allow-same-origin allow-scripts allow-popups" title="Cette erreur idiote qu&#39;on fait tous au sujet des Bogdanoff... • la parenthèse - #2" src="https://peertube.fr/videos/embed/33c242ed-566c-49a0-a2d8-2f332c6dcdd0" frameborder="0" allowfullscreen></iframe>',
+            'video' => 'https://peertube.fr/w/kkGMgK9ZtnKfYAgnEtQxbv',
             //'presentation_file' => '123',
-            'status' => 'draft'
+            'status' => 'finalized'
         ]);
 
         Project::create([
@@ -57,9 +57,9 @@ class ProjectsSeeder extends Seeder
             'team_boys' => 1,
             'team_not_provided' => 1,
             'description' => 'description text',
-            'video' => '<iframe width="560" height="315" sandbox="allow-same-origin allow-scripts allow-popups" title="Cette erreur idiote qu&#39;on fait tous au sujet des Bogdanoff... • la parenthèse - #2" src="https://peertube.fr/videos/embed/33c242ed-566c-49a0-a2d8-2f332c6dcdd0" frameborder="0" allowfullscreen></iframe>',
+            'video' => 'https://peertube.fr/w/kkGMgK9ZtnKfYAgnEtQxbv',
             //'presentation_file' => '123',
             'status' => 'draft'
-        ]);        
+        ]);
     }
 }

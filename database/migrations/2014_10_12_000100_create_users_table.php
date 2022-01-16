@@ -15,13 +15,13 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();            
-            $table->string('email')->nullable();
-            $table->string('secondary_email')->nullable();
-            $table->string('name')->nullable();
-            $table->bigInteger('country_id')->unsigned()->nullable();
-            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade')->onUpdate('cascade');            
-            $table->bigInteger('region_id')->unsigned()->nullable();
+            $table->timestamps();
+            $table->string('email')->nullable()->index();
+            $table->string('secondary_email')->nullable()->index();
+            $table->string('name')->nullable()->index();
+            $table->bigInteger('country_id')->unsigned()->nullable()->index();
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade')->onUpdate('cascade');
+            $table->bigInteger('region_id')->unsigned()->nullable()->index();
             $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade')->onUpdate('cascade');
             $table->boolean('validated')->default(false);
             $table->enum('role', ['teacher', 'jury', 'admin'])->default('teacher');

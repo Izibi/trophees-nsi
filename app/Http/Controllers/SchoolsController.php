@@ -42,7 +42,7 @@ class SchoolsController extends Controller
     {
         return view('schools.edit', [
             'countries' => Country::orderBy('name')->get(),
-            'regions' => Region::orderBy('country_id')->orderBy('name')->get(),
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
             'refer_page' => $request->get('refer_page', '/projects'),
             'school' => $school
         ]);
@@ -54,7 +54,7 @@ class SchoolsController extends Controller
         $school->fill($request->all());
         $school->save();
         $url = $request->get('refer_page', '/schools');
-        return redirect($url)->withMessage('School updated');        
+        return redirect($url)->withMessage('School updated');
     }
 
 
@@ -63,8 +63,8 @@ class SchoolsController extends Controller
         $school->hidden = 1;
         $school->save();
         $url = $request->get('refer_page', '/school');
-        return redirect($url)->withMessage('School updated');        
-    }    
+        return redirect($url)->withMessage('School updated');
+    }
 
 
     public function destroy(Request $request, School $school)

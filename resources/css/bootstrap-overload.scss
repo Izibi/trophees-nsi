@@ -6,3 +6,9 @@
 .card .table:last-child {
     margin-bottom: 0;
 }
+
+
+select[readonly] {
+    pointer-events: none;
+    touch-action: none;
+}

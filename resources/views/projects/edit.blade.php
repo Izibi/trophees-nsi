@@ -4,8 +4,8 @@
     <div id="edit-form">
         {!! Form::open()
             ->multipart()
-            ->route($project ? 'projects.update' : 'projects.store', ['project' => $project]) 
-            ->fill($project)            
+            ->route($project ? 'projects.update' : 'projects.store', ['project' => $project])
+            ->fill($project)
             !!}
             {{ $project ? method_field('PUT') : '' }}
 
@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-4">
                     {!! Form::text('team_not_provided', 'Not provided')->wrapperAttrs(['class' => 'mb-0']) !!}
-                </div>        
+                </div>
             </div>
             <p><small class="form-text text-muted">We have a separate prize for girls to encourage female participation.</small></p>
 
@@ -38,11 +38,11 @@
                 <div class="col-4">
                     {!! Form::file('image_file', 'Image')->attrs(['accept' => '.jpg,.jpeg,.png,.gif']) !!}
                     @if($project && !is_null($project->image_file))
-                        <a href="{{ Storage::disk('uploads')->url($project->image_file) }}" target="_blank" class="border d-block" 
+                        <a href="{{ Storage::disk('uploads')->url($project->image_file) }}" target="_blank" class="border d-block"
                             style="width: 160px; height: 120px; background: center / contain no-repeat url({{ Storage::disk('uploads')->url($project->image_file) }})">
                         </a>
-                    @endif            
-                </div>                
+                    @endif
+                </div>
                 <div class="col-4">
                     {!! Form::file('presentation_file', 'Presentation PDF')->attrs(['accept' => '.pdf']) !!}
                     @if($project && !is_null($project->presentation_file))
@@ -55,7 +55,7 @@
                     @if($project && !is_null($project->zip_file))
                         <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">Download</a>
                     @endif
-                </div>                
+                </div>
             </div>
 
             <input type="hidden" name="cb_tested_by_teacher" value="0"/>
@@ -70,15 +70,9 @@
                 @endif
                 <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
             </div>
-        {!! Form::close() !!}   
+        {!! Form::close() !!}
     </div>
 
-
-    <script>
-        window.user_schools = {!! json_encode($schools['data']) !!}
-        window.regions = {!! json_encode($regions) !!}
-    </script>
-    
     @include('projects.school-popup')
 
 
@@ -87,14 +81,14 @@
             {!! Form::open()->route('projects.destroy', ['project' => $project]) !!}
             {{ method_field('DELETE') }}
             {!! Form::hidden('refer_page', $refer_page) !!}
-            {!! Form::close() !!}   
+            {!! Form::close() !!}
         </div>
     @endif
 
     <script>
         $(document).ready(function() {
             var form = $('#edit-form>form').first();
-           
+
             $('#btn-save-draft').click(function(e) {
                 e.preventDefault();
                 form.submit();
@@ -115,7 +109,7 @@
                     var del_form = $('#delete-form>form').first();
                     del_form.submit();
                 }
-            });            
+            });
 
             // schools popup
             var schools_manager = SchoolsManager();
@@ -124,6 +118,11 @@
                 schools_manager.show();
             });
 
+
+            // debug
+            //schools_manager.show();
+            //$('#section-schools-manager').hide();
+            //$('#section-schools-editor').show();
         });
     </script>
 @endsection

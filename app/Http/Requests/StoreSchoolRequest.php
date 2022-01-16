@@ -28,7 +28,7 @@ class StoreSchoolRequest extends FormRequest
             'address' => 'required|min:1|max:255',
             'city' => 'required|min:1|max:255',
             'zip' => 'required|min:1|max:255',
-            'country_id' => 'required|exists:countries,id',
+            'country_id' => 'required_with:region_id|exists:countries,id',
             'region_id' => 'required|exists:regions,id',
             'uai' => 'required|min:1|max:255',
         ];

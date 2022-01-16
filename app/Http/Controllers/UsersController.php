@@ -47,7 +47,7 @@ class UsersController extends Controller
             'refer_page' => $request->get('refer_page', '/users'),
             'user' => $user,
             'countries' => Country::orderBy('name')->get(),
-            'regions' => Region::orderBy('country_id')->orderBy('name')->get()            
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()
         ]);
     }
 

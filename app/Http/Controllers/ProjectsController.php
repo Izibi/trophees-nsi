@@ -44,7 +44,7 @@ class ProjectsController extends Controller
         }
         $res['created_at'] = 'projects.created_at';
         $res['status'] = 'projects.status';
-        return $res;        
+        return $res;
     }
 
 
@@ -52,7 +52,7 @@ class ProjectsController extends Controller
         $user = $request->user();
 
         $q = DB::table('projects');
-       
+
         if($user->role == 'teacher') {
             $q->select(DB::raw('projects.id, projects.name, schools.name as school_name, projects.created_at, projects.status'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
@@ -66,7 +66,7 @@ class ProjectsController extends Controller
             $q->select(DB::raw('projects.id, projects.name, schools.name as school_name, users.name as user_name, regions.name as region_name, projects.created_at, projects.status'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
             $q->leftJoin('users', 'projects.user_id', '=', 'users.id');
-            $q->leftJoin('regions', 'schools.region_id', '=', 'regions.id');            
+            $q->leftJoin('regions', 'schools.region_id', '=', 'regions.id');
         }
 
         if($request->has('filter')) {
@@ -89,7 +89,7 @@ class ProjectsController extends Controller
             $filter_status = $request->get('filter_status');
             if(strlen($filter_status) > 0) {
                 $q->where('projects.status', '=', $filter_status);
-            }                        
+            }
         }
         return $q;
     }
@@ -101,13 +101,13 @@ class ProjectsController extends Controller
         $user = $request->user();
         if(!$this->accessible($user, null, 'create')) {
             return $this->accessDeniedResponse();
-        }        
+        }
         return view('projects.edit', [
             'project' => null,
             'schools' => $this->getUserSchools($user),
             'grades' => Grade::orderBy('name')->get(),
             'countries' => Country::orderBy('name')->get(),
-            'regions' => Region::orderBy('country_id')->orderBy('name')->get(),
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
             'refer_page' => $request->get('refer_page', '/projects')
         ]);
     }
@@ -122,7 +122,7 @@ class ProjectsController extends Controller
         $project = new Project($request->all());
         if($request->has('finalize')) {
             $project->status = 'finalized';
-        }        
+        }
         $project->uploadFiles($request);
         $project->user_id = $user->id;
         $project->save();
@@ -133,10 +133,10 @@ class ProjectsController extends Controller
 
     public function show(Request $request, Project $project)
     {
-        $user = $request->user();        
+        $user = $request->user();
         if(!$this->accessible($user, $project, 'view')) {
             return $this->accessDeniedResponse();
-        }        
+        }
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project
@@ -160,7 +160,7 @@ class ProjectsController extends Controller
             'schools' => $this->getUserSchools($user),
             'grades' => Grade::orderBy('name')->get(),
             'countries' => Country::orderBy('name')->get(),
-            'regions' => Region::orderBy('country_id')->orderBy('name')->get(),            
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
             'refer_page' => $request->get('refer_page', '/projects')
         ]);
     }
@@ -178,7 +178,7 @@ class ProjectsController extends Controller
         $project->fill($request->all());
         $project->save();
         $url = $request->get('refer_page', '/projects');
-        return redirect($url)->withMessage('Project updated');        
+        return redirect($url)->withMessage('Project updated');
     }
 
 
@@ -198,8 +198,8 @@ class ProjectsController extends Controller
         $rating->fill($request->all());
         $rating->save();
         $url = $request->get('refer_page', '/projects');
-        return redirect($url)->withMessage('Rating updated');        
-    }    
+        return redirect($url)->withMessage('Rating updated');
+    }
 
 
     public function setStatus(SetProjectStatusRequest $request, Project $project)
@@ -211,8 +211,8 @@ class ProjectsController extends Controller
         $project->status = $request->get('status');
         $project->save();
         $url = $request->get('refer_page', '/projects');
-        return redirect($url)->withMessage('Status updated');        
-    }        
+        return redirect($url)->withMessage('Status updated');
+    }
 
 
     public function destroy(Request $request, Project $project)
@@ -230,7 +230,12 @@ class ProjectsController extends Controller
         $data = $user->schools()->with('country', 'region')->get();
         $options = [];
         foreach($data as $school) {
-            $options[$school->id] = $school->name.', '.$school->zip.' '.$school->city.', '.$school->country->name;
+            $title = $school->name.', '.$school->zip.' '.$school->city.', ';
+            if(!is_null($school->region->country_id)) {
+                $title .= $school->region->name.', ';
+            }
+            $title .= $school->country->name;
+            $options[$school->id] = $title;
         }
         return [
             'data' => $data,
@@ -243,10 +248,10 @@ class ProjectsController extends Controller
         switch($action) {
             case 'create':
                 return $user->role == 'teacher';
-                break;            
+                break;
             case 'view':
-                return $user->role == 'admin' || 
-                    ($user->role == 'teacher' && $user->id == $project->user_id) || 
+                return $user->role == 'admin' ||
+                    ($user->role == 'teacher' && $user->id == $project->user_id) ||
                     ($user->role == 'jury' && $user->region_id == $project->school->region_id);
                 break;
             case 'edit':
