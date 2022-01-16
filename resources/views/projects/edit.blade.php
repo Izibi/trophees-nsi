@@ -30,8 +30,8 @@
 
             {!! Form::textarea('description', 'Description') !!}
 
-            {!! Form::textarea('video', 'Video')
-                ->help('Please upload your video to <a href="https://peertube.fr" target="_blank">peertube.fr</a> and copy/paste embed code here.') !!}
+            {!! Form::text('video', 'Video')
+                ->help('Please upload your video to <a href="https://peertube.fr" target="_blank">peertube.fr</a> and copy/paste video URL here.') !!}
 
 
             <div class="row">

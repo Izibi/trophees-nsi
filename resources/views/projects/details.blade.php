@@ -19,21 +19,19 @@
         @endif
         @if(!is_null($project->team_boys))
             {{ $project->team_boys }} boys;
-        @endif            
+        @endif
         @if(!is_null($project->team_not_provided))
             {{ $project->team_not_provided }} not provided
-        @endif        
+        @endif
+        <br>
+        @if(!is_null($project->video))
+            Video: <a href="{{ $project->video }}">{{ $project->video }}</a>
+        @endif
     </div>
 </div>
 
 @if(!is_null($project->description))
     <div class="mt-3">{!! nl2br($project->description) !!}</div>
-@endif
-
-@if(!is_null($project->video))
-    <div class="mt-3 d-flex justify-content-center">
-        {!! $project->video !!}
-    </div>
 @endif
 
 <div class="row mt-3">
