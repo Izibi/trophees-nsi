@@ -17,22 +17,46 @@ class UsersSeeder extends Seeder
     {
         $region = Region::find(1);
         User::create([
-            'id' => 100002089,
-            'name' => 'nsi teacher',
-            'role' => 'teacher'
+            'id' => 100000002,
+            'name' => 'nsi teacher1',
+            'login' => 'nsi-teacher1',
+            'role' => 'teacher',
+            'region_id' => $region->id,
+            'country_id' => $region->country_id
         ]);
         User::create([
-            'id' => 100002091,
-            'name' => 'nsi jury',
+            'id' => 100000003,
+            'name' => 'nsi teacher2',
+            'login' => 'nsi-teacher2',
+            'role' => 'teacher',
+            'region_id' => $region->id,
+            'country_id' => $region->country_id
+        ]);
+
+
+        User::create([
+            'id' => 100000004,
+            'name' => 'nsi jury1',
+            'login' => 'nsi-jury1',
             'role' => 'jury',
             'region_id' => $region->id,
             'country_id' => $region->country_id
         ]);
         User::create([
-            'id' => 100002092,
-            'name' => 'nsi admin',
-            'role' => 'admin'
+            'id' => 100000005,
+            'name' => 'nsi jury1',
+            'login' => 'nsi-jury1',
+            'role' => 'jury',
+            'region_id' => $region->id,
+            'country_id' => $region->country_id
         ]);
 
+
+        User::create([
+            'id' => 100000006,
+            'name' => 'nsi admin1',
+            'login' => 'nsi-admin1',
+            'role' => 'admin'
+        ]);
     }
 }
