@@ -35,6 +35,7 @@ class StorePojectRequest extends FormRequest
             'image_file' => 'required_if:finalize,1|mimes:jpg,jpeg,png,gif',
             'description' => 'required_if:finalize,1',
             'video' => 'required_if:finalize,1',
+            'cb_tested_by_teacher' => 'accepted_if:finalize,1'
         ];
     }
 }
