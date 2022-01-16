@@ -58,9 +58,11 @@
                 </div>
             </div>
 
-            <input type="hidden" name="cb_tested_by_teacher" value="0"/>
-            {!! Form::checkbox('cb_tested_by_teacher', 'I hereby declare that I have tested the project and that what is shown in the video really works.')
-                ->checked($project && $project->tested_by_teacher) !!}
+            <div class="mt-5">
+                <input type="hidden" name="cb_tested_by_teacher" value="0"/>
+                {!! Form::checkbox('cb_tested_by_teacher', 'I hereby declare that I have tested the project and that what is shown in the video really works.')
+                    ->checked($project && $project->tested_by_teacher) !!}
+            </div>
 
             <div class="mt-5">
                 <a class="btn btn-primary" id="btn-save-draft" href="#">Save Draft</a>
