@@ -33,7 +33,8 @@ class Rating extends Model
         'cb_award_engineering',
         'cb_award_heart',
         'cb_award_originality',
-        'notes'
+        'notes',
+        'published'
     ];
 
 
@@ -53,7 +54,9 @@ class Rating extends Model
         });
 
         static::saved(function($rating) {
-            $rating->refreshProjectRatings($rating->project_id);
+            if($rating->published) {
+                $rating->refreshProjectRatings($rating->project_id);
+            }
         });
     }
 
@@ -84,8 +87,11 @@ class Rating extends Model
             '))
             ->groupBy('project_id')
             ->where('project_id', '=', $project_id)
+            ->where('published', '=', 1)
             ->first();
-
+        if(!$res) {
+            return;
+        }
         $project->score_total = $res->score_total;
         $project->score_idea = $res->score_idea;
         $project->score_communication = $res->score_communication;

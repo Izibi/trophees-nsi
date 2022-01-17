@@ -10,7 +10,9 @@
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#panel-my-ratings" role="tab">My ratings</a>
+                            <a class="nav-link active" data-toggle="tab" href="#panel-my-ratings" role="tab">
+                                My ratings {{ $rating && !$rating->published ? '(draft)' : '' }}
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#panel-aggregated-ratings" role="tab">Aggregated ratings</a>

@@ -62,7 +62,10 @@
         </div>
 
         <div class="mt-3">
-            {!! Form::submit('Submit rating') !!}
+            @if(!$rating || !$rating->published)
+                {!! Form::submit('Save draft') !!}
+            @endif
+            <a class="btn btn-primary" href="#" id="btn-submit-rating">Submit</a>
             <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
         </div>
     {!! Form::close() !!}
@@ -87,5 +90,15 @@
             refreshTotal();
         })
         refreshTotal();
+
+
+        $('#btn-submit-rating').on('click', function(e) {
+            e.preventDefault();
+            if(confirm('You are going to submit your rating. This will affect project aggregated ratings. Continue?')) {
+                var form = $('#rating-form form').first();
+                form.append('<input type="hidden" name="published" value="1"/>');
+                form.submit();
+            }
+        })
     })
 </script>
