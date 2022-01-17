@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\School;
 use App\Models\Grade;
 use App\Models\User;
+use App\Models\Contest;
 
 class ProjectsSeeder extends Seeder
 {
@@ -31,7 +32,8 @@ class ProjectsSeeder extends Seeder
             'description' => 'description text',
             'video' => 'https://peertube.fr/w/kkGMgK9ZtnKfYAgnEtQxbv',
             //'presentation_file' => '123',
-            'status' => 'validated'
+            'status' => 'validated',
+            'contest_id' => 2
         ]);
 
         Project::create([
@@ -45,7 +47,8 @@ class ProjectsSeeder extends Seeder
             'description' => 'description text',
             'video' => 'https://peertube.fr/w/kkGMgK9ZtnKfYAgnEtQxbv',
             //'presentation_file' => '123',
-            'status' => 'finalized'
+            'status' => 'finalized',
+            'contest_id' => 2
         ]);
 
         Project::create([
@@ -59,7 +62,8 @@ class ProjectsSeeder extends Seeder
             'description' => 'description text',
             'video' => 'https://peertube.fr/w/kkGMgK9ZtnKfYAgnEtQxbv',
             //'presentation_file' => '123',
-            'status' => 'draft'
+            'status' => 'draft',
+            'contest_id' => 2
         ]);
     }
 }

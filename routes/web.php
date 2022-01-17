@@ -23,7 +23,10 @@ Route::middleware('auth')->group(function() {
         Route::post('schools/{school}/hide', [App\Http\Controllers\SchoolsController::class, 'hide'])->name('schools.hide');
         Route::resource('users', App\Http\Controllers\UsersController::class)->only(['index', 'edit', 'update', 'destroy']);
         Route::post('projects/{project}/set_status', [App\Http\Controllers\ProjectsController::class, 'setStatus'])->name('projects.set_status');
-        Route::get('results', [App\Http\Controllers\ResultsController::class, 'index']);        
+
+        Route::resource('contests', App\Http\Controllers\ContestsController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+
+        Route::get('results', [App\Http\Controllers\ResultsController::class, 'index']);
     });
 
     Route::get('user_schools/search', [App\Http\Controllers\UserSchoolsController::class, 'search']);

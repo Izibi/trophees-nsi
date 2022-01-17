@@ -6,7 +6,6 @@
 
     <div id="edit-form">
         {!! Form::open()
-            ->multipart()
             ->route('schools.update', ['school' => $school])
             ->fill($school)
             !!}
@@ -52,7 +51,7 @@
 
             $('#btn-delete').click(function(e) {
                 e.preventDefault();
-                if(confirm('This action delete all data related to this school. Are you sure?')) {
+                if(confirm('This action will delete all data related to this school. Are you sure?')) {
                     var del_form = $('#delete-form>form').first();
                     del_form.submit();
                 }

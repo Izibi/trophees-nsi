@@ -3,7 +3,7 @@
         <div class="container">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu">
                 <span class="navbar-toggler-icon"></span>
-            </button>            
+            </button>
             <div class="navbar-collapse collapse" id="navbar-menu">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -16,9 +16,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/schools">Schools</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/contests">Contests</a>
+                        </li>
                     @endif
                 </ul>
-                
+
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
