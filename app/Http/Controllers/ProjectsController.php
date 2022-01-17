@@ -15,9 +15,16 @@ use App\Http\Requests\SetProjectRatingRequest;
 use App\Http\Requests\SetProjectStatusRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\SortableTable;
+use App\Classes\ActiveContest;
 
 class ProjectsController extends Controller
 {
+
+    public function __construct(ActiveContest $active_contest)
+    {
+        $this->contest = $active_contest->get();
+    }
+
 
     public function index(Request $request)
     {
@@ -121,10 +128,16 @@ class ProjectsController extends Controller
         }
         $project = new Project($request->all());
         if($request->has('finalize')) {
+            if(empty($project->presentation_file) ||
+                empty($project->zip_file) ||
+                empty($project->image_file)) {
+                return redirect()->back()->withInput()->withError('Some files missed, please upload all files.');
+            }
             $project->status = 'finalized';
         }
         $project->uploadFiles($request);
         $project->user_id = $user->id;
+        $project->contest_id = $this->contest->id;
         $project->save();
         $url = $request->get('refer_page', '/projects');
         return redirect($url)->withMessage('Project created');
@@ -172,6 +185,11 @@ class ProjectsController extends Controller
             return $this->accessDeniedResponse();
         }
         if($request->has('finalize')) {
+            if(empty($project->presentation_file) ||
+                empty($project->zip_file) ||
+                empty($project->image_file)) {
+                return redirect()->back()->withInput()->withError('Some files missed, please upload all files.');
+            }
             $project->status = 'finalized';
         }
         $project->uploadFiles($request);

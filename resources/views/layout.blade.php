@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         <script src="{{ mix('js/vendor.js') }}"></script>
         <script src="{{ mix('js/app.js') }}"></script>
-        <script src="{{ mix('js/manifest.js') }}"></script>        
+        <script src="{{ mix('js/manifest.js') }}"></script>
         @yield('head')
     </head>
 
@@ -20,8 +20,11 @@
         <main class="container mt-3 mb-5">
             @if (\Session::has('message'))
                 <div class="alert alert-success">{!! \Session::get('message') !!}</div>
-            @endif            
+            @endif
+            @if (\Session::has('error'))
+                <div class="alert alert-danger">{!! \Session::get('error') !!}</div>
+            @endif
             @yield('content')
-        </main>        
+        </main>
     </body>
 </html>

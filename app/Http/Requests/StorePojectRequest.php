@@ -30,9 +30,6 @@ class StorePojectRequest extends FormRequest
             'team_girls' => 'required_if:finalize,1|nullable|integer|min:0|max:1000',
             'team_boys' => 'required_if:finalize,1|nullable|integer|min:0|max:1000',
             'team_not_provided' => 'required_if:finalize,1|nullable|integer|min:0|max:1000',
-            'presentation_file' => 'required_if:finalize,1|mimes:pdf',
-            'zip_file' => 'required_if:finalize,1|mimes:zip',
-            'image_file' => 'required_if:finalize,1|mimes:jpg,jpeg,png,gif',
             'description' => 'required_if:finalize,1',
             'video' => 'required_if:finalize,1',
             'cb_tested_by_teacher' => 'accepted_if:finalize,1'
