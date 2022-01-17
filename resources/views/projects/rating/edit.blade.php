@@ -60,7 +60,7 @@
         </div>
 
         <div class="mt-3">
-            {!! Form::textarea('comment', 'Comment') !!}
+            {!! Form::textarea('notes', 'Notes') !!}
         </div>
 
         <div class="mt-3">

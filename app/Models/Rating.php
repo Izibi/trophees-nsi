@@ -27,20 +27,20 @@ class Rating extends Model
         'award_citizenship',
         'award_engineering',
         'award_heart',
-        'award_originality',        
+        'award_originality',
         'cb_award_mixed',
         'cb_award_citizenship',
         'cb_award_engineering',
         'cb_award_heart',
         'cb_award_originality',
-        'comment'
+        'notes'
     ];
 
 
     protected static function boot() {
         parent::boot();
         static::saving(function($rating) {
-            $rating->score_total = 
+            $rating->score_total =
                 $rating->score_idea +
                 $rating->score_communication +
                 $rating->score_presentation +
@@ -114,16 +114,16 @@ class Rating extends Model
     public function setCbAwardCitizenshipAttribute($v) {
         $this->attributes['award_citizenship'] = !empty($v);
     }
-    
+
     public function setCbAwardEngineeringAttribute($v) {
         $this->attributes['award_engineering'] = !empty($v);
     }
-    
+
     public function setCbAwardHeartAttribute($v) {
         $this->attributes['award_heart'] = !empty($v);
     }
-    
+
     public function setCbAwardOriginalityAttribute($v) {
         $this->attributes['award_originality'] = !empty($v);
-    }    
+    }
 }

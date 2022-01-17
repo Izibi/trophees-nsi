@@ -19,7 +19,7 @@ class RatingRewards extends Migration
             $table->boolean('award_engineering')->boolean()->default(false); // ingénierie
             $table->boolean('award_heart')->boolean()->default(false); // coup de coeur
             $table->boolean('award_originality')->boolean()->default(false); // originalité
-            $table->text('comment')->nullable();
+            $table->text('notes')->nullable();
         });
 
 
@@ -45,7 +45,7 @@ class RatingRewards extends Migration
             $table->dropColumn('award_engineering');
             $table->dropColumn('award_heart');
             $table->dropColumn('award_originality');
-            $table->dropColumn('comment');
+            $table->dropColumn('notes');
         });
 
 
