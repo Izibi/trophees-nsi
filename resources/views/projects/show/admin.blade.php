@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-6">
+        <div class="col-8">
             @include('projects.details')
 
             <div class="mt-3">
@@ -22,7 +22,7 @@
                 {!! Form::close() !!}
             </div>
         </div>
-        <div class="col-6">
+        <div class="col-4">
             @include('projects.rating.show')
         </div>
     </div>

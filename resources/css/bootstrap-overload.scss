@@ -12,3 +12,19 @@ select[readonly] {
     pointer-events: none;
     touch-action: none;
 }
+
+
+
+.form-group-compact label {
+    margin: 0;
+    line-height: calc(1.5em + 0.75rem + 2px);
+}
+
+.form-group-compact .form-control {
+    float: right;
+    width: 25%;
+}
+
+.form-group-compact .form-text {
+    clear: both;
+}
