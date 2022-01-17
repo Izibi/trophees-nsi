@@ -13,7 +13,7 @@
 
             {!! Form::select('school_id', 'School', $schools['options'])->help('<a id="btn-open-schools-manager" href="#">Edit my list of schools</a>') !!}
 
-            {!! Form::select('grade_id', 'Grade', $grades) !!}
+            {!! Form::select('grade_id', 'Grade', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
 
             <div class="row">
                 <div class="col-4">
