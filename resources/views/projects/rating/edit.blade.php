@@ -1,5 +1,3 @@
-<h2>My ratings</h2>
-
 <div id="rating-form">
     {!! Form::open()->route('projects.set_rating', ['project' => $project])->fill($rating)->attrs(['class' => 'form-compact']) !!}
 
@@ -31,7 +29,7 @@
             ->wrapperAttrs(['class' => 'form-group-compact'])
             ->options(Rating::rangeOptions(3))->help('Idées d\'améliorations, de diffusion et pistes de développement') !!}
         <div class="mt-3">
-            Total: <span id="rating-total">--</span> of <span id="rating-max">--</span>
+            Total: <strong><span id="rating-total">--</span> of <span id="rating-max">--</span></strong>
         </div>
         <div class="mt-3">
             To consider for awards:
