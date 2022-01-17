@@ -20,24 +20,24 @@
             <div class="row">
                 <div class="col-4">
                     <input type="hidden" name="cb_award_mixed" value="0"/>
-                    {!! Form::checkbox('cb_award_mixed', 'Mixité')->checked($rating->award_mixed) !!}
+                    {!! Form::checkbox('cb_award_mixed', 'Mixité')->checked($rating ? $rating->award_mixed : false) !!}
                 </div>
                 <div class="col-4">
                     <input type="hidden" name="cb_award_citizenship" value="0"/>
-                    {!! Form::checkbox('cb_award_citizenship', 'Citoyenneté')->checked($rating->award_citizenship) !!}
+                    {!! Form::checkbox('cb_award_citizenship', 'Citoyenneté')->checked($rating ? $rating->award_citizenship : false) !!}
                 </div>
                 <div class="col-4">
                     <input type="hidden" name="cb_award_engineering" value="0"/>
-                    {!! Form::checkbox('cb_award_engineering', 'Ingénierie')->checked($rating->award_engineering) !!}
+                    {!! Form::checkbox('cb_award_engineering', 'Ingénierie')->checked($rating ? $rating->award_engineering : false) !!}
                 </div>
                 <div class="col-4">
                     <input type="hidden" name="cb_award_heart" value="0"/>
-                    {!! Form::checkbox('cb_award_heart', 'Coup de coeur')->checked($rating->award_heart) !!}
+                    {!! Form::checkbox('cb_award_heart', 'Coup de coeur')->checked($rating ? $rating->award_heart : false) !!}
                 </div>
                 <div class="col-4">
                     <input type="hidden" name="cb_award_originality" value="0"/>
-                    {!! Form::checkbox('cb_award_originality', 'Originalité')->checked($rating->award_originality) !!}
-                </div>                                                                
+                    {!! Form::checkbox('cb_award_originality', 'Originalité')->checked($rating ? $rating->award_originality : false) !!}
+                </div>
             </div>
         </div>
 
@@ -49,7 +49,7 @@
             {!! Form::submit('Submit rating') !!}
             <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
         </div>
-    {!! Form::close() !!}   
+    {!! Form::close() !!}
 </div>
 
 
@@ -68,7 +68,7 @@
             $('#rating-max').text(max);
         }
         sels.on('change', function() {
-            refreshTotal();    
+            refreshTotal();
         })
         refreshTotal();
     })
