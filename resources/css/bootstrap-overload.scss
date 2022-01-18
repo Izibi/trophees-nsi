@@ -78,3 +78,27 @@ select[readonly] {
 .form-group-compact .form-text {
     clear: both;
 }
+
+
+.custom-file-input:lang(fr) ~ .custom-file-label::after {
+    content: "Parcourir...";
+}
+
+.custom-file-label {
+    padding-left: 30px;
+}
+
+
+.custom-file-clear {
+    display: none;
+    position: absolute;
+    top: 2px;
+    left: 10px;
+    z-index: 4;
+    font-size: 150%;
+    cursor: default;
+}
+
+.custom-file-selected .custom-file-clear {
+    display: block;
+}

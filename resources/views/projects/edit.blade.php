@@ -37,26 +37,42 @@
 
 
             <div class="row">
-                <div class="col-4">
-                    {!! Form::file('image_file', 'Image')->attrs(['accept' => '.jpg,.jpeg,.png,.gif']) !!}
+                <div class="col-4 file-box">
+                    <span class="file-box-title">Image</span>
                     @if($project && !is_null($project->image_file))
-                        <a href="{{ Storage::disk('uploads')->url($project->image_file) }}" target="_blank" class="border d-block"
-                            style="width: 160px; height: 120px; background: center / contain no-repeat url({{ Storage::disk('uploads')->url($project->image_file) }})">
-                        </a>
+                        - <a href="{{ Storage::disk('uploads')->url($project->image_file) }}" target="_blank">download</a> or
+                        <a href="#" class="link-delete-file" data-file="image_file">delete</a>
                     @endif
+                    <div class="custom-file mt-2">
+                        <span class="custom-file-clear" title="Clear">&times;</span>
+                        <input name="image_file" id="inp-image_file" type="file" accept=".jpg,.jpeg,.png,.gif" class="custom-file-input">
+                        <label for="inp-image_file" class="custom-file-label text-truncate">Choose file...</label>
+                    </div>
                 </div>
-                <div class="col-4">
-                    {!! Form::file('presentation_file', 'Presentation PDF')->attrs(['accept' => '.pdf']) !!}
+                <div class="col-4 file-box">
+                    <span class="file-box-title">Presentation PDF</span>
                     @if($project && !is_null($project->presentation_file))
-                        <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">Download</a>
+                        - <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">download</a> or
+                        <a href="#" class="link-delete-file" data-file="presentation_file">delete</a>
                     @endif
+                    <div class="custom-file mt-2">
+                        <span class="custom-file-clear" title="Clear">&times;</span>
+                        <input name="presentation_file" id="inp-presentation_file" type="file" accept=".pdf" class="custom-file-input">
+                        <label for="inp-presentation_file" class="custom-file-label text-truncate">Choose file...</label>
+                    </div>
                 </div>
-                <div class="col-4">
-                    {!! Form::file('zip_file', 'Zip of project')->attrs(['accept' => '.zip'])
-                        ->help('Should include executable, source codes and documentation. See <a href="#">here</a> for details.') !!}
+                <div class="col-4 file-box">
+                    <span class="file-box-title">Zip of project</span>
                     @if($project && !is_null($project->zip_file))
-                        <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">Download</a>
+                        - <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">download</a> or
+                        <a href="#" class="link-delete-file" data-file="zip_file">delete</a>
                     @endif
+                    <div class="custom-file mt-2">
+                        <span class="custom-file-clear" title="Clear">&times;</span>
+                        <input name="zip_file" id="inp-zip_file" type="file" accept=".zip" class="custom-file-input">
+                        <label for="inp-zip_file" class="custom-file-label text-truncate">Choose file...</label>
+                    </div>
+                    <small>Should include executable, source codes and documentation. See <a href="#">here</a> for details.</small>
                 </div>
             </div>
 
@@ -100,7 +116,6 @@
                 form.submit();
             })
 
-
             $('#btn-submit-finalized').click(function(e) {
                 e.preventDefault();
                 if(confirm('This will change project status to finalized, cancellation will not be possible. Continue?')) {
@@ -126,7 +141,7 @@
 
 
 
-
+            // description counter
             var inp_description = $('#inp-description');
             var description_counter = $('#description-counter');
             function refreshDescriptionCounter() {
@@ -138,6 +153,31 @@
             refreshDescriptionCounter();
             inp_description.bind('input propertychange', refreshDescriptionCounter);
 
+
+            // file inputs
+            $('.custom-file-input').on('change', function() {
+                var el = $(this);
+                var name = el.val().split("\\").pop();
+                el.siblings('.custom-file-label').addClass('selected').html(name);
+                el.closest('.custom-file').addClass('custom-file-selected');
+            });
+            $('.custom-file-clear').on('click', function(e) {
+                e.preventDefault();
+                var el = $(this);
+                el.siblings('input').val('');
+                el.siblings('.custom-file-label').removeClass('selected').html('');
+                el.closest('.custom-file').removeClass('custom-file-selected');
+            });
+
+            $('.link-delete-file').on('click', function(e) {
+                e.preventDefault();
+                var el = $(this);
+                var file = el.data('file');
+                var text = el.siblings('.file-box-title').text() + ' - ' + el.text();
+                el.closest('.file-box').empty().append(text).append(
+                    $('<input type="hidden">').attr('name', 'delete_uploads[]').val(file)
+                )
+            })
 
             // debug
             //schools_manager.show();

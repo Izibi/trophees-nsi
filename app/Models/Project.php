@@ -43,7 +43,7 @@ class Project extends Model
         static::updating(function($project) {
             foreach($project->upload_attributes as $attr) {
                 $old_file = $project->getOriginal($attr);
-                if(!is_null($old_file) && $project->$attr != $old_file) {
+                if(!is_null($old_file) && $project->$attr !== $old_file) {
                     Storage::disk('uploads')->delete($old_file);
                 }
             }
@@ -59,7 +59,7 @@ class Project extends Model
                 $file->storeAs('/', $this->$attr, 'uploads');
             }
         }
-    }    
+    }
 
 
     public function user()
@@ -77,11 +77,11 @@ class Project extends Model
     public function grade()
     {
         return $this->belongsTo(Grade::class);
-    }    
+    }
 
 
     public function setCbTestedByTeacherAttribute($v) {
         $this->attributes['tested_by_teacher'] = !empty($v);
-    }    
+    }
 
 }

@@ -187,6 +187,12 @@ class ProjectsController extends Controller
         if(!$this->accessible($request->user(), $project, 'edit')) {
             return $this->accessDeniedResponse();
         }
+        if($request->has('delete_uploads')) {
+            $to_delete = $request->get('delete_uploads');
+            foreach($to_delete as $attr) {
+                $project->$attr = null;
+            }
+        }
         $project->uploadFiles($request);
         $project->fill($request->all());
         $project->save();
