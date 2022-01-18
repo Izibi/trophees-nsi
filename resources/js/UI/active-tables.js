@@ -51,7 +51,7 @@ function init() {
             var action = btn.data('action');
             var require_selection = action.indexOf(':id') !== -1;
             $(this).prop('disabled', require_selection && !selection)
-        });        
+        });
     }
     refreshButtons();
 
@@ -69,7 +69,7 @@ function init() {
         form.attr('action', action);
         method = method || 'GET';
         form.attr('method', method);
-        
+
         var hidden = $('<input type="hidden" name="refer_page"/>');
         hidden.val(location.href);
         form.append(hidden);
@@ -79,7 +79,7 @@ function init() {
             hidden.val($('meta[name="csrf-token"]').attr('content'));
             form.append(hidden);
         }
-        
+
         $(document.body).append(form);
         form.submit();
     }
@@ -87,7 +87,10 @@ function init() {
     buttons.each(function() {
         var btn = $(this)
         btn.on('click', function() {
-            redirect(btn.data('action'), btn.data('method'))
+            var confirmation = btn.data('confirmation');
+            if(!confirmation || confirm(confirmation)) {
+                redirect(btn.data('action'), btn.data('method'))
+            }
         })
     })
 

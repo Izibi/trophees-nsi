@@ -16,6 +16,7 @@ class ContestsController extends Controller
         'name' => 'contests.name',
         'year' => 'contests.year',
         'status' => 'contests.status',
+        'active' => 'contests.active',
     ];
 
 

@@ -23,14 +23,14 @@ class ContestsSeeder extends Seeder
         ]);
 
         $msg = <<<PHP_STR
-Test contest 1 message.
+Test contest 1 message.<br><br>
 
-Users:
-nsi-teacher1
-nsi-teacher2
-nsi-jury1
-nsi-jury2
-nsi-admin1
+Users:<br>
+nsi-teacher1<br>
+nsi-teacher2<br>
+nsi-jury1<br>
+nsi-jury2<br>
+nsi-admin1<br><br>
 
 Users pasword: 123123
 PHP_STR;

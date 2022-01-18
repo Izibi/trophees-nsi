@@ -6,9 +6,10 @@ mix.setPublicPath('public')
         [
             'jquery',
             'popper.js',
-            'bootstrap'
+            'bootstrap',
+            'tinymce'
         ],
         'public/js/vendor.js'
     )
     .sass('resources/css/app.scss', 'public/css')
-    .version();    
+    .version();

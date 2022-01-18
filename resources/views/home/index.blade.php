@@ -3,7 +3,7 @@
 @section('content')
     @if($contest)
         <h1>{{ $contest->name }}</h1>
-        <p>{!! nl2br($contest->message) !!}</p>
+        <p>{!! $contest->message !!}</p>
     @endif
 
     @if (!Auth::check())

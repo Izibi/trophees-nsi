@@ -12,7 +12,7 @@
             {{ $contest ? method_field('PUT') : '' }}
             {!! Form::text('name', 'Name') !!}
             {!! Form::text('year', 'Year') !!}
-            {!! Form::textarea('message', 'Message')->attrs(['style' => 'height: 300px']) !!}
+            {!! Form::textarea('message', 'Message')->attrs(['style' => 'height: 500px']) !!}
             {!! Form::select('status', 'Status', [
                 'preparing' => 'preparing',
                 'open' => 'open',
@@ -56,6 +56,15 @@
                     del_form.submit();
                 }
             });
+
+
+            tinymce.init({
+                selector: '#inp-message',
+                skin: false,
+                content_css: false,
+                plugins: 'code link lists table',
+                toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | bullist numlist | table | fontsizeselect'
+            })
         });
     </script>
 @endsection
