@@ -5,7 +5,7 @@
         <div class="col-7">
             @include('projects.details')
 
-            <div class="mt-3">
+            <div class="mt-5">
                 {!! Form::open()->route('projects.set_status', ['project' => $project])->fill($project) !!}
                     {!! Form::select('status', 'Status')->options([
                         'draft' => 'Draft',

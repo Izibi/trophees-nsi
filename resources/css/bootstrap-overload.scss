@@ -30,15 +30,18 @@
     background-color: $primary;
 }
 
+
+
 h1,h2,h3,h4,h5,h6 {
     font-family: "Bebas Neue";
 }
 
 
-.card .card-header a,
-.card .card-header a:hover {
+.card .card-header a.right-link,
+.card .card-header a.right-link:hover {
     color: $white;
     line-height: 3rem;
+    float: right;
 }
 
 .card .card-header h2 {

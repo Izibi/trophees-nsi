@@ -7,6 +7,7 @@ use App\Http\Requests\StoreContestRequest;
 use App\Models\Contest;
 use App\Helpers\SortableTable;
 use Illuminate\Support\Facades\DB;
+use App\Classes\ActiveContest;
 
 class ContestsController extends Controller
 {
@@ -16,6 +17,13 @@ class ContestsController extends Controller
         'year' => 'contests.year',
         'status' => 'contests.status',
     ];
+
+
+    public function __construct(ActiveContest $active_contest)
+    {
+        $this->active_contest = $active_contest;
+    }
+
 
     public function index(Request $request)
     {
@@ -64,9 +72,17 @@ class ContestsController extends Controller
         return redirect($url)->withMessage('Contest updated');
     }
 
+    public function activate(Request $request, $contest_id) {
+        $this->active_contest->set($contest_id);
+        $url = $request->get('refer_page', '/contests');
+        return redirect($url)->withMessage('Active contest changed');
+    }
 
     public function destroy(Request $request, Contest $contest)
     {
+        if($contest->active) {
+            return redirect()->back()->withError('You can not delete active contest');
+        }
         $contest->delete();
         $url = $request->get('refer_page', '/contests');
         return redirect($url)->withMessage('Contest deleted');

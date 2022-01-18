@@ -40,9 +40,13 @@
 
     <div class="mt-5 mb-3">
         @if(count($rows))
-            <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Edit selected project</button>
+            @if($contest_status == 'open')
+                <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Edit selected project</button>
+            @endif
             <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">View selected project</button>
         @endif
-        <button class="btn btn-primary active-button" data-action="/projects/create" data-method="GET">Deposit new project</button>
+        @if($contest_status == 'open')
+            <button class="btn btn-primary active-button" data-action="/projects/create" data-method="GET">Deposit new project</button>
+        @endif
     </div>
 @endsection

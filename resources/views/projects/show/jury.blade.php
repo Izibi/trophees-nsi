@@ -14,18 +14,22 @@
                                 My ratings {{ $rating && !$rating->published ? '(draft)' : '' }}
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#panel-aggregated-ratings" role="tab">Aggregated ratings</a>
-                        </li>
+                        @if($contest_status == 'deliberating')
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#panel-aggregated-ratings" role="tab">Aggregated ratings</a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
                 <div class="card-body tab-content p-0">
                     <div class="tab-pane fade show active p-3" id="panel-my-ratings" role="tabpanel">
                         @include('projects.rating.edit')
                     </div>
-                    <div class="tab-pane fade p-0" id="panel-aggregated-ratings" role="tabpanel">
-                        @include('projects.rating.show')
-                    </div>
+                    @if($contest_status == 'deliberating')
+                        <div class="tab-pane fade p-0" id="panel-aggregated-ratings" role="tabpanel">
+                            @include('projects.rating.show')
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

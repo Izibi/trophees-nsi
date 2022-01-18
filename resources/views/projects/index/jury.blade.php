@@ -32,9 +32,12 @@
 
     @include('common.paginator')
 
+
     <div class="mt-5 mb-3">
         @if(count($rows))
-            <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">View selected project</button>
+            @if($contest_status == 'grading' || $contest_status == 'deliberating' || $contest_status == 'closed')
+                <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">View selected project</button>
+            @endif
         @endif
     </div>
 @endsection

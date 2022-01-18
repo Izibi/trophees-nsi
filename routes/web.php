@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function() {
         Route::post('projects/{project}/set_status', [App\Http\Controllers\ProjectsController::class, 'setStatus'])->name('projects.set_status');
 
         Route::resource('contests', App\Http\Controllers\ContestsController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+        Route::post('contests/{contest_id}/activate', [App\Http\Controllers\ContestsController::class, 'activate'])->name('contests.activate');
 
         Route::get('results', [App\Http\Controllers\ResultsController::class, 'index']);
     });

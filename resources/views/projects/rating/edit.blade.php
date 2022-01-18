@@ -61,13 +61,20 @@
             {!! Form::textarea('notes', 'Notes') !!}
         </div>
 
-        <div class="mt-3">
-            @if(!$rating || !$rating->published)
-                {!! Form::submit('Save draft') !!}
-            @endif
-            <a class="btn btn-primary" href="#" id="btn-submit-rating">Submit</a>
-            <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
-        </div>
+        @if($contest_status == 'grading' || $contest_status == 'deliberating')
+            <div class="mt-3">
+                @if(!$rating || !$rating->published)
+                    {!! Form::submit('Save draft') !!}
+                @endif
+                <a class="btn btn-primary" href="#" id="btn-submit-rating">Submit</a>
+                <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
+            </div>
+        @else
+            <script>
+                $('#rating-form select, #rating-form input, #rating-form textarea').prop('disabled', 'disabled');
+            </script>
+
+        @endif
     {!! Form::close() !!}
 </div>
 

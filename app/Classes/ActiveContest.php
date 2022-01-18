@@ -8,7 +8,7 @@ class ActiveContest {
 
 
     public function get() {
-        return Contest::where('status', 'open')->first();
+        return Contest::where('active', true)->first();
     }
 
 
@@ -18,9 +18,9 @@ class ActiveContest {
             if($old->id == $id) {
                 return;
             }
-            //$old->active = false;
-            //$old->save();
+            $old->active = false;
+            $old->save();
         }
-        //Contest::where('id', $id)->update(['open' => true]);
+        Contest::where('id', $id)->update(['active' => true]);
     }
 }

@@ -32,7 +32,8 @@ class ProjectsController extends Controller
         SortableTable::orderBy($q, $this->getSortFields($request));
         $projects = $q->paginate()->appends($request->all());
         return view('projects.index.'.$request->user()->role, [
-            'rows' => $projects
+            'rows' => $projects,
+            'contest_status' => $this->contest->status
         ]);
     }
 
@@ -59,16 +60,19 @@ class ProjectsController extends Controller
         $user = $request->user();
 
         $q = DB::table('projects');
+        $q->where('projects.contest_id', '=', $this->contest->id);
 
         if($user->role == 'teacher') {
             $q->select(DB::raw('projects.id, projects.name, schools.name as school_name, projects.created_at, projects.status'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
             $q->where('projects.user_id', '=', $user->id);
+
         } else if($user->role == 'jury') {
             $q->select(DB::raw('projects.id, projects.name, projects.created_at, projects.status'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
             $q->where('schools.region_id', '=', $user->region_id);
             $q->where('projects.status', '=', 'validated');
+            $q->where('projects.status', '<>', 'masked');
         } else if($user->role == 'admin') {
             $q->select(DB::raw('projects.id, projects.name, schools.name as school_name, users.name as user_name, regions.name as region_name, projects.created_at, projects.status'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
@@ -150,7 +154,8 @@ class ProjectsController extends Controller
         }
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
-            'project' => $project
+            'project' => $project,
+            'contest_status' => $this->contest->status
         ];
         if($user->role == 'jury') {
             $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
@@ -263,21 +268,46 @@ class ProjectsController extends Controller
     private function accessible($user, $project, $action) {
         switch($action) {
             case 'create':
-                return $user->role == 'teacher';
+                return $user->role == 'teacher' && $this->contest->status == 'open';
                 break;
             case 'view':
                 return $user->role == 'admin' ||
                     ($user->role == 'teacher' && $user->id == $project->user_id) ||
-                    ($user->role == 'jury' && $user->region_id == $project->school->region_id);
+                    ($user->role == 'jury' &&
+                        $user->region_id == $project->school->region_id &&
+                        $project->status != 'masked' &&
+                        $project->contest_id == $this->contest->id &&
+                        ($this->contest->status == 'grading' || $this->contest->status == 'deliberating' || $this->contest->status == 'closed')
+                    );
                 break;
             case 'edit':
-                return $user->role == 'teacher' && $user->id == $project->user_id && $project->status == 'draft';
+                return
+                    $user->role == 'teacher' &&
+                    $user->id == $project->user_id &&
+                    $project->status == 'draft' &&
+                    $project->contest_id == $this->contest->id &&
+                    $this->contest->status == 'open';
                 break;
             case 'change_status':
                 return $user->role == 'admin';
                 break;
             case 'rate':
-                return $user->role == 'jury' && $user->region_id == $project->school->region_id && $project->status == 'validated';
+                return $user->role == 'jury' &&
+                    $user->region_id == $project->school->region_id &&
+                    $project->status == 'validated' &&
+                    $project->contest_id == $this->contest->id &&
+                    ($this->contest->status == 'grading' || $this->contest->status == 'deliberating');
+                break;
+            case 'view_aggregated_ratings':
+                return
+                    $user->role == 'admin' ||
+                    (
+                        $user->role == 'jury' &&
+                        $user->region_id == $project->school->region_id &&
+                        $project->status == 'validated' &&
+                        $project->contest_id == $this->contest->id &&
+                        $this->contest->status == 'deliberating'
+                    );
                 break;
         }
     }

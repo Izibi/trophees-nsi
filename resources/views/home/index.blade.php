@@ -11,7 +11,7 @@
         <p>If you are a student, please contact your NSI teacher and let them know you would like your group to take part in Trophees NSI.</p>
 
         <div class="justify-content-center">
-            <a class="btn btn-primary" href="/login">Login or Register</a>
+            <a class="btn btn-secondary" href="/login">Login or Register</a>
         </div>
     @endif
 
