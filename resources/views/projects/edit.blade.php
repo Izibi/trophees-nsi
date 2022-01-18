@@ -28,7 +28,9 @@
             </div>
             <p><small class="form-text text-muted">We have a separate prize for girls to encourage female participation.</small></p>
 
-            {!! Form::textarea('description', 'Description') !!}
+            {!! Form::textarea('description', 'Description')
+                ->attrs(['style' => 'height: 200px'])
+                ->help('<div id="description-counter"></div>') !!}
 
             {!! Form::text('video', 'Video')
                 ->help('Please upload your video to <a href="https://peertube.fr" target="_blank">peertube.fr</a> and copy/paste video URL here.') !!}
@@ -89,6 +91,8 @@
 
     <script>
         $(document).ready(function() {
+            var config = {!! json_encode(config('nsi.project')) !!}
+
             var form = $('#edit-form>form').first();
 
             $('#btn-save-draft').click(function(e) {
@@ -119,6 +123,20 @@
             $('#btn-open-schools-manager').on('click', function() {
                 schools_manager.show();
             });
+
+
+
+
+            var inp_description = $('#inp-description');
+            var description_counter = $('#description-counter');
+            function refreshDescriptionCounter() {
+                var l = inp_description.val().length;
+                var cn = l <= config.description_max_length ? 'text-success' : 'text-danger';
+                description_counter.attr('class', 'text-right ' + cn);
+                description_counter.text(l + '/' + config.description_max_length);
+            }
+            refreshDescriptionCounter();
+            inp_description.bind('input propertychange', refreshDescriptionCounter);
 
 
             // debug
