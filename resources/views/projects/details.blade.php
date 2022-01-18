@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12 col-sm-3">
         @if(!is_null($project->image_file))
-            <div class="border mb-3" style="height: 200px; background: center / contain no-repeat url({{ Storage::disk('uploads')->url($project->image_file) }})"></div>
+            <div class="border mb-3" style="height: 200px; background: center / cover no-repeat url({{ Storage::disk('uploads')->url($project->image_file) }})"></div>
         @endif
     </div>
 
@@ -25,7 +25,7 @@
         @endif
         <br>
         @if(!is_null($project->video))
-            Video: <a href="{{ $project->video }}">{{ $project->video }}</a>
+            Video: <a href="{{ $project->video }}" target="_blank">{{ $project->video }}</a>
         @endif
     </div>
 </div>
