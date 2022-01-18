@@ -22,7 +22,7 @@
                 <div class="alert alert-success">{!! \Session::get('message') !!}</div>
             @endif
             @if (\Session::has('error'))
-                <div class="alert alert-danger">{!! \Session::get('error') !!}</div>
+                <div class="alert alert-danger">{!! is_array(\Session::get('error')) ? implode('<br>', \Session::get('error')) : \Session::get('error') !!}</div>
             @endif
             @yield('content')
         </main>

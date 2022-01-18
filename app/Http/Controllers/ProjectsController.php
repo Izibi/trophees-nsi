@@ -127,18 +127,16 @@ class ProjectsController extends Controller
             return $this->accessDeniedResponse();
         }
         $project = new Project($request->all());
-        if($request->has('finalize')) {
-            if(empty($project->presentation_file) ||
-                empty($project->zip_file) ||
-                empty($project->image_file)) {
-                return redirect()->back()->withInput()->withError('Some files missed, please upload all files.');
-            }
-            $project->status = 'finalized';
-        }
         $project->uploadFiles($request);
         $project->user_id = $user->id;
         $project->contest_id = $this->contest->id;
         $project->save();
+        if($request->has('finalize')) {
+            $res = $this->finalizeProject($project, $request);
+            if($res !== true) {
+                return $res;
+            }
+        }
         $url = $request->get('refer_page', '/projects');
         return redirect($url)->withMessage('Project created');
     }
@@ -184,17 +182,17 @@ class ProjectsController extends Controller
         if(!$this->accessible($request->user(), $project, 'edit')) {
             return $this->accessDeniedResponse();
         }
-        if($request->has('finalize')) {
-            if(empty($project->presentation_file) ||
-                empty($project->zip_file) ||
-                empty($project->image_file)) {
-                return redirect()->back()->withInput()->withError('Some files missed, please upload all files.');
-            }
-            $project->status = 'finalized';
-        }
         $project->uploadFiles($request);
         $project->fill($request->all());
         $project->save();
+
+        if($request->has('finalize')) {
+            $res = $this->finalizeProject($project, $request);
+            if($res !== true) {
+                return $res;
+            }
+        }
+
         $url = $request->get('refer_page', '/projects');
         return redirect($url)->withMessage('Project updated');
     }
@@ -288,4 +286,35 @@ class ProjectsController extends Controller
     private function accessDeniedResponse() {
         return redirect('/');
     }
+
+
+
+    private function finalizeProject(&$project, $request) {
+        $errors = [];
+        $config = config('nsi.project');
+
+        $team_size = $project->team_girls + $project->team_boys + $project->team_not_provided;
+        if($team_size < $config['team_size_min'] || $team_size > $config['team_size_max']) {
+            $errors[] = strtr('Total size of the team must be between team_size_min and team_size_max', $config);
+        }
+
+        if(empty($project->presentation_file)) {
+            $errors[] = 'Presentation PDF not uploaded.';
+        }
+        if(empty($project->zip_file)) {
+            $errors[] = 'Zip of project not uploaded.';
+        }
+        if(empty($project->image_file)) {
+            $errors[] = 'Image not uploaded.';
+        }
+
+        if(count($errors)) {
+            return redirect()->route('projects.edit', $project)->withError($errors);
+        }
+
+        $project->status = 'finalized';
+        $project->save();
+        return true;
+    }
+
 }

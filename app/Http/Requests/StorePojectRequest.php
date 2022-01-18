@@ -31,7 +31,7 @@ class StorePojectRequest extends FormRequest
             'team_boys' => 'required_if:finalize,1|nullable|integer|min:0|max:1000',
             'team_not_provided' => 'required_if:finalize,1|nullable|integer|min:0|max:1000',
             'description' => 'required_if:finalize,1|max:'.config('nsi.project.description_max_length'),
-            'video' => 'required_if:finalize,1',
+            'video' => 'required_if:finalize,1|url',
             'cb_tested_by_teacher' => 'accepted_if:finalize,1'
         ];
     }
