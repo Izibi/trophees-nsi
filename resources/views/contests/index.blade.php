@@ -4,11 +4,11 @@
     @if(count($rows))
         <div class="card mt-3 mb-3">
             <div class="card-header">
-                <strong>Contests</strong>
+                <h2>Contests</h2>
             </div>
 
             <div class="table-responsive">
-                <table class="table table-striped active-table">
+                <table class="table table-striped table-borderless active-table">
                     <thead>
                         <tr>
                             <th>{!! SortableTable::th('name', 'Name') !!}</th>

@@ -1,11 +1,11 @@
 @if(is_null($project->score_total))
     <div class="alert alert-info m-3">This project was not rated.</div>
 @else
-    <table class="table">
+    <table class="table table-striped table-borderless">
         <tbody>
             <tr>
-                <td class="col-10 border-0">Idée globale</td>
-                <td class="col-2 border-0">{{ $project->score_idea }}</td>
+                <td class="col-10">Idée globale</td>
+                <td class="col-2">{{ $project->score_idea }}</td>
             </tr>
             <tr>
                 <td>Comunication</td>
@@ -47,10 +47,11 @@
     </table>
 
 
-    <table class="table mt-3">
+    <table class="table table-striped table-borderless mt-3">
         <tbody>
+            <tr></tr>
             <tr>
-                <td colspan="2" class="border-0"><strong>Project awards</strong></td>
+                <td colspan="2"><strong>Project awards</strong></td>
             </tr>
             <tr>
                 <td class="col-10">Mixité</td>

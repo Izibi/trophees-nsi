@@ -1,1 +1,35 @@
 $font-size-base: 16;
+$font-family-base: "Roboto Slab";
+
+$primary: #003947;
+$secondary: #E94E1B;
+
+$body-color: $primary;
+$link-color: $secondary;
+$text-muted: $primary;
+$black: $primary;
+
+$navbar-light-bg: rgba($primary, 0.5);
+
+$dropdown-border-color: $primary;
+$dropdown-border-width: 2px;
+
+$input-color: $primary;
+$input-border-color: $primary;
+$input-focus-border-color: $primary;
+$input-border-width: 2px;
+$input-placeholder-color: rgba($primary, 0.5);
+
+$btn-focus-box-shadow: none;
+$input-btn-focus-box-shadow: none;
+
+$input-btn-focus-width: 0;
+$btn-border-radius: 1.5rem;
+$btn-padding-x: 2rem;
+
+
+$card-border-radius: 0;
+$card-border-width: 0;
+
+$nav-tabs-border-radius: 0;
+$nav-tabs-border-width: 0;

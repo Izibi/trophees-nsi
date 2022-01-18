@@ -4,12 +4,12 @@
 
     <div class="card mt-3 mb-3">
         <div class="card-header">
-            <strong>Projects</strong>
+            <h2>Projects</h2>
             @include('projects.index.filter')
         </div>
         @if(count($rows))
             <div class="table-responsive">
-                <table class="table table-striped active-table">
+                <table class="table table-striped table-borderless active-table">
                     <thead>
                         <tr>
                             <th>{!! SortableTable::th('id', 'ID') !!}</th>
@@ -32,17 +32,17 @@
             </div>
         @else
             @include('common.empty_list')
-        @endif    
+        @endif
     </div>
-    
+
     @include('common.paginator')
 
 
-    <div class="mt-3 mb-3">
+    <div class="mt-5 mb-3">
         @if(count($rows))
             <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Edit selected project</button>
             <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">View selected project</button>
         @endif
         <button class="btn btn-primary active-button" data-action="/projects/create" data-method="GET">Deposit new project</button>
-    </div>    
+    </div>
 @endsection

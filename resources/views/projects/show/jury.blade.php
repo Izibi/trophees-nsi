@@ -23,7 +23,7 @@
                     <div class="tab-pane fade show active p-3" id="panel-my-ratings" role="tabpanel">
                         @include('projects.rating.edit')
                     </div>
-                    <div class="tab-pane fade p-1" id="panel-aggregated-ratings" role="tabpanel">
+                    <div class="tab-pane fade p-0" id="panel-aggregated-ratings" role="tabpanel">
                         @include('projects.rating.show')
                     </div>
                 </div>

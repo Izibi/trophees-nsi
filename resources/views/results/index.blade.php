@@ -4,11 +4,11 @@
     @if(count($rows))
         <div class="card mt-3 mb-3">
             <div class="card-header">
-                <strong>Projects rating</strong>
+                <h2>Projects rating</h2>
             </div>
 
             <div class="table-responsive">
-                <table class="table table-striped active-table">
+                <table class="table table-striped table-borderless active-table">
                     <thead>
                         <tr>
                             <th>Project name</th>
@@ -27,5 +27,5 @@
         @include('common.paginator')
     @else
         @include('common.empty_list')
-    @endif    
+    @endif
 @endsection

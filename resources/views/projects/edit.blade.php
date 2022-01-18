@@ -68,7 +68,7 @@
 
             <div class="mt-5">
                 <a class="btn btn-primary" id="btn-save-draft" href="#">Save Draft</a>
-                <a class="btn btn-primary" id="btn-submit-finalized" href="#">Submit finalized project</a>
+                <a class="btn btn-secondary" id="btn-submit-finalized" href="#">Submit finalized project</a>
                 @if($project)
                     <a class="btn btn-primary" id="btn-delete" href="#">Delete</a>
                 @endif

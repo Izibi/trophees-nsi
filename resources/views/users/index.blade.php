@@ -4,11 +4,11 @@
     @if(count($rows))
         <div class="card mt-3 mb-3">
             <div class="card-header">
-                <strong>Users</strong>
+                <h2>Users</h2>
             </div>
 
             <div class="table-responsive">
-                <table class="table table-striped active-table">
+                <table class="table table-striped table-borderless active-table">
                     <thead>
                         <tr>
                             <th>{!! SortableTable::th('name', 'Name') !!}</th>
@@ -40,11 +40,11 @@
         </div>
 
         <div class="mt-3 mb-3">
-            <button class="btn btn-primary active-button" data-action="/users/:id/edit" data-method="GET">Edit selected user</button>        
+            <button class="btn btn-primary active-button" data-action="/users/:id/edit" data-method="GET">Edit selected user</button>
         </div>
 
         @include('common.paginator')
     @else
         @include('common.empty_list')
-    @endif    
+    @endif
 @endsection

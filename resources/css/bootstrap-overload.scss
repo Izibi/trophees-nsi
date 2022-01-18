@@ -1,10 +1,56 @@
+.navbar-light {
+    border-bottom: 2px solid $primary;
+}
+.navbar-light a,
+.navbar-light a:active,
+.navbar-light a:focus
+.navbar-light a {
+    color: $secondary !important;
+    font-family: "Bebas Neue";
+    font-size: 20px;
+
+}
+
+
 .modal-lg {
     max-width: 90% !important;
+}
+
+.modal-header {
+    border-bottom: 2px solid $primary;
 }
 
 
 .card .table:last-child {
     margin-bottom: 0;
+}
+
+.card .card-header {
+    color: $white;
+    background-color: $primary;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-family: "Bebas Neue";
+}
+
+
+.card .card-header a,
+.card .card-header a:hover {
+    color: $white;
+    line-height: 3rem;
+}
+
+.card .card-header h2 {
+    display: inline;
+    margin: 0;
+    line-height: 3rem;
+}
+
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link.active:hover {
+    color: $primary;
 }
 
 
