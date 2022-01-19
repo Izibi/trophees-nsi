@@ -10108,6 +10108,7 @@ h3 {
 }
 .navbar-light {
   border-bottom: 2px solid #003947;
+  background: rgba(0, 57, 71, 0.05);
 }
 
 .navbar-light a,
