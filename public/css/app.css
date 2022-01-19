@@ -4698,18 +4698,18 @@ input[type=button].btn-block {
   position: relative;
   display: block;
   padding: 0.5rem 0.75rem;
-  margin-left: -1px;
+  margin-left: -2px;
   line-height: 1.25;
   color: #E94E1B;
   background-color: #fff;
-  border: 1px solid #dee2e6;
+  border: 2px solid #003947;
 }
 .page-link:hover {
   z-index: 2;
   color: #a73610;
   text-decoration: none;
   background-color: #e9ecef;
-  border-color: #dee2e6;
+  border-color: #003947;
 }
 .page-link:focus {
   z-index: 3;
@@ -4737,7 +4737,7 @@ input[type=button].btn-block {
   pointer-events: none;
   cursor: auto;
   background-color: #fff;
-  border-color: #dee2e6;
+  border-color: #003947;
 }
 
 .pagination-lg .page-link {
@@ -4755,17 +4755,17 @@ input[type=button].btn-block {
 }
 
 .pagination-sm .page-link {
-  padding: 0.25rem 0.5rem;
+  padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
   line-height: 1.5;
 }
 .pagination-sm .page-item:first-child .page-link {
-  border-top-left-radius: 0.2rem;
-  border-bottom-left-radius: 0.2rem;
+  border-top-left-radius: 1.5rem;
+  border-bottom-left-radius: 1.5rem;
 }
 .pagination-sm .page-item:last-child .page-link {
-  border-top-right-radius: 0.2rem;
-  border-bottom-right-radius: 0.2rem;
+  border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
 }
 
 .badge {
@@ -10196,6 +10196,10 @@ select[readonly] {
 
 .custom-file-selected .custom-file-clear {
   display: block;
+}
+
+.pagination {
+  border-radius: 1.5rem !important;
 }
 
 table.active-table tr.active-row,
