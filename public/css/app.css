@@ -10209,6 +10209,15 @@ select[readonly] {
   border-radius: 1.5rem !important;
 }
 
+.pagination-compact .page-item {
+  display: none;
+}
+
+.pagination-compact .page-item:first-child,
+.pagination-compact .page-item:last-child {
+  display: block;
+}
+
 table.active-table tr.active-row,
 table.active-table tr[data-row-id]:hover {
   background-color: #003947;

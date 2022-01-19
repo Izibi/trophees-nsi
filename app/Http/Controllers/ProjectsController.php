@@ -30,7 +30,7 @@ class ProjectsController extends Controller
     {
         $q = $this->getProjectsQuery($request);
         SortableTable::orderBy($q, $this->getSortFields($request));
-        $projects = $q->paginate(5)->appends($request->all());
+        $projects = $q->paginate()->appends($request->all());
         $offset = ($projects->currentPage() - 1) * $projects->perPage();
         foreach($projects as &$project) {
             $offset++;
@@ -176,7 +176,7 @@ class ProjectsController extends Controller
     {
         $q = $this->getProjectsQuery($request);
         SortableTable::orderBy($q, $this->getSortFields($request));
-        $projects = $q->simplePaginate(1)->appends($request->all());
+        $projects = $q->paginate(1)->appends($request->all());
         if(!count($projects)) {
             return redirect($request->get('refer_page', '/projects'));
         }
@@ -274,8 +274,8 @@ class ProjectsController extends Controller
         }
         $project->status = $request->get('status');
         $project->save();
-        $url = $request->get('refer_page', '/projects');
-        return redirect($url)->withMessage('Status updated');
+        //$url = $request->get('refer_page', '/projects');
+        return redirect()->back()->withMessage('Status updated');
     }
 
 

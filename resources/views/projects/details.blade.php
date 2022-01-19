@@ -11,7 +11,7 @@
 
     <div class="col-12 col-sm-9">
         @if($projects_paginator && $projects_paginator->hasPages())
-            <div class="float-right">
+            <div class="float-right pagination-compact">
                 {{ $projects_paginator->links() }}
             </div>
         @endif

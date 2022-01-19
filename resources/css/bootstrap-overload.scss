@@ -112,3 +112,12 @@ select[readonly] {
 .pagination {
     border-radius: 1.5rem !important;
 }
+
+.pagination-compact .page-item {
+    display: none;
+}
+
+.pagination-compact .page-item:first-child,
+.pagination-compact .page-item:last-child {
+    display: block;
+}
