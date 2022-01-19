@@ -41,6 +41,7 @@
 
         <div class="mt-3 mb-3">
             <button class="btn btn-primary active-button" data-action="/users/:id/edit" data-method="GET">Edit selected user</button>
+            <a class="btn btn-primary" href="export/users" target="_blank">Download users CSV</a>
         </div>
 
         @include('common.paginator')
