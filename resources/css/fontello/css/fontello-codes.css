@@ -1,4 +1,5 @@
 
+.icon-picture:before { content: '\e800'; } /* '' */
 .icon-down:before { content: '\f175'; } /* '' */
 .icon-up:before { content: '\f176'; } /* '' */
 .icon-file-pdf:before { content: '\f1c1'; } /* '' */
