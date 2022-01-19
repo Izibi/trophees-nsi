@@ -10200,6 +10200,11 @@ select[readonly] {
   display: block;
 }
 
+.nav-tabs a,
+.nav-tabs a:hover {
+  color: #fff;
+}
+
 .pagination {
   border-radius: 1.5rem !important;
 }

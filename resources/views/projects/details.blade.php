@@ -64,5 +64,5 @@
 </div>
 
 <div class="mt-3">
-    Status: submitted on {{ $project->created_at }} {{ $project->status }}
+    Status: submitted on {{ $project->created_at }}, {{ $project->status }}
 </div>

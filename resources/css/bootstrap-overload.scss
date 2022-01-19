@@ -9,7 +9,6 @@
     color: $secondary !important;
     font-family: "Bebas Neue";
     font-size: 20px;
-
 }
 
 
@@ -104,6 +103,11 @@ select[readonly] {
     display: block;
 }
 
+
+.nav-tabs a,
+.nav-tabs a:hover {
+    color: $white;
+}
 
 .pagination {
     border-radius: 1.5rem !important;

@@ -1,5 +1,7 @@
 @if(is_null($project->score_total))
-    This project was not rated.
+    <div class="mt-3">
+        This project was not rated.
+    </div>
 @else
     <table class="table table-striped table-borderless">
         <tbody>
