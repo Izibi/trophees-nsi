@@ -10,6 +10,12 @@
     </div>
 
     <div class="col-12 col-sm-9">
+        @if($projects_paginator && $projects_paginator->hasPages())
+            <div class="float-right">
+                {{ $projects_paginator->links() }}
+            </div>
+        @endif
+
         <h1>{{ $project->name }}</h1>
         @if($project->school_id)
             School: {{ $project->school->name }}<br>

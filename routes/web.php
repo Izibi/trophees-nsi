@@ -13,6 +13,7 @@ Route::get('/oauth_callback/profile', [App\Http\Controllers\OAuthCallbackControl
 Route::middleware('auth')->group(function() {
 
     Route::resource('projects', App\Http\Controllers\ProjectsController::class);
+    Route::get('/project', [App\Http\Controllers\ProjectsController::class, 'showPaginated']);
 
     Route::middleware(['role:jury'])->group(function() {
         Route::post('projects/{project}/set_rating', [App\Http\Controllers\ProjectsController::class, 'setRating'])->name('projects.set_rating');

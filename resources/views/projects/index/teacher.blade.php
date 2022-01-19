@@ -20,7 +20,7 @@
                         </tr>
                     </thead>
                     @foreach ($rows as $project)
-                        <tr data-row-id="{{ $project->id }}" @if($project->status != 'draft') data-actions-disabled="edit" @endif>
+                        <tr data-row-id="{{ $project->id }}" @if($project->status != 'draft') data-actions-disabled="edit" @endif data-redirect-url="{{ $project->view_url }}">
                             <td>{{ $project->id }}</td>
                             <td>{{ $project->name }}</td>
                             <td>{{ $project->school_name }}</td>
@@ -43,7 +43,7 @@
             @if($contest_status == 'open')
                 <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Edit selected project</button>
             @endif
-            <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">View selected project</button>
+            <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">View selected project</button>
         @endif
         @if($contest_status == 'open')
             <button class="btn btn-primary active-button" data-action="/projects/create" data-method="GET">Deposit new project</button>

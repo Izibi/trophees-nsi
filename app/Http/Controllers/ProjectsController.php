@@ -30,7 +30,13 @@ class ProjectsController extends Controller
     {
         $q = $this->getProjectsQuery($request);
         SortableTable::orderBy($q, $this->getSortFields($request));
-        $projects = $q->paginate()->appends($request->all());
+        $projects = $q->paginate(5)->appends($request->all());
+        $offset = ($projects->currentPage() - 1) * $projects->perPage();
+        foreach($projects as &$project) {
+            $offset++;
+            $p = parse_url($projects->url($offset));
+            $project->view_url = '/project?'.$p['query'].'&refer_page='.urlencode($request->fullUrl());
+        }
         return view('projects.index.'.$request->user()->role, [
             'rows' => $projects,
             'contest_status' => $this->contest->status
@@ -148,6 +154,7 @@ class ProjectsController extends Controller
 
     public function show(Request $request, Project $project)
     {
+        // this method is not used anymore, but saved for future :)
         $user = $request->user();
         if(!$this->accessible($user, $project, 'view')) {
             return $this->accessDeniedResponse();
@@ -155,6 +162,7 @@ class ProjectsController extends Controller
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project,
+            'projects_paginator' => false,
             'contest_status' => $this->contest->status
         ];
         if($user->role == 'jury') {
@@ -162,6 +170,35 @@ class ProjectsController extends Controller
         }
         return view('projects.show.'.$user->role, $data);
     }
+
+
+    public function showPaginated(Request $request)
+    {
+        $q = $this->getProjectsQuery($request);
+        SortableTable::orderBy($q, $this->getSortFields($request));
+        $projects = $q->simplePaginate(1)->appends($request->all());
+        if(!count($projects)) {
+            return redirect($request->get('refer_page', '/projects'));
+        }
+
+        $project = Project::find($projects[0]->id);
+
+        $user = $request->user();
+        if(!$this->accessible($user, $project, 'view')) {
+            return $this->accessDeniedResponse();
+        }
+        $data = [
+            'refer_page' => $request->get('refer_page', '/projects'),
+            'project' => $project,
+            'projects_paginator' => $projects,
+            'contest_status' => $this->contest->status
+        ];
+        if($user->role == 'jury') {
+            $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
+        }
+        return view('projects.show.'.$user->role, $data);
+    }
+
 
 
     public function edit(Request $request, Project $project)
@@ -224,8 +261,8 @@ class ProjectsController extends Controller
         }
         $rating->fill($request->all());
         $rating->save();
-        $url = $request->get('refer_page', '/projects');
-        return redirect($url)->withMessage('Rating updated');
+        //$url = $request->get('refer_page', '/projects');
+        return redirect()->back()->withMessage('Rating updated');
     }
 
 

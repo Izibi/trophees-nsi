@@ -57,7 +57,7 @@ function init() {
 
   refreshButtons();
 
-  function redirect(action, method) {
+  function callAction(action, method) {
     //console.log(action, method, selection)
     if (action.indexOf(':id') !== -1) {
       if (!selection) {
@@ -85,13 +85,27 @@ function init() {
     form.submit();
   }
 
+  function redirect() {
+    var url = selection.el.data('redirect-url');
+
+    if (url) {
+      location.href = url;
+    }
+  }
+
   buttons.each(function () {
     var btn = $(this);
     btn.on('click', function () {
       var confirmation = btn.data('confirmation');
 
       if (!confirmation || confirm(confirmation)) {
-        redirect(btn.data('action'), btn.data('method'));
+        var method = btn.data('method');
+
+        if (method == 'REDIRECT') {
+          redirect();
+        } else {
+          callAction(btn.data('action'), btn.data('method'));
+        }
       }
     });
   });

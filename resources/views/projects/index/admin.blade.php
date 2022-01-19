@@ -21,7 +21,7 @@
                         </tr>
                     </thead>
                     @foreach ($rows as $project)
-                        <tr data-row-id="{{ $project->id }}" @if($project->status != 'draft') data-actions-disabled="edit" @endif>
+                        <tr data-row-id="{{ $project->id }}" @if($project->status != 'draft') data-actions-disabled="edit" @endif data-redirect-url="{{ $project->view_url }}">
                             <td>{{ $project->id }}</td>
                             <td>{{ $project->name }}</td>
                             <td>{{ $project->school_name }}</td>
@@ -42,7 +42,7 @@
 
     <div class="mt-5 mb-3">
         @if(count($rows))
-            <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">View selected project</button>
+            <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">View selected project</button>
         @endif
     </div>
 @endsection
