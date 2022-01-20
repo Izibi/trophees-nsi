@@ -51,7 +51,7 @@ class ContestsController extends Controller
         $contest = new Contest($request->all());
         $contest->save();
         $url = $request->get('refer_page', '/contests');
-        return redirect($url)->withMessage('Contest created');
+        return redirect($url)->withMessage('Concours créé');
     }
 
 
@@ -70,22 +70,22 @@ class ContestsController extends Controller
         $contest->fill($request->all());
         $contest->save();
         $url = $request->get('refer_page', '/contests');
-        return redirect($url)->withMessage('Contest updated');
+        return redirect($url)->withMessage('Concours modifié');
     }
 
     public function activate(Request $request, $contest_id) {
         $this->active_contest->set($contest_id);
         $url = $request->get('refer_page', '/contests');
-        return redirect($url)->withMessage('Active contest changed');
+        return redirect($url)->withMessage('Concours actif changé');
     }
 
     public function destroy(Request $request, Contest $contest)
     {
         if($contest->active) {
-            return redirect()->back()->withError('You can not delete active contest');
+            return redirect()->back()->withError('Vous ne pouvez pas supprimer un concours acrif');
         }
         $contest->delete();
         $url = $request->get('refer_page', '/contests');
-        return redirect($url)->withMessage('Contest deleted');
+        return redirect($url)->withMessage('Concours supprimé');
     }
 }

@@ -57,7 +57,7 @@ class UsersController extends Controller
         $user->fill($request->all());
         $user->save();
         $url = $request->get('refer_page', '/users');
-        return redirect($url)->withMessage('User updated');
+        return redirect($url)->withMessage('Utilisateur enregistré');
     }
 
 
@@ -65,6 +65,6 @@ class UsersController extends Controller
     {
         $user->delete();
         $url = $request->get('refer_page', '/users');
-        return redirect($url)->withMessage('User deleted');
+        return redirect($url)->withMessage('Utilisateur supprimé');
     }
 }

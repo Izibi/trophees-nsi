@@ -148,7 +148,7 @@ class ProjectsController extends Controller
             }
         }
         $url = $request->get('refer_page', '/projects');
-        return redirect($url)->withMessage('Project created');
+        return redirect($url)->withMessage('Projet créé');
     }
 
 
@@ -242,7 +242,7 @@ class ProjectsController extends Controller
         }
 
         $url = $request->get('refer_page', '/projects');
-        return redirect($url)->withMessage('Project updated');
+        return redirect($url)->withMessage('Project enregistré');
     }
 
 
@@ -262,7 +262,7 @@ class ProjectsController extends Controller
         $rating->fill($request->all());
         $rating->save();
         //$url = $request->get('refer_page', '/projects');
-        return redirect()->back()->withMessage('Rating updated');
+        return redirect()->back()->withMessage('Notes enregistrées');
     }
 
 
@@ -275,7 +275,7 @@ class ProjectsController extends Controller
         $project->status = $request->get('status');
         $project->save();
         //$url = $request->get('refer_page', '/projects');
-        return redirect()->back()->withMessage('Status updated');
+        return redirect()->back()->withMessage('Statut enregistré');
     }
 
 
@@ -286,7 +286,7 @@ class ProjectsController extends Controller
         }
         $project->delete();
         $url = $request->get('refer_page', '/projects');
-        return redirect($url)->withMessage('Project deleted');
+        return redirect($url)->withMessage('Projet supprimé');
     }
 
 

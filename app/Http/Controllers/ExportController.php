@@ -11,7 +11,7 @@ class ExportController extends Controller
     public function users() {
         $callback = function() {
             $fh = fopen('php://output', 'w');
-            $columns = ['ID', 'Created at', 'Name', 'Login', 'Email', 'Secondary Email', 'Role', 'Validated', 'Region', 'Country', 'Last login'];
+            $columns = ['ID', 'Date de création', 'Nom', 'Login', 'Email', 'Email secondaire', 'Rôle', 'Validé', 'Région', 'Pays', 'Dernière connexion'];
             fputcsv($fh, $columns);
 
             User::with('country', 'region')->chunk(100, function($users) use ($fh) {

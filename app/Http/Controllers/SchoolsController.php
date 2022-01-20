@@ -54,7 +54,7 @@ class SchoolsController extends Controller
         $school->fill($request->all());
         $school->save();
         $url = $request->get('refer_page', '/schools');
-        return redirect($url)->withMessage('School updated');
+        return redirect($url)->withMessage('Établissement enregistré');
     }
 
 
@@ -63,7 +63,7 @@ class SchoolsController extends Controller
         $school->hidden = 1;
         $school->save();
         $url = $request->get('refer_page', '/school');
-        return redirect($url)->withMessage('School updated');
+        return redirect($url)->withMessage('Etablissement caché');
     }
 
 
@@ -71,6 +71,6 @@ class SchoolsController extends Controller
     {
         $school->delete();
         $url = $request->get('refer_page', '/schools');
-        return redirect($url)->withMessage('School deleted');
+        return redirect($url)->withMessage('Établissement supprimé');
     }
 }
