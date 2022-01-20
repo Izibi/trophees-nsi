@@ -11,11 +11,11 @@ use Carbon\Carbon;
 
 class OAuthCallbackController extends Controller
 {
-    
+
 
     public function login(Request $request) {
         Session::flush();
-        Auth::logout();        
+        Auth::logout();
         try {
             $client = new Client(config('login_module_client'));
             $authorization_helper = $client->getAuthorizationHelper();
@@ -25,7 +25,7 @@ class OAuthCallbackController extends Controller
                 throw new \Exception('Login available for teachers only.');
             }
             $user = $this->refreshUser($user_data);
-            Auth::login($user);        
+            Auth::login($user);
         } catch(\Exception $e) {
             return redirect('/')->with('error_message', $e->getMessage());
         }
@@ -34,14 +34,18 @@ class OAuthCallbackController extends Controller
 
 
     public function profile(Request $request) {
-        $client = new Client(config('login_module_client'));
-        $authorization_helper = $client->getAuthorizationHelper();
-        $user_data = $authorization_helper->queryUser();
-        if($request->user()->id != $user_data['id']) {
-            return redirect('/logout');
-        }
-        $this->refreshUser($user_data);
         $url = $request->session()->pull('refer_page', '/');
+        try {
+            $client = new Client(config('login_module_client'));
+            $authorization_helper = $client->getAuthorizationHelper();
+            $user_data = $authorization_helper->queryUser();
+            if($request->user()->id != $user_data['id']) {
+                return redirect('/logout');
+            }
+            $this->refreshUser($user_data);
+        } catch(\Exception $e) {
+            return redirect($url)->with('error_message', $e->getMessage());
+        }
         return redirect($url);
     }
 
@@ -75,7 +79,7 @@ class OAuthCallbackController extends Controller
             'email' => $user_data['primary_email'],
             'secondary_email' => $user_data['secondary_email'],
             'name' => $user_data['first_name'].' '.$user_data['last_name'],
-            'login' => $user_data['login'],            
+            'login' => $user_data['login'],
             'validated' => isset($user_data['verification']['role']) && $user_data['verification']['role'] == 'VERIFIED'
         ];
     }
