@@ -14,8 +14,7 @@
                         <div class="list-select" id="schools-my" style="height: 354px"></div>
                         <div class="mt-3">
                             <button class="btn btn-primary" id="btn-school-use">Utiliser cet établissement</button>
-                            <button class="btn btn-primary" id="btn-school-delete">Retirer de mes établissements</button>
-                            <button class="btn btn-primary" id="btn-school-show-create">Ajouter un nouvel établissement</button>
+                            <button class="btn btn-primary" id="btn-school-delete">Retirer de ma liste</button>
                         </div>
                     </div>
                     <div class="col-6">
@@ -30,6 +29,7 @@
                         </div>
                         <div class="mt-3">
                             <button class="btn btn-primary" id="btn-school-add">Ajouter à mes établissements</button>
+                            <button class="btn btn-primary" id="btn-school-show-create">Créer un nouvel établissement</button>
                         </div>
                     </div>
                 </div>
