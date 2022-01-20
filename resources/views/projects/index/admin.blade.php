@@ -28,7 +28,7 @@
                             <td>{{ $project->region_name }}</td>
                             <td>{{ $project->user_name }}</td>
                             <td>{{ $project->created_at }}</td>
-                            <td>{{ $project->status }}</td>
+                            <td>@lang('project_status.'.$project->status)</td>
                         </tr>
                     @endforeach
                 </table>
