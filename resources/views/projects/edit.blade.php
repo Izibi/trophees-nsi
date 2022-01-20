@@ -11,7 +11,7 @@
 
             {!! Form::text('name', 'Nom du projet') !!}
 
-            {!! Form::select('school_id', 'School', $schools['options'])->help('<a id="btn-open-schools-manager" href="#">Modifier ma liste d'établissements</a>') !!}
+            {!! Form::select('school_id', 'School', $schools['options'])->help('<a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>') !!}
 
             {!! Form::select('grade_id', 'Grade', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
 
