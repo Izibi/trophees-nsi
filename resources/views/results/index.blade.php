@@ -4,15 +4,15 @@
     @if(count($rows))
         <div class="card mt-3 mb-3">
             <div class="card-header">
-                <h2>Projects rating</h2>
+                <h2>Notes des projets</h2>
             </div>
 
             <div class="table-responsive">
                 <table class="table table-striped table-borderless active-table">
                     <thead>
                         <tr>
-                            <th>Project name</th>
-                            <th>Project average score</th>
+                            <th>Nom du projet</th>
+                            <th>Note moyenne du projet</th>
                         </tr>
                     </thead>
                     @foreach ($rows as $project)

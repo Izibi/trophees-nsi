@@ -18,24 +18,24 @@
 
         <h1>{{ $project->name }}</h1>
         @if($project->school_id)
-            School: {{ $project->school->name }}<br>
+            Établissement : {{ $project->school->name }}<br>
         @endif
         @if($project->grade_id)
-            Grade: {{ $project->grade->name }}<br>
+            Classe : {{ $project->grade->name }}<br>
         @endif
-        Team composition:
+        Composition de l'équipe :
         @if(!is_null($project->team_girls))
-            {{ $project->team_girls }} girls;
+            {{ $project->team_girls }} filles;
         @endif
         @if(!is_null($project->team_boys))
-            {{ $project->team_boys }} boys;
+            {{ $project->team_boys }} garçons;
         @endif
         @if(!is_null($project->team_not_provided))
-            {{ $project->team_not_provided }} not provided
+            {{ $project->team_not_provided }} non renseigné
         @endif
         <br>
         @if(!is_null($project->video))
-            Video: <a href="{{ $project->video }}" target="_blank">{{ $project->video }}</a>
+            Vidéo : <a href="{{ $project->video }}" target="_blank">{{ $project->video }}</a>
         @endif
     </div>
 </div>
@@ -49,7 +49,7 @@
         <div class="col-6">
             <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">
                 <i class="icon-file-pdf"></i>
-                PDF presentation
+                PDF de presentation
             </a>
         </div>
     @endif
@@ -57,12 +57,12 @@
         <div class="col-6">
             <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">
                 <i class="icon-file-archive"></i>
-                ZIP file
+                fichier ZIP
             </a>
         </div>
     @endif
 </div>
 
 <div class="mt-3">
-    Status: submitted on {{ $project->created_at }}, {{ $project->status }}
+    Statur : soumis le {{ $project->created_at }}, {{ $project->status }}
 </div>

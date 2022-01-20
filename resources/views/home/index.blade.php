@@ -7,11 +7,11 @@
     @endif
 
     @if (!Auth::check())
-        <p>Projects have to be deposited by teachers. If you are a teacher, you can register or login below.</p>
-        <p>If you are a student, please contact your NSI teacher and let them know you would like your group to take part in Trophees NSI.</p>
+        <p>Les projets pour les Trophées NSI doivent être déposés par l'enseignant. Si vous êtes enseignant, vous pouvez vous inscrire ou vous connecter ci-dessous.</p>
+        <p>Si vous êtes élève, contactez votre professeur de NSI pour l'informer que vous souhaitez que votre équipe participe aux Trophées NSI.</p>
 
         <div class="justify-content-center">
-            <a class="btn btn-secondary" href="/login">Login or Register</a>
+            <a class="btn btn-secondary" href="/login">Se connecter ou créer un compte</a>
         </div>
     @endif
 

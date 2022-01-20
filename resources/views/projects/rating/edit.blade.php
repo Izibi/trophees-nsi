@@ -29,10 +29,10 @@
             ->wrapperAttrs(['class' => 'form-group-compact'])
             ->options(Rating::rangeOptions(3))->help('Idées d\'améliorations, de diffusion et pistes de développement') !!}
         <div class="mt-3">
-            Total: <strong><span id="rating-total">--</span> of <span id="rating-max">--</span></strong>
+            Total : <strong><span id="rating-total">--</span> sur <span id="rating-max">--</span></strong>
         </div>
         <div class="mt-3">
-            To consider for awards:
+            À envisager pour un prix spécial :
             <div class="row">
                 <div class="col-6">
                     <input type="hidden" name="cb_award_mixed" value="0"/>
@@ -64,10 +64,10 @@
         @if($contest_status == 'grading' || $contest_status == 'deliberating')
             <div class="mt-3">
                 @if(!$rating || !$rating->published)
-                    {!! Form::submit('Save draft') !!}
+                    {!! Form::submit('Enregistrer le brouillon') !!}
                 @endif
-                <a class="btn btn-primary" href="#" id="btn-submit-rating">Submit</a>
-                <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
+                <a class="btn btn-primary" href="#" id="btn-submit-rating">Finaliser</a>
+                <a class="btn btn-primary" href="{{ $refer_page }}">Annuler</a>
             </div>
         @else
             <script>
@@ -101,7 +101,7 @@
 
         $('#btn-submit-rating').on('click', function(e) {
             e.preventDefault();
-            if(confirm('You are going to submit your rating. This will affect project aggregated ratings. Continue?')) {
+            if(confirm('Vous allez soumettre vos notes. Continuer ?')) {
                 var form = $('#rating-form form').first();
                 form.append('<input type="hidden" name="published" value="1"/>');
                 form.submit();

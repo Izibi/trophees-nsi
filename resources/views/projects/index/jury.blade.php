@@ -3,7 +3,7 @@
 @section('content')
     <div class="card mt-3 mb-3">
         <div class="card-header">
-            <h2>Projects</h2>
+            <h2>Projets</h2>
             @include('projects.index.filter')
         </div>
         @if(count($rows))
@@ -12,8 +12,8 @@
                     <thead>
                         <tr>
                             <th>{!! SortableTable::th('id', 'ID') !!}</th>
-                            <th>{!! SortableTable::th('name', 'Name') !!}</th>
-                            <th>{!! SortableTable::th('created_at', 'Submission date') !!}</th>
+                            <th>{!! SortableTable::th('name', 'Nom') !!}</th>
+                            <th>{!! SortableTable::th('created_at', 'Date de soumission') !!}</th>
                         </tr>
                     </thead>
                     @foreach ($rows as $project)
@@ -36,7 +36,7 @@
     <div class="mt-5 mb-3">
         @if(count($rows))
             @if($contest_status == 'grading' || $contest_status == 'deliberating' || $contest_status == 'closed')
-                <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">View selected project</button>
+                <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">Afficher le projet sélectionné</button>
             @endif
         @endif
     </div>

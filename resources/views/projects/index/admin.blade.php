@@ -3,7 +3,7 @@
 @section('content')
     <div class="card mt-3 mb-3">
         <div class="card-header">
-            <h2>Projects</h2>
+            <h2>Projets</h2>
             @include('projects.index.filter')
         </div>
         @if(count($rows))
@@ -12,12 +12,12 @@
                     <thead>
                         <tr>
                             <th>{!! SortableTable::th('id', 'ID') !!}</th>
-                            <th>{!! SortableTable::th('name', 'Name') !!}</th>
-                            <th>{!! SortableTable::th('school_name', 'School') !!}</th>
-                            <th>{!! SortableTable::th('region_name', 'Region') !!}</th>
-                            <th>{!! SortableTable::th('user_name', 'Teacher') !!}</th>
-                            <th>{!! SortableTable::th('created_at', 'Submission date') !!}</th>
-                            <th>{!! SortableTable::th('status', 'Status') !!}</th>
+                            <th>{!! SortableTable::th('name', 'Nom') !!}</th>
+                            <th>{!! SortableTable::th('school_name', 'Établissement') !!}</th>
+                            <th>{!! SortableTable::th('region_name', 'Territoire') !!}</th>
+                            <th>{!! SortableTable::th('user_name', 'Enseignant') !!}</th>
+                            <th>{!! SortableTable::th('created_at', 'Date de soumission') !!}</th>
+                            <th>{!! SortableTable::th('status', 'Statut') !!}</th>
                         </tr>
                     </thead>
                     @foreach ($rows as $project)
@@ -42,7 +42,7 @@
 
     <div class="mt-5 mb-3">
         @if(count($rows))
-            <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">View selected project</button>
+            <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">Afficher le projet sélectionné</button>
         @endif
     </div>
 @endsection

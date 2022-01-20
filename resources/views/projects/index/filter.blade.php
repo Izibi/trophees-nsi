@@ -1,4 +1,4 @@
-<a href="#" class="right-link" data-toggle="collapse" data-target="#projects-filter">Filter</a>
+<a href="#" class="right-link" data-toggle="collapse" data-target="#projects-filter">Filtre</a>
 
 <div class="border-top collapse {{ Request::has('filter') ? 'show' : '' }}" id="projects-filter">
     <div class="mt-3">
@@ -10,25 +10,25 @@
                 {!! Form::hidden('sort_order') !!}
             @endif
             {!! Form::hidden('filter', '1') !!}
-            {!! Form::text('filter_id', 'Project ID') !!}
-            {!! Form::text('filter_name', 'Name') !!}
+            {!! Form::text('filter_id', 'ID de projet') !!}
+            {!! Form::text('filter_name', 'Nom') !!}
 
             @if(Auth::user()->role == 'teacher' || Auth::user()->role == 'admin')
-                {!! Form::text('filter_school', 'School') !!}
+                {!! Form::text('filter_school', 'Établissement') !!}
             @endif
             @if(Auth::user()->role == 'admin')
-                {!! Form::text('filter_region', 'Region') !!}
-                {!! Form::text('filter_user_name', 'Teacher') !!}
+                {!! Form::text('filter_region', 'Territoire') !!}
+                {!! Form::text('filter_user_name', 'Enseignant') !!}
             @endif
-            {!! Form::select('filter_status', 'Status')->options([
+            {!! Form::select('filter_status', 'Statut')->options([
                 '' => '',
-                'draft' => 'Draft',
-                'finalized' => 'Finalized',
-                'validated' => 'Validated',
-                'incomplete' => 'Incomplete',
-                'masked' => 'Masked'
+                'draft' => 'Brouillon',
+                'finalized' => 'Finalisé',
+                'validated' => 'Validé',
+                'incomplete' => 'Incomplet',
+                'masked' => 'Masqué'
             ]) !!}
-            {!! Form::submit('Search') !!}
+            {!! Form::submit('Chercher') !!}
             <a href="/projects" class="btn btn-primary">Reset</a>
         {!! Form::close() !!}
     </div>
