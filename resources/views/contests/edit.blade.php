@@ -52,8 +52,10 @@
             });
 
 
+            var locale = '{!! app()->getLocale() !!}';
             tinymce.init({
                 selector: '#inp-message',
+                language: locale,
                 skin: false,
                 content_css: false,
                 plugins: 'code link lists table',

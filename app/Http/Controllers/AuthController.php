@@ -14,7 +14,7 @@ class AuthController extends Controller
         $this->logoutUser();
         $client = new Client(config('login_module_client'));
         $authorization_helper = $client->getAuthorizationHelper();
-        $url = $authorization_helper->getUrl(['locale' => config('app.locale')]);
+        $url = $authorization_helper->getUrl(['locale' => app()->getLocale()]);
         return redirect($url);
     }
 
