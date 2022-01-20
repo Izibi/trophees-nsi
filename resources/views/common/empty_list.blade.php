@@ -1,1 +1,1 @@
-<div class="alert alert-warning m-3">Empty list</div>
+<div class="alert alert-warning m-3">Liste vide</div>
