@@ -9,86 +9,86 @@
             !!}
             {{ $project ? method_field('PUT') : '' }}
 
-            {!! Form::text('name', 'Project name') !!}
+            {!! Form::text('name', 'Nom du projet') !!}
 
-            {!! Form::select('school_id', 'School', $schools['options'])->help('<a id="btn-open-schools-manager" href="#">Edit my list of schools</a>') !!}
+            {!! Form::select('school_id', 'School', $schools['options'])->help('<a id="btn-open-schools-manager" href="#">Modifier ma liste d'établissements</a>') !!}
 
             {!! Form::select('grade_id', 'Grade', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
 
             <div class="row">
                 <div class="col-4">
-                    {!! Form::text('team_girls', 'Team girls')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('team_girls', 'Filles de l\'équipe')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
                 <div class="col-4">
-                    {!! Form::text('team_boys', 'Team boys')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('team_boys', 'Garçons de l\'équipe')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
                 <div class="col-4">
-                    {!! Form::text('team_not_provided', 'Not provided')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('team_not_provided', 'Non renseigné')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
             </div>
-            <p><small class="form-text text-muted">We have a separate prize for girls to encourage female participation.</small></p>
+            <p><small class="form-text text-muted">Notez que la mixité de l'équipe est prise en compte pour certains prix.</small></p>
 
             {!! Form::textarea('description', 'Description')
                 ->attrs(['style' => 'height: 200px'])
                 ->help('<div id="description-counter"></div>') !!}
 
-            {!! Form::text('video', 'Video')
-                ->help('Please upload your video to <a href="https://peertube.fr" target="_blank">peertube.fr</a> and copy/paste video URL here.') !!}
+            {!! Form::text('video', 'Vidéo')
+                ->help('La vidéo doit être publiée sur <a href="https://peertube.fr" target="_blank">peertube.fr</a>. Renseignez ici son URL.') !!}
 
 
             <div class="row">
                 <div class="col-4 file-box">
                     <span class="file-box-title">Image</span>
                     @if($project && !is_null($project->image_file))
-                        - <a href="{{ Storage::disk('uploads')->url($project->image_file) }}" target="_blank">download</a> or
-                        <a href="#" class="link-delete-file" data-file="image_file">delete</a>
+                        - <a href="{{ Storage::disk('uploads')->url($project->image_file) }}" target="_blank">télécharger</a> ou
+                        <a href="#" class="link-delete-file" data-file="image_file">supprimer</a>
                     @endif
                     <div class="custom-file mt-2">
                         <span class="custom-file-clear" title="Clear">&times;</span>
                         <input name="image_file" id="inp-image_file" type="file" accept=".jpg,.jpeg,.png,.gif" class="custom-file-input">
-                        <label for="inp-image_file" class="custom-file-label text-truncate">Choose file...</label>
+                        <label for="inp-image_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                     </div>
                 </div>
                 <div class="col-4 file-box">
-                    <span class="file-box-title">Presentation PDF</span>
+                    <span class="file-box-title">PDF de présentation</span>
                     @if($project && !is_null($project->presentation_file))
-                        - <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">download</a> or
-                        <a href="#" class="link-delete-file" data-file="presentation_file">delete</a>
+                        - <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">télécharger</a> ou
+                        <a href="#" class="link-delete-file" data-file="presentation_file">supprimer</a>
                     @endif
                     <div class="custom-file mt-2">
                         <span class="custom-file-clear" title="Clear">&times;</span>
                         <input name="presentation_file" id="inp-presentation_file" type="file" accept=".pdf" class="custom-file-input">
-                        <label for="inp-presentation_file" class="custom-file-label text-truncate">Choose file...</label>
+                        <label for="inp-presentation_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                     </div>
                 </div>
                 <div class="col-4 file-box">
-                    <span class="file-box-title">Zip of project</span>
+                    <span class="file-box-title">Zip du projet</span>
                     @if($project && !is_null($project->zip_file))
-                        - <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">download</a> or
-                        <a href="#" class="link-delete-file" data-file="zip_file">delete</a>
+                        - <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">télécharger</a> ou
+                        <a href="#" class="link-delete-file" data-file="zip_file">supprimer</a>
                     @endif
                     <div class="custom-file mt-2">
                         <span class="custom-file-clear" title="Clear">&times;</span>
                         <input name="zip_file" id="inp-zip_file" type="file" accept=".zip" class="custom-file-input">
-                        <label for="inp-zip_file" class="custom-file-label text-truncate">Choose file...</label>
+                        <label for="inp-zip_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                     </div>
-                    <small>Should include executable, source codes and documentation. See <a href="#">here</a> for details.</small>
+                    <small>Le zip doit contenir un exécutable, les codes sources et la documentation. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation">ici</a> pour les détails.</small>
                 </div>
             </div>
 
             <div class="mt-5">
                 <input type="hidden" name="cb_tested_by_teacher" value="0"/>
-                {!! Form::checkbox('cb_tested_by_teacher', 'I hereby declare that I have tested the project and that what is shown in the video really works.')
+                {!! Form::checkbox('cb_tested_by_teacher', 'Je certifie avoir testé le projet soumis, et que celui-ci fonctionne comme présenté dans la vidéo.')
                     ->checked($project && $project->tested_by_teacher) !!}
             </div>
 
             <div class="mt-5">
-                <a class="btn btn-primary" id="btn-save-draft" href="#">Save Draft</a>
-                <a class="btn btn-secondary" id="btn-submit-finalized" href="#">Submit finalized project</a>
+                <a class="btn btn-primary" id="btn-save-draft" href="#">Enregistrer le brouillon</a>
+                <a class="btn btn-secondary" id="btn-submit-finalized" href="#">Soumettre le projet finalisé</a>
                 @if($project)
-                    <a class="btn btn-primary" id="btn-delete" href="#">Delete</a>
+                    <a class="btn btn-primary" id="btn-delete" href="#">Supprimer</a>
                 @endif
-                <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
+                <a class="btn btn-primary" href="{{ $refer_page }}">Annuler</a>
             </div>
         {!! Form::close() !!}
     </div>
@@ -118,7 +118,7 @@
 
             $('#btn-submit-finalized').click(function(e) {
                 e.preventDefault();
-                if(confirm('This will change project status to finalized, cancellation will not be possible. Continue?')) {
+                if(confirm('Vous êtes sur le point de soumettre le projet, il ne sera plus possible de le modifier. Continuer ?')) {
                     form.append('<input type="hidden" name="finalize" value="1"/>');
                     form.submit();
                 }
@@ -126,7 +126,7 @@
 
             $('#btn-delete').click(function(e) {
                 e.preventDefault();
-                if(confirm('Are you sure?')) {
+                if(confirm('Êtes-vous certain ?')) {
                     var del_form = $('#delete-form>form').first();
                     del_form.submit();
                 }

@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h1>Edit contest</h1>
+<h1>Modifier un concours</h1>
 
     <div id="edit-form">
         {!! Form::open()
@@ -10,22 +10,22 @@
             ->fill($contest)
             !!}
             {{ $contest ? method_field('PUT') : '' }}
-            {!! Form::text('name', 'Name') !!}
-            {!! Form::text('year', 'Year') !!}
+            {!! Form::text('name', 'Nom') !!}
+            {!! Form::text('year', 'Année') !!}
             {!! Form::textarea('message', 'Message')->attrs(['style' => 'height: 500px']) !!}
-            {!! Form::select('status', 'Status', [
-                'preparing' => 'preparing',
-                'open' => 'open',
-                'grading' => 'grading',
-                'deliberating' => 'deliberating',
-                'closed' => 'closed'
+            {!! Form::select('status', 'Statut', [
+                'preparing' => 'En préparation',
+                'open' => 'Ouvert',
+                'grading' => 'Évaluation',
+                'deliberating' => 'Délibération',
+                'closed' => 'Fermé'
             ]) !!}
         {!! Form::close() !!}
         <div class="mt-5">
             <a class="btn btn-primary" id="btn-ok" href="#">Ok</a>
-            <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
+            <a class="btn btn-primary" href="{{ $refer_page }}">Annuler</a>
             @if($contest)
-                <a class="btn btn-primary" id="btn-delete" href="#">Delete</a>
+                <a class="btn btn-primary" id="btn-delete" href="#">Supprimer</a>
             @endif
         </div>
     </div>
@@ -51,7 +51,7 @@
 
             $('#btn-delete').click(function(e) {
                 e.preventDefault();
-                if(confirm('This action will delete all data related to this contest. Are you sure?')) {
+                if(confirm('Cette action supprimera toutes les données liées à ce concours. Êtes-vous sûr ?')) {
                     var del_form = $('#delete-form>form').first();
                     del_form.submit();
                 }

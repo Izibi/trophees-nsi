@@ -11,20 +11,20 @@
             !!}
             {{ method_field('PUT') }}
 
-            {!! Form::text('name', 'Name') !!}
+            {!! Form::text('name', 'Nom') !!}
 
-            {!! Form::text('address', 'Name') !!}
-            {!! Form::text('city', 'Name') !!}
-            {!! Form::text('zip', 'Name') !!}
+            {!! Form::text('address', 'Adresse') !!}
+            {!! Form::text('city', 'Ville') !!}
+            {!! Form::text('zip', 'Fichier zip') !!}
 
-            {!! Form::select('region_id', 'Region', $regions) !!}
-            {!! Form::select('country_id', 'Country', [null => ''] + $countries->pluck('name', 'id')->toArray()) !!}
+            {!! Form::select('region_id', 'Rétion', $regions) !!}
+            {!! Form::select('country_id', 'Pays', [null => ''] + $countries->pluck('name', 'id')->toArray()) !!}
             {!! Form::text('uai', 'UAI') !!}
         {!! Form::close() !!}
         <div class="mt-5">
             <a class="btn btn-primary" id="btn-ok" href="#">Ok</a>
-            <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
-            <a class="btn btn-primary" id="btn-delete" href="#">Delete</a>
+            <a class="btn btn-primary" href="{{ $refer_page }}">Annuler</a>
+            <a class="btn btn-primary" id="btn-delete" href="#">Supprimer</a>
         </div>
     </div>
 
@@ -51,7 +51,7 @@
 
             $('#btn-delete').click(function(e) {
                 e.preventDefault();
-                if(confirm('This action will delete all data related to this school. Are you sure?')) {
+                if(confirm('Cette action va supprimer toutes les données associées à cet établissement. Êtes-vous sûr ?')) {
                     var del_form = $('#delete-form>form').first();
                     del_form.submit();
                 }

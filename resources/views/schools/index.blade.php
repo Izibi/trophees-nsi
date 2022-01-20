@@ -11,12 +11,12 @@
                 <table class="table table-striped table-borderless active-table">
                     <thead>
                         <tr>
-                            <th>{!! SortableTable::th('name', 'Name') !!}</th>
-                            <th>{!! SortableTable::th('address', 'Address') !!}</th>
-                            <th>{!! SortableTable::th('city', 'City') !!}</th>
-                            <th>{!! SortableTable::th('zip', 'Zipcode') !!}</th>
-                            <th>{!! SortableTable::th('country', 'Country') !!}</th>
-                            <th>{!! SortableTable::th('region', 'Region') !!}</th>
+                            <th>{!! SortableTable::th('name', 'Nom') !!}</th>
+                            <th>{!! SortableTable::th('address', 'Adresse') !!}</th>
+                            <th>{!! SortableTable::th('city', 'Ville') !!}</th>
+                            <th>{!! SortableTable::th('zip', 'Code postal') !!}</th>
+                            <th>{!! SortableTable::th('country', 'Pays') !!}</th>
+                            <th>{!! SortableTable::th('region', 'Territoire') !!}</th>
                             <th>{!! SortableTable::th('uai', 'UAI') !!}</th>
                         </tr>
                     </thead>
@@ -38,8 +38,8 @@
         </div>
 
         <div class="mt-3 mb-3">
-            <button class="btn btn-primary active-button" data-action="/schools/:id/edit" data-method="GET">Edit selected school</button>
-            <button class="btn btn-primary active-button" data-action="/schools/:id/hide" data-method="POST">Hide selected school</button>
+            <button class="btn btn-primary active-button" data-action="/schools/:id/edit" data-method="GET">Modifier l'établissement sélectionné</button>
+            <button class="btn btn-primary active-button" data-action="/schools/:id/hide" data-method="POST">Cacher l'établissement sélectionné</button>
         </div>
 
         @include('common.paginator')

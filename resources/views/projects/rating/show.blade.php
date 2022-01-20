@@ -1,6 +1,6 @@
 @if(is_null($project->score_total))
     <div class="mt-3">
-        This project was not rated.
+        Ce projet n'a pas été noté
     </div>
 @else
     <table class="table table-striped table-borderless">
@@ -53,7 +53,7 @@
         <tbody>
             <tr></tr>
             <tr>
-                <td colspan="2"><strong>Project awards</strong></td>
+                <td colspan="2"><strong>Récompenses suggérées</strong></td>
             </tr>
             <tr>
                 <td class="col-10">Mixité</td>

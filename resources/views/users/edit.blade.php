@@ -4,7 +4,7 @@
     <table class="table table-bordered">
         <tbody>
         <tr>
-            <td>Name</td>
+            <td>Nom</td>
             <td>{{ $user->name }}</td>
         </tr>
         <tr>
@@ -12,11 +12,11 @@
             <td>{{ $user->login }} </td>
         </tr>
         <tr>
-            <td>Professional email</td>
+            <td>Email professionel</td>
             <td>{{ $user->email }}</td>
         </tr>
         <tr>
-            <td>Secondary email</td>
+            <td>Email secondaire</td>
             <td>{{ $user->secondary_email }}</td>
         </tr>
         </tbody>
@@ -30,30 +30,30 @@
             !!}
             {{ method_field('PUT') }}
 
-            {!!Form::select('validated', 'Validated user',
+            {!!Form::select('validated', 'Utilisateur validé',
                 [
-                    '0' => 'No',
-                    '1' => 'Yes',
+                    '0' => 'Non',
+                    '1' => 'Oui',
                 ]
             )!!}
 
-            {!!Form::select('role', 'Role',
+            {!!Form::select('role', 'Rôle',
                 [
-                    'teacher' => 'Teacher',
+                    'teacher' => 'Enseignant',
                     'jury' => 'Jury',
                     'admin' => 'Admin',
                 ]
             )!!}
 
-            {!! Form::select('region_id', 'Region', [null => ''] + $regions->pluck('name', 'id')->toArray()) !!}
-            {!! Form::select('country_id', 'Country', [null => ''] + $countries->pluck('name', 'id')->toArray()) !!}
+            {!! Form::select('region_id', 'Territoire', [null => ''] + $regions->pluck('name', 'id')->toArray()) !!}
+            {!! Form::select('country_id', 'Pays', [null => ''] + $countries->pluck('name', 'id')->toArray()) !!}
 
         {!! Form::close() !!}
 
         <div class="mt-5">
             <a class="btn btn-primary" id="btn-ok" href="#">Ok</a>
-            <a class="btn btn-primary" href="{{ $refer_page }}">Cancel</a>
-            <a class="btn btn-primary" id="btn-delete" href="#">Delete user</a>
+            <a class="btn btn-primary" href="{{ $refer_page }}">Annuler</a>
+            <a class="btn btn-primary" id="btn-delete" href="#">Supprimer l'utilisateur</a>
         </div>
     </div>
 
