@@ -107,7 +107,7 @@ return [
     'prohibits'            => 'Ce champ interdit :other d\'être présent.',
     'regex'                => 'Le format de ce champ est invalide.',
     'required'             => 'Ce champ est obligatoire.',
-    'required_if'          => 'Ce champ est obligatoire quand la valeur de :other est :value.',
+    'required_if'          => 'Ce champ est obligatoire.',
     'required_unless'      => 'Ce champ est obligatoire sauf si :other est :values.',
     'required_with'        => 'Ce champ est obligatoire quand :values est présent.',
     'required_with_all'    => 'Ce champ est obligatoire quand :values sont présents.',
