@@ -64,5 +64,5 @@
 </div>
 
 <div class="mt-3">
-    Statut : soumis le {{ $project->created_at }}, {{ $project->status }}
+    Statut : soumis le {{ $project->created_at }}, @lang('project_status.'.$project->status)
 </div>

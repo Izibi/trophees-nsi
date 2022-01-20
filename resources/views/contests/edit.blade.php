@@ -13,13 +13,7 @@
             {!! Form::text('name', 'Nom') !!}
             {!! Form::text('year', 'Année') !!}
             {!! Form::textarea('message', 'Message')->attrs(['style' => 'height: 500px']) !!}
-            {!! Form::select('status', 'Statut', [
-                'preparing' => 'En préparation',
-                'open' => 'Ouvert',
-                'grading' => 'Évaluation',
-                'deliberating' => 'Délibération',
-                'closed' => 'Fermé'
-            ]) !!}
+            {!! Form::select('status', 'Statut', trans('contest_status')) !!}
         {!! Form::close() !!}
         <div class="mt-5">
             <a class="btn btn-primary" id="btn-ok" href="#">Ok</a>
@@ -58,8 +52,10 @@
             });
 
 
+            var locale = '{!! app()->getLocale() !!}';
             tinymce.init({
                 selector: '#inp-message',
+                language: locale,
                 skin: false,
                 content_css: false,
                 plugins: 'code link lists table',

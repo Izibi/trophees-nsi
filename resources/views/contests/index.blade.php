@@ -22,7 +22,7 @@
                             <tr data-row-id="{{ $contest->id }}" @if($contest->active) data-actions-disabled="activate" @endif>
                                 <td>{{ $contest->name }}</td>
                                 <td>{{ $contest->year }}</td>
-                                <td>{{ $contest->status }}</td>
+                                <td>@lang('contest_status.'.$contest->status)</td>
                                 <td>{!! $contest->active ? '<span class="badge badge-success">Oui</span>' : '' !!}</td>
                             </tr>
                         @endforeach

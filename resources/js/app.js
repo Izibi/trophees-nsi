@@ -12,6 +12,7 @@ require('tinymce/plugins/emoticons/js/emojis');
 require('tinymce/plugins/link');
 require('tinymce/plugins/lists');
 require('tinymce/plugins/table');
+require('./tinymce/langs/fr.js');
 
 require('bootstrap');
 require('./UI/overlay.js');
