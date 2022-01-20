@@ -126,7 +126,7 @@
 
             $('#btn-delete').click(function(e) {
                 e.preventDefault();
-                if(confirm('Êtes-vous certain ?')) {
+                if(confirm('Êtes-vous certain de vouloir supprimer ce projet ?')) {
                     var del_form = $('#delete-form>form').first();
                     del_form.submit();
                 }
