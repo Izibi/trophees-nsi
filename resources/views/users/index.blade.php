@@ -18,7 +18,7 @@
                             <th>{!! SortableTable::th('role', 'Rôle') !!}</th>
                             <th>{!! SortableTable::th('country', 'Pays') !!}</th>
                             <th>{!! SortableTable::th('region', 'Territoire') !!}</th>
-                            <th>{!! SortableTable::th('created_at', 'Date d'enregistrement') !!}</th>
+                            <th>{!! SortableTable::th('created_at', 'Date d\'enregistrement') !!}</th>
                             <th>{!! SortableTable::th('last_login_at', 'Date de dernière connexion') !!}</th>
                         </tr>
                     </thead>
