@@ -15,10 +15,10 @@ class GradesSeeder extends Seeder
     public function run()
     {
         Grade::create([
-            'name' => '11th'
+            'name' => 'Première'
         ]);
         Grade::create([
-            'name' => '12th'
+            'name' => 'Terminale'
         ]);        
     }
 }
