@@ -78,7 +78,7 @@
 
             <div class="mt-5">
                 <input type="hidden" name="cb_tested_by_teacher" value="0"/>
-                {!! Form::checkbox('cb_tested_by_teacher', 'Je certifie avoir testé le projet soumis, et que celui-ci fonctionne comme présenté dans la vidéo.')
+                {!! Form::checkbox('cb_tested_by_teacher', 'Je certifie que le projet soumis est en conformité avec le <a href="https://trophees-nsi.fr/le-reglement" target="_blank">règlement du concours</a>. Je certifie également avoir testé moi-même le projet, et confirme que celui-ci fonctionne comme présenté dans la vidéo.')
                     ->checked($project && $project->tested_by_teacher) !!}
             </div>
 
