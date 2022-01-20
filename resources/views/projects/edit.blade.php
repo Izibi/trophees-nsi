@@ -72,7 +72,7 @@
                         <input name="zip_file" id="inp-zip_file" type="file" accept=".zip" class="custom-file-input">
                         <label for="inp-zip_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                     </div>
-                    <small>Le zip doit contenir un exécutable, les codes sources et la documentation. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation">ici</a> pour les détails.</small>
+                    <small>Le zip doit contenir un exécutable, les codes sources et la documentation. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour les détails.</small>
                 </div>
             </div>
 
