@@ -9,16 +9,16 @@ use FranceIOI\LoginModuleClient\Client;
 
 class AuthController extends Controller
 {
-    
+
     public function login() {
         $this->logoutUser();
         $client = new Client(config('login_module_client'));
         $authorization_helper = $client->getAuthorizationHelper();
-        $url = $authorization_helper->getUrl();
+        $url = $authorization_helper->getUrl(['locale' => config('app.locale')]);
         return redirect($url);
     }
 
-    
+
     public function profile(Request $request) {
         $client = new Client(config('login_module_client'));
         $redirect_helper = $client->getRedirectHelper();
@@ -47,9 +47,9 @@ class AuthController extends Controller
 
     private function logoutUser() {
         Session::flush();
-        Auth::logout();        
+        Auth::logout();
         return redirect('/');
-    }    
+    }
 
 
 
