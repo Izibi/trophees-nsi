@@ -21,7 +21,7 @@
             Établissement : {{ $project->school->name }}<br>
         @endif
         @if($project->grade_id)
-            Classe : {{ $project->grade->name }}<br>
+            Niveau : {{ $project->grade->name }}<br>
         @endif
         Composition de l'équipe :
         @if(!is_null($project->team_girls))
