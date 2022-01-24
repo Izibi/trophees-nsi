@@ -20,7 +20,7 @@ class CreateSchoolsTable extends Migration
             $table->string('address');
             $table->string('city');
             $table->string('zip');
-            $table->string('uai');
+            $table->string('uai')->nullable();
             $table->bigInteger('country_id')->unsigned()->index();
             $table->foreign('country_id')->references('id')->on('countries')->onDelete('cascade')->onUpdate('cascade');
             $table->bigInteger('region_id')->unsigned()->index();

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Region;
 
 class StoreSchoolRequest extends FormRequest
 {
@@ -23,14 +24,21 @@ class StoreSchoolRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required|min:1|max:255',
-            'address' => 'required|min:1|max:255',
-            'city' => 'required|min:1|max:255',
-            'zip' => 'required|min:1|max:255',
+        $res = [
+            'name' => 'required|max:255',
+            'address' => 'required|max:255',
+            'city' => 'required|max:255',
+            'zip' => 'required|max:255',
             'country_id' => 'required_with:region_id|exists:countries,id',
             'region_id' => 'required|exists:regions,id',
-            'uai' => 'required|min:1|max:255',
+            'uai' => 'max:255'
         ];
+        if($this->has('region_id')) {
+            $region = Region::find($this->get('region_id'));
+            if($region && !is_null($region->country_id)) {
+                $res['uai'] = 'required|'.$res['uai'];
+            }
+        }
+        return $res;
     }
 }
