@@ -61,7 +61,7 @@
             {!! Form::textarea('notes', 'Notes') !!}
         </div>
 
-        @if($contest_status == 'grading' || $contest_status == 'deliberating')
+        @if($contest->status == 'grading' || $contest->status == 'deliberating')
             <div class="mt-3">
                 @if(!$rating || !$rating->published)
                     {!! Form::submit('Enregistrer le brouillon') !!}

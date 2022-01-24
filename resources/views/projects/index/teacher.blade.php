@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('content')
+    @include('projects.contest-status')
 
     <div class="card mt-3 mb-3">
         <div class="card-header">
@@ -40,12 +41,12 @@
 
     <div class="mt-5 mb-3">
         @if(count($rows))
-            @if($contest_status == 'open')
+            @if($contest->status == 'open')
                 <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Modifier le projet sélectionné</button>
             @endif
             <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">Afficher le projet sélectionné</button>
         @endif
-        @if($contest_status == 'open')
+        @if($contest->status == 'open')
             <button class="btn btn-primary active-button" data-action="/projects/create" data-method="GET">Déposer un nouveau projet</button>
         @endif
     </div>

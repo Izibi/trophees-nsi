@@ -14,7 +14,7 @@
                                 Mes notes {{ $rating && !$rating->published ? '(draft)' : '' }}
                             </a>
                         </li>
-                        @if($contest_status == 'deliberating')
+                        @if($contest->status == 'deliberating')
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#panel-aggregated-ratings" role="tab">Notes aggrégées</a>
                             </li>
@@ -25,7 +25,7 @@
                     <div class="tab-pane fade show active p-3" id="panel-my-ratings" role="tabpanel">
                         @include('projects.rating.edit')
                     </div>
-                    @if($contest_status == 'deliberating')
+                    @if($contest->status == 'deliberating')
                         <div class="tab-pane fade p-0" id="panel-aggregated-ratings" role="tabpanel">
                             @include('projects.rating.show')
                         </div>

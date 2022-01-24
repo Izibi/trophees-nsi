@@ -39,7 +39,7 @@ class ProjectsController extends Controller
         }
         return view('projects.index.'.$request->user()->role, [
             'rows' => $projects,
-            'contest_status' => $this->contest->status
+            'contest' => $this->contest
         ]);
     }
 
@@ -163,7 +163,7 @@ class ProjectsController extends Controller
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project,
             'projects_paginator' => false,
-            'contest_status' => $this->contest->status
+            'contest' => $this->contest
         ];
         if($user->role == 'jury') {
             $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
@@ -191,7 +191,7 @@ class ProjectsController extends Controller
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project,
             'projects_paginator' => $projects,
-            'contest_status' => $this->contest->status
+            'contest' => $this->contest
         ];
         if($user->role == 'jury') {
             $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
