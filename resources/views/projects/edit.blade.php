@@ -28,6 +28,18 @@
             </div>
             <p><small class="form-text text-muted">Notez que la mixité de l'équipe est prise en compte pour certains prix.</small></p>
 
+            <div class="row">
+                <div class="col-4">
+                    {!! Form::text('class_girls', 'Class girls')->wrapperAttrs(['class' => 'mb-0']) !!}
+                </div>
+                <div class="col-4">
+                    {!! Form::text('class_boys', 'Class boys')->wrapperAttrs(['class' => 'mb-0']) !!}
+                </div>
+                <div class="col-4">
+                    {!! Form::text('class_not_provided', 'Class not provided')->wrapperAttrs(['class' => 'mb-0']) !!}
+                </div>
+            </div>
+
             {!! Form::textarea('description', 'Description')
                 ->attrs(['style' => 'height: 200px'])
                 ->help('<div id="description-counter"></div>') !!}
@@ -37,42 +49,58 @@
 
 
             <div class="row">
-                <div class="col-4 file-box">
+                <div class="col-6 file-box mb-4">
                     <span class="file-box-title">Image</span>
                     @if($project && !is_null($project->image_file))
                         - <a href="{{ Storage::disk('uploads')->url($project->image_file) }}" target="_blank">télécharger</a> ou
                         <a href="#" class="link-delete-file" data-file="image_file">supprimer</a>
+                    @else
+                        <div class="custom-file mt-2">
+                            <span class="custom-file-clear" title="Clear">&times;</span>
+                            <input name="image_file" id="inp-image_file" type="file" accept=".jpg,.jpeg,.png,.gif" class="custom-file-input">
+                            <label for="inp-image_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
+                        </div>
                     @endif
-                    <div class="custom-file mt-2">
-                        <span class="custom-file-clear" title="Clear">&times;</span>
-                        <input name="image_file" id="inp-image_file" type="file" accept=".jpg,.jpeg,.png,.gif" class="custom-file-input">
-                        <label for="inp-image_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
-                    </div>
                 </div>
-                <div class="col-4 file-box">
+                <div class="col-6 file-box mb-4">
                     <span class="file-box-title">PDF de présentation</span>
                     @if($project && !is_null($project->presentation_file))
                         - <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">télécharger</a> ou
                         <a href="#" class="link-delete-file" data-file="presentation_file">supprimer</a>
+                    @else
+                        <div class="custom-file mt-2">
+                            <span class="custom-file-clear" title="Clear">&times;</span>
+                            <input name="presentation_file" id="inp-presentation_file" type="file" accept=".pdf" class="custom-file-input">
+                            <label for="inp-presentation_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
+                        </div>
                     @endif
-                    <div class="custom-file mt-2">
-                        <span class="custom-file-clear" title="Clear">&times;</span>
-                        <input name="presentation_file" id="inp-presentation_file" type="file" accept=".pdf" class="custom-file-input">
-                        <label for="inp-presentation_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
-                    </div>
                 </div>
-                <div class="col-4 file-box">
+                <div class="col-6 file-box mb-4">
                     <span class="file-box-title">Zip du projet</span>
                     @if($project && !is_null($project->zip_file))
                         - <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">télécharger</a> ou
                         <a href="#" class="link-delete-file" data-file="zip_file">supprimer</a>
+                    @else
+                        <div class="custom-file mt-2">
+                            <span class="custom-file-clear" title="Clear">&times;</span>
+                            <input name="zip_file" id="inp-zip_file" type="file" accept=".zip" class="custom-file-input">
+                            <label for="inp-zip_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
+                        </div>
+                        <small>Le zip doit contenir un exécutable, les codes sources et la documentation. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour les détails.</small>
                     @endif
-                    <div class="custom-file mt-2">
-                        <span class="custom-file-clear" title="Clear">&times;</span>
-                        <input name="zip_file" id="inp-zip_file" type="file" accept=".zip" class="custom-file-input">
-                        <label for="inp-zip_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
-                    </div>
-                    <small>Le zip doit contenir un exécutable, les codes sources et la documentation. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour les détails.</small>
+                </div>
+                <div class="col-6 file-box mb-4">
+                    <span class="file-box-title">Autorisations parentales</span>
+                    @if($project && !is_null($project->parental_permissions_file))
+                        - <a href="{{ Storage::disk('uploads')->url($project->parental_permissions_file) }}" target="_blank">télécharger</a> ou
+                        <a href="#" class="link-delete-file" data-file="parental_permissions_file">supprimer</a>
+                    @else
+                        <div class="custom-file mt-2">
+                            <span class="custom-file-clear" title="Clear">&times;</span>
+                            <input name="parental_permissions_file" id="inp-parental_permissions_file" type="file" class="custom-file-input">
+                            <label for="inp-parental_permissions_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
+                        </div>
+                    @endif
                 </div>
             </div>
 

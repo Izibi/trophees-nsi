@@ -20,13 +20,17 @@ class Project extends Model
         'description',
         'video',
         'tested_by_teacher',
-        'cb_tested_by_teacher'
+        'cb_tested_by_teacher',
+        'class_girls',
+        'class_boys',
+        'class_not_provided'
     ];
 
     public $upload_attributes = [
         'presentation_file',
         'image_file',
-        'zip_file'
+        'zip_file',
+        'parental_permissions_file'
     ];
 
 
