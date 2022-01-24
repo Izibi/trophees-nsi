@@ -1,15 +1,53 @@
+.navbar {
+    padding: 0;
+}
+.navbar .navbar-brand,
+.navbar .navbar-brand:focus,
+.navbar .navbar-brand:active,
+.navbar .navbar-brand:hover {
+    text-transform: uppercase;
+    color: $white;
+    background-color: $secondary;
+    font-family: "Bebas Neue";
+    padding: 0.5rem 1rem;
+    font-size: 20px;
+    margin-right: 3rem;
+}
+
+.navbar .navbar-brand figure {
+    vertical-align: middle;
+    background-color: $white;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 0.5rem 0 0;
+    width: 30px;
+    height: 30px;
+    position: relative;
+}
+
+
+.navbar .navbar-brand figure svg {
+    width: 70%;
+    height: auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
 .navbar-light {
     border-bottom: 2px solid $primary;
     background-color: rgba(0, 57, 71, 0.05);
 }
-.navbar-light a,
-.navbar-light a:active,
-.navbar-light a:focus
-.navbar-light a {
+.navbar-light .navbar-nav a,
+.navbar-light .navbar-nav a:active,
+.navbar-light .navbar-nav a:focus
+.navbar-light .navbar-nav a {
     color: $secondary !important;
     font-family: "Bebas Neue";
     font-size: 20px;
 }
+
 
 
 .modal-lg {
