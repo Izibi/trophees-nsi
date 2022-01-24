@@ -1,7 +1,7 @@
 <h3>
 @if($contest->status == 'preparing')
 Le dépôt de projets n'est pas encore ouvert.
-@if($contest->status == 'open')
+@elseif($contest->status == 'open')
 La période de dépôt de projets est en cours
 @elseif($contest->status == 'grading')
 Le dépôt de projets est clôturé, les projets sont évalués par le jury régional.
