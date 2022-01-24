@@ -380,6 +380,9 @@ class ProjectsController extends Controller
         if(empty($project->image_file)) {
             $errors[] = 'Image not uploaded.';
         }
+        if(empty($project->parental_permissions_file)) {
+            $errors[] = 'Parental permissions not uploaded.';
+        }
 
         if(count($errors)) {
             return redirect()->route('projects.edit', $project)->withError($errors);
