@@ -18,31 +18,31 @@
 
             <div class="row">
                 <div class="col-4">
-                    {!! Form::text('team_girls', 'Filles de l\'équipe')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('team_girls', 'Nombre de filles')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
                 <div class="col-4">
-                    {!! Form::text('team_boys', 'Garçons de l\'équipe')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('team_boys', 'Nombre de garçons')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
                 <div class="col-4">
                     {!! Form::text('team_not_provided', 'Non renseigné')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
             </div>
-            <p><small class="form-text text-muted">Notez que la mixité de l'équipe est prise en compte pour certains prix.</small></p>
+            <p><small class="form-text text-muted">Précisez la composition de l'équipe pour ce projet. La mixité de l'équipe pourra être prise en compte pour certains prix.</small></p>
 
             <div class="row">
                 <div class="col-4">
-                    {!! Form::text('class_girls', 'Filles de la classe')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('class_girls', 'Nombre de filles')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
                 <div class="col-4">
-                    {!! Form::text('class_boys', 'Garçons de la classe')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('class_boys', 'Nombre de garçons')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
                 <div class="col-4">
-                    {!! Form::text('class_not_provided', 'Non renseignés de la classe')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('class_not_provided', 'Non renseigné')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
             </div>
-            <p><small class="form-text text-muted">Entrez le nombre total de chaque genre pour l'ensemble de la classe.</small></p>
+            <p><small class="form-text text-muted">Précisez la répartition des élèves en NSI pour le niveau renseigné ci-dessus.</small></p>
 
-            {!! Form::textarea('description', 'Description')
+            {!! Form::textarea('description', 'Résumé du projet')
                 ->attrs(['style' => 'height: 200px'])
                 ->help('<div id="description-counter" class="text-right text-muted"></div>') !!}
 
@@ -75,7 +75,7 @@
                             <input name="presentation_file" id="inp-presentation_file" type="file" accept=".pdf" class="custom-file-input">
                             <label for="inp-presentation_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                         </div>
-                        <small>Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé de ce pdf.</small>
+                        <small>Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
                     @endif
                 </div>
                 <div class="col-6 file-box mb-4">
@@ -89,7 +89,7 @@
                             <input name="zip_file" id="inp-zip_file" type="file" accept=".zip" class="custom-file-input">
                             <label for="inp-zip_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                         </div>
-                        <small>Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé de ce zip.</small>
+                        <small>Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce zip.</small>
                     @endif
                 </div>
                 <div class="col-6 file-box mb-4">
