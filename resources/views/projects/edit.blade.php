@@ -11,7 +11,7 @@
 
             {!! Form::text('name', 'Nom du projet') !!}
 
-            {!! Form::select('school_id', 'School', $schools['options'])->help('<a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>') !!}
+            {!! Form::select('school_id', 'Établissement', $schools['options'])->help('<a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>') !!}
 
             {!! Form::select('grade_id', 'Niveau', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
 
@@ -30,15 +30,16 @@
 
             <div class="row">
                 <div class="col-4">
-                    {!! Form::text('class_girls', 'Class girls')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('class_girls', 'Filles de la classe')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
                 <div class="col-4">
-                    {!! Form::text('class_boys', 'Class boys')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('class_boys', 'Garçons de la classe')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
                 <div class="col-4">
-                    {!! Form::text('class_not_provided', 'Class not provided')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    {!! Form::text('class_not_provided', 'Non renseignés de la classe')->wrapperAttrs(['class' => 'mb-0']) !!}
                 </div>
             </div>
+            <p><small class="form-text text-muted">Entrez le nombre total de chaque genre pour l'ensemble de la classe.</small></p>
 
             {!! Form::textarea('description', 'Description')
                 ->attrs(['style' => 'height: 200px'])
@@ -73,6 +74,7 @@
                             <input name="presentation_file" id="inp-presentation_file" type="file" accept=".pdf" class="custom-file-input">
                             <label for="inp-presentation_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                         </div>
+                        <small>Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé de ce pdf.</small>
                     @endif
                 </div>
                 <div class="col-6 file-box mb-4">
@@ -86,7 +88,7 @@
                             <input name="zip_file" id="inp-zip_file" type="file" accept=".zip" class="custom-file-input">
                             <label for="inp-zip_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                         </div>
-                        <small>Le zip doit contenir un exécutable, les codes sources et la documentation. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour les détails.</small>
+                        <small>Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé de ce zip.</small>
                     @endif
                 </div>
                 <div class="col-6 file-box mb-4">
@@ -106,7 +108,7 @@
 
             <div class="mt-5">
                 <input type="hidden" name="cb_tested_by_teacher" value="0"/>
-                {!! Form::checkbox('cb_tested_by_teacher', 'Je certifie que le projet soumis est en conformité avec le <a href="https://trophees-nsi.fr/le-reglement" target="_blank">règlement du concours</a>. Je certifie également avoir testé moi-même le projet, et confirme que celui-ci fonctionne comme présenté dans la vidéo.')
+                {!! Form::checkbox('cb_tested_by_teacher', 'Je certifie que le projet soumis est en conformité avec le <a href="https://trophees-nsi.fr/le-reglement" target="_blank">règlement du concours</a>. Je certifie également avoir testé moi-même le projet, et confirme que celui-ci fonctionne comme présenté dans la vidéo. Je certifie enfin que tous les éleves dont l\'image ou la voix est présente sur la vidéo ont une autorisation parentale signée.')
                     ->checked($project && $project->tested_by_teacher) !!}
             </div>
 
