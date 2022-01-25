@@ -14,17 +14,29 @@ class CountriesSeeder extends Seeder
      */
     public function run()
     {
-        Country::create([
-            'id' => 1,
-            'name' => 'France'
+        $countries = require(database_path().'/initial_data/countries.php');
+
+        $id = 1;
+        $country = Country::firstOrNew([
+            'id' => $id
         ]);
-        Country::create([
-            'id' => 2,
-            'name' => 'Test country 2'
-        ]);
-        Country::create([
-            'id' => 3,
-            'name' => 'Test country 3'
-        ]);
+        $country->code = 'FR';
+        $country->name = $countries['FR'];
+        $country->save();
+
+        foreach($countries as $code => $name) {
+            if($code == 'FR') {
+                continue;
+            }
+            $id++;
+            $country = Country::firstOrNew([
+                'id' => $id
+            ]);
+            $country->code = $code;
+            $country->name = $name;
+            $country->save();
+        }
     }
+
+
 }
