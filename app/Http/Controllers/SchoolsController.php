@@ -9,6 +9,7 @@ use App\Helpers\SortableTable;
 use App\Models\Country;
 use App\Models\Region;
 use App\Http\Requests\StoreSchoolRequest;
+use App\Classes\ActiveContest;
 
 class SchoolsController extends Controller
 {
@@ -21,14 +22,32 @@ class SchoolsController extends Controller
         'country' => 'countries.name',
         'region' => 'regions.name',
         'uai' => 'schools.uai',
-        'hidden' => 'schools.hidden'
+        'hidden' => 'schools.hidden',
+        'projects_amount' => 'projects_amount'
     ];
 
 
+    public function __construct(ActiveContest $active_contest)
+    {
+        $this->contest = $active_contest->get();
+    }
+
     public function index(Request $request)
     {
+        $contest =
         $q = DB::table('schools')
-            ->select(DB::raw('schools.id, schools.name, schools.address, schools.city, schools.zip, countries.name as country_name, regions.name as region_name, schools.uai, schools.hidden'))
+            ->select(DB::raw('
+                schools.id,
+                schools.name,
+                schools.address,
+                schools.city,
+                schools.zip,
+                countries.name as country_name,
+                regions.name as region_name,
+                schools.uai,
+                schools.hidden,
+                (select count(*) from projects where projects.school_id=schools.id and projects.contest_id='.$this->contest->id.') as projects_amount
+            '))
             ->leftJoin('regions', 'schools.region_id', '=', 'regions.id')
             ->leftJoin('countries', 'schools.country_id', '=', 'countries.id');
         SortableTable::orderBy($q, $this->sort_fields);

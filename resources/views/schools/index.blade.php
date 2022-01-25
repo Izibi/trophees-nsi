@@ -19,6 +19,8 @@
                             <th>{!! SortableTable::th('region', 'Territoire') !!}</th>
                             <th>{!! SortableTable::th('uai', 'UAI') !!}</th>
                             <th>{!! SortableTable::th('hidden', 'Hidden') !!}</th>
+                            <th>{!! SortableTable::th('projects_amount', 'Projects amount') !!}</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -32,6 +34,8 @@
                                 <td>{{ $school->region_name }}</td>
                                 <td>{{ $school->uai }}</td>
                                 <td>{{ $school->hidden ? 'Oui' : 'Non' }}</td>
+                                <td>{{ $school->projects_amount }}</td>
+
                             </tr>
                         @endforeach
                     </tbody>
