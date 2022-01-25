@@ -20,14 +20,15 @@ class SchoolsController extends Controller
         'zip' => 'schools.zip',
         'country' => 'countries.name',
         'region' => 'regions.name',
-        'uai' => 'schools.uai'
+        'uai' => 'schools.uai',
+        'hidden' => 'schools.hidden'
     ];
 
 
     public function index(Request $request)
     {
         $q = DB::table('schools')
-            ->select(DB::raw('schools.id, schools.name, schools.address, schools.city, schools.zip, countries.name as country_name, regions.name as region_name, schools.uai'))
+            ->select(DB::raw('schools.id, schools.name, schools.address, schools.city, schools.zip, countries.name as country_name, regions.name as region_name, schools.uai, schools.hidden'))
             ->leftJoin('regions', 'schools.region_id', '=', 'regions.id')
             ->leftJoin('countries', 'schools.country_id', '=', 'countries.id');
         SortableTable::orderBy($q, $this->sort_fields);
