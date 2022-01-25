@@ -8,6 +8,7 @@
             ->fill($project)
             !!}
             {{ $project ? method_field('PUT') : '' }}
+            {!! Form::hidden('refer_page', $refer_page) !!}
 
             {!! Form::text('name', 'Nom du projet') !!}
 
@@ -105,6 +106,9 @@
                     @endif
                 </div>
             </div>
+
+            {!! Form::textarea('teacher_notes', 'Remarques de l\'enseignant')
+                ->attrs(['style' => 'height: 200px']) !!}
 
             <div class="mt-5">
                 <input type="hidden" name="cb_tested_by_teacher" value="0"/>

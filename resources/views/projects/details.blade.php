@@ -66,3 +66,7 @@
 <div class="mt-3">
     Statut : soumis le {{ $project->created_at }}, @lang('project_status.'.$project->status)
 </div>
+
+@if(!is_null($project->teacher_notes))
+    <div class="mt-3">{!! nl2br($project->teacher_notes) !!}</div>
+@endif

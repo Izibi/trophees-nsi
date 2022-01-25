@@ -23,7 +23,8 @@ class Project extends Model
         'cb_tested_by_teacher',
         'class_girls',
         'class_boys',
-        'class_not_provided'
+        'class_not_provided',
+        'teacher_notes'
     ];
 
     public $upload_attributes = [
