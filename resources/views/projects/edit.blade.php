@@ -8,6 +8,7 @@
             ->fill($project)
             !!}
             {{ $project ? method_field('PUT') : '' }}
+            {!! Form::hidden('refer_page', $refer_page) !!}
 
             {!! Form::text('name', 'Nom du projet') !!}
 
@@ -43,7 +44,7 @@
 
             {!! Form::textarea('description', 'Résumé du projet')
                 ->attrs(['style' => 'height: 200px'])
-                ->help('<div id="description-counter"></div>') !!}
+                ->help('<div id="description-counter" class="text-right text-muted"></div>') !!}
 
             {!! Form::text('video', 'Vidéo')
                 ->help('La vidéo doit être publiée sur <a href="https://peertube.fr" target="_blank">peertube.fr</a>. Renseignez ici son URL.') !!}
@@ -105,6 +106,9 @@
                     @endif
                 </div>
             </div>
+
+            {!! Form::textarea('teacher_notes', 'Remarques de l\'enseignant')
+                ->attrs(['style' => 'height: 200px']) !!}
 
             <div class="mt-5">
                 <input type="hidden" name="cb_tested_by_teacher" value="0"/>
@@ -176,8 +180,10 @@
             var description_counter = $('#description-counter');
             function refreshDescriptionCounter() {
                 var l = inp_description.val().length;
-                var cn = l <= config.description_max_length ? 'text-success' : 'text-danger';
-                description_counter.attr('class', 'text-right ' + cn);
+                if(l >= config.description_max_length) {
+                    inp_description.val(inp_description.val().substr(0, config.description_max_length));
+                    l = config.description_max_length;
+                }
                 description_counter.text(l + '/' + config.description_max_length);
             }
             refreshDescriptionCounter();
