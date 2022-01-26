@@ -50,6 +50,9 @@
                             {{ Auth::user()->screen_name }}
                         </a>
                         <div class="dropdown-menu">
+                            @if(Auth::user()->role == 'admin')
+                                <a class="dropdown-item" href="/admin/users" target="_blank">Manage users</a>
+                            @endif
                             <a class="dropdown-item" href="/profile?refer_page={{ urlencode(Request::url()) }}">Modifier mon profil</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/logout">Déconnexion</a>

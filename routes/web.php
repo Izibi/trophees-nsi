@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function() {
         Route::post('contests/{contest_id}/activate', [App\Http\Controllers\ContestsController::class, 'activate'])->name('contests.activate');
         Route::get('results', [App\Http\Controllers\ResultsController::class, 'index']);
         Route::get('export/users', [App\Http\Controllers\ExportController::class, 'users']);
+
+        Route::get('admin/users', [App\Http\Controllers\AdminController::class, 'users']);
     });
 
     Route::get('user_schools/search', [App\Http\Controllers\UserSchoolsController::class, 'search']);

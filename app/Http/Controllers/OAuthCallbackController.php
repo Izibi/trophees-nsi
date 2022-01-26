@@ -64,7 +64,6 @@ class OAuthCallbackController extends Controller
         if(!$user) {
             $user = new User();
             $user->id = $user_data['id'];
-            $user->role = 'teacher';
         }
         $attributes = $this->getUserAttributes($user_data);
         $user->fill($attributes);
@@ -80,6 +79,7 @@ class OAuthCallbackController extends Controller
             'secondary_email' => $user_data['secondary_email'],
             'name' => $user_data['first_name'].' '.$user_data['last_name'],
             'login' => $user_data['login'],
+            'role' => $user_data['client_admin'] ? 'admin' : 'teacher',
             'validated' => isset($user_data['verification']['role']) && $user_data['verification']['role'] == 'VERIFIED'
         ];
     }
