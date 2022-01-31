@@ -22,7 +22,8 @@ class OAuthCallbackController extends Controller
             $authorization_helper->handleRequestParams($_GET);
             $user_data = $authorization_helper->queryUser();
             if(!$this->validateUserData($user_data)) {
-                throw new \Exception('Connexion possible uniquement pour les enseignants confirmés.');
+                return redirect(config('login_module_client.base_url'));
+                //throw new \Exception('Connexion possible uniquement pour les enseignants confirmés.');
             }
             $user = $this->refreshUser($user_data);
             Auth::login($user);
