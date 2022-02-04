@@ -14,8 +14,6 @@ class OAuthCallbackController extends Controller
 
 
     public function login(Request $request) {
-        Session::flush();
-        Auth::logout();
         try {
             $client = new Client(config('login_module_client'));
             $authorization_helper = $client->getAuthorizationHelper();
@@ -26,6 +24,8 @@ class OAuthCallbackController extends Controller
                 //throw new \Exception('Connexion possible uniquement pour les enseignants confirmés.');
             }
             $user = $this->refreshUser($user_data);
+            Auth::logout();
+            Session::flush();
             Auth::login($user);
         } catch(\Exception $e) {
             return redirect('/')->with('error_message', $e->getMessage());
