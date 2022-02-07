@@ -103,6 +103,7 @@
                             <input name="parental_permissions_file" id="inp-parental_permissions_file" type="file" class="custom-file-input">
                             <label for="inp-parental_permissions_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                         </div>
+                        <small>Voir <a href="#" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
                     @endif
                 </div>
             </div>
