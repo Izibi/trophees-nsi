@@ -34,10 +34,10 @@ class StorePojectRequest extends FormRequest
             'description' => 'required_if:finalize,1|max:'.config('nsi.project.description_max_length'),
             'video' => 'required_if:finalize,1|nullable|url',
             'cb_tested_by_teacher' => 'accepted_if:finalize,1',
-            'presentation_file' => 'size:'.$conf['presentation_file_size_max'],
-            'image_file' => 'size:'.$conf['image_file_size_max'],
-            'zip_file' => 'size:'.$conf['zip_file_size_max'],
-            'parental_permissions_file' => 'size:'.$conf['parental_permissions_file_size_max']
+            'presentation_file' => 'max:'.$conf['presentation_file_size_max'],
+            'image_file' => 'max:'.$conf['image_file_size_max'],
+            'zip_file' => 'max:'.$conf['zip_file_size_max'],
+            'parental_permissions_file' => 'max:'.$conf['parental_permissions_file_size_max']
         ];
     }
 }
