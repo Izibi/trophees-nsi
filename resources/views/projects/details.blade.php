@@ -23,6 +23,7 @@
         @if($project->grade_id)
             Niveau : {{ $project->grade->name }}<br>
         @endif
+
         Composition de l'équipe :
         @if(!is_null($project->team_girls))
             {{ $project->team_girls }} filles;
@@ -34,6 +35,19 @@
             {{ $project->team_not_provided }} non renseigné
         @endif
         <br>
+
+        Totaux en NSI pour ce niveau :
+        @if(!is_null($project->class_girls))
+            {{ $project->class_girls }} filles;
+        @endif
+        @if(!is_null($project->class_boys))
+            {{ $project->class_boys }} garçons;
+        @endif
+        @if(!is_null($project->class_not_provided))
+            {{ $project->class_not_provided }} non renseigné
+        @endif
+        <br>
+
         @if(!is_null($project->video))
             Vidéo : <a href="{{ $project->video }}" target="_blank">{{ $project->video }}</a>
         @endif
