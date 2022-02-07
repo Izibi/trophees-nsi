@@ -49,7 +49,6 @@
             {!! Form::text('video', 'Vidéo')
                 ->help('La vidéo doit être publiée sur <a href="https://peertube.fr" target="_blank">peertube.fr</a>. Renseignez ici son URL.') !!}
 
-
             <div class="row">
                 <div class="col-6 file-box mb-4">
                     <span class="file-box-title">Image</span>
@@ -59,9 +58,14 @@
                     @else
                         <div class="custom-file mt-2">
                             <span class="custom-file-clear" title="Clear">&times;</span>
-                            <input name="image_file" id="inp-image_file" type="file" accept=".jpg,.jpeg,.png,.gif" class="custom-file-input">
+                            <input name="image_file" id="inp-image_file" type="file" accept=".jpg,.jpeg,.png,.gif" class="custom-file-input {{ $errors->get('image_file') ? 'is-invalid' : '' }}">
                             <label for="inp-image_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                         </div>
+                        @error('image_file')
+                            <div class="text-danger">
+                                <small>{{ $message }}</small>
+                            </div>
+                        @enderror
                     @endif
                 </div>
                 <div class="col-6 file-box mb-4">
@@ -72,9 +76,14 @@
                     @else
                         <div class="custom-file mt-2">
                             <span class="custom-file-clear" title="Clear">&times;</span>
-                            <input name="presentation_file" id="inp-presentation_file" type="file" accept=".pdf" class="custom-file-input">
+                            <input name="presentation_file" id="inp-presentation_file" type="file" accept=".pdf" class="custom-file-input {{ $errors->get('presentation_file') ? 'is-invalid' : '' }}">
                             <label for="inp-presentation_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                         </div>
+                        @error('presentation_file')
+                            <div class="text-danger">
+                                <small>{{ $message }}</small>
+                            </div>
+                        @enderror
                         <small>Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
                     @endif
                 </div>
@@ -86,9 +95,14 @@
                     @else
                         <div class="custom-file mt-2">
                             <span class="custom-file-clear" title="Clear">&times;</span>
-                            <input name="zip_file" id="inp-zip_file" type="file" accept=".zip" class="custom-file-input">
+                            <input name="zip_file" id="inp-zip_file" type="file" accept=".zip" class="custom-file-input {{ $errors->get('zip_file') ? 'is-invalid' : '' }}">
                             <label for="inp-zip_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                         </div>
+                        @error('zip_file')
+                            <div class="text-danger">
+                                <small>{{ $message }}</small>
+                            </div>
+                        @enderror
                         <small>Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce zip.</small>
                     @endif
                 </div>
@@ -100,9 +114,14 @@
                     @else
                         <div class="custom-file mt-2">
                             <span class="custom-file-clear" title="Clear">&times;</span>
-                            <input name="parental_permissions_file" id="inp-parental_permissions_file" type="file" class="custom-file-input">
+                            <input name="parental_permissions_file" id="inp-parental_permissions_file" type="file" class="custom-file-input {{ $errors->get('parental_permissions_file') ? 'is-invalid' : '' }}">
                             <label for="inp-parental_permissions_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                         </div>
+                        @error('parental_permissions_file')
+                            <div class="text-danger">
+                                <small>{{ $message }}</small>
+                            </div>
+                        @enderror
                         <small>Voir <a href="#" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
                     @endif
                 </div>
