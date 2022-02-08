@@ -21,7 +21,10 @@
                         </tr>
                     </thead>
                     @foreach ($rows as $project)
-                        <tr data-row-id="{{ $project->id }}" @if($project->status != 'draft') data-actions-disabled="edit" @endif data-redirect-url="{{ $project->view_url }}">
+                        <tr data-row-id="{{ $project->id }}"
+                            @if($project->status == 'incomplete') class="row-alert" @endif
+                            @if($project->status != 'draft') data-actions-disabled="edit" @endif
+                            data-redirect-url="{{ $project->view_url }}">
                             <td>{{ $project->id }}</td>
                             <td>{{ $project->name }}</td>
                             <td>{{ $project->school_name }}</td>

@@ -4,3 +4,8 @@ table.active-table tr[data-row-id]:hover {
     color: $white;
     cursor: default;
 }
+
+
+table.active-table .row-alert td {
+    background-color: rgba($red, 0.3);
+}
