@@ -49,6 +49,7 @@ class ProjectsController extends Controller
             'contest' => $this->contest,
             'rating_mode_accessible' => $rating_mode_accessible,
             'rating_mode' => $rating_mode,
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray()
         ]);
     }
 
@@ -139,9 +140,9 @@ class ProjectsController extends Controller
             if(strlen($filter_school) > 0) {
                 $q->where('schools.name', 'LIKE', '%'.$filter_school.'%');
             }
-            $filter_region = $request->get('filter_region');
-            if(strlen($filter_region) > 0) {
-                $q->where('regions.name', 'LIKE', '%'.$filter_region.'%');
+            $filter_region_id = $request->get('filter_region_id');
+            if($filter_region_id) {
+                $q->where('schools.region_id', $filter_region_id);
             }
             $filter_status = $request->get('filter_status');
             if(strlen($filter_status) > 0) {

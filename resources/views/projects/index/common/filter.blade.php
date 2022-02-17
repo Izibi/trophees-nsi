@@ -17,7 +17,7 @@
                 {!! Form::text('filter_school', 'Établissement') !!}
             @endif
             @if(Auth::user()->role == 'admin')
-                {!! Form::text('filter_region', 'Territoire') !!}
+                {!! Form::select('filter_region_id', 'Territoire')->options(['' => ''] + $regions) !!}
                 {!! Form::text('filter_user_name', 'Enseignant') !!}
             @endif
             {!! Form::select('filter_status', 'Statut')->options([
