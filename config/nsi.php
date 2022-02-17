@@ -8,5 +8,12 @@ return [
         'image_file_size_max' => 1024, // size in Kbytes
         'zip_file_size_max' => 1024, // size in Kbytes
         'parental_permissions_file_size_max' => 1024, // size in Kbytes
+    ],
+    'awards_limit_per_jury_member' => [
+        'award_mixed' => 4,
+        'award_citizenship' => 4,
+        'award_engineering' => 4,
+        'award_heart' => 4,
+        'award_originality' => 4,
     ]
 ];

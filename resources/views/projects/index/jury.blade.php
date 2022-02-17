@@ -2,6 +2,7 @@
 
 @section('content')
     @include('projects.contest-status.jury')
+    @include('projects.index.jury_awards_alert')
 
     <div class="card mt-3 mb-3">
         <div class="card-header">

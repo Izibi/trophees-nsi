@@ -43,13 +43,14 @@ class ProjectsController extends Controller
             $project->view_url = '/project?'.$p['query'].'&refer_page='.urlencode($request->fullUrl());
         }
 
-
         return view('projects.index.'.$request->user()->role, [
             'rows' => $projects,
             'contest' => $this->contest,
             'rating_mode_accessible' => $rating_mode_accessible,
             'rating_mode' => $rating_mode,
-            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray()
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray(),
+            'awards_count' => $this->countJuryMemberAwards($request),
+            'awards_limit' => config('nsi.awards_limit_per_jury_member')
         ]);
     }
 
@@ -428,4 +429,30 @@ class ProjectsController extends Controller
         return true;
     }
 
+
+    private function countJuryMemberAwards($request) {
+        $user = $request->user();
+        $right_contest_mode = $this->contest->status == 'grading' || $this->contest->status == 'deliberating';
+        if($user->role !== 'jury' || !$right_contest_mode) {
+            return false;
+        }
+
+        $res = DB::table('projects')
+            ->select(DB::raw('
+                SUM(projects.award_mixed) as award_mixed,
+                SUM(projects.award_citizenship) as award_citizenship,
+                SUM(projects.award_engineering) as award_engineering,
+                SUM(projects.award_heart) as award_heart,
+                SUM(projects.award_originality) as award_originality,
+                COUNT(*) as rows_total
+            '))
+            ->leftJoin('ratings', 'ratings.project_id', '=', 'projects.id')
+            ->where('projects.contest_id', '=', $this->contest->id)
+            ->where('ratings.user_id', '=', $user->id)
+            ->first();
+        if(!$res || !$res->rows_total) {
+            return false;
+        }
+        return (array) $res;
+    }
 }
