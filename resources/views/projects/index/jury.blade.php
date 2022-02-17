@@ -6,26 +6,16 @@
     <div class="card mt-3 mb-3">
         <div class="card-header">
             <h2>Projets</h2>
-            @include('projects.index.filter')
+            @include('projects.index.common.rating_mode_switcher')
+            @include('projects.index.common.filter')
         </div>
         @if(count($rows))
             <div class="table-responsive">
-                <table class="table table-striped table-borderless active-table">
-                    <thead>
-                        <tr>
-                            <th>{!! SortableTable::th('id', 'ID') !!}</th>
-                            <th>{!! SortableTable::th('name', 'Nom') !!}</th>
-                            <th>{!! SortableTable::th('created_at', 'Date de soumission') !!}</th>
-                        </tr>
-                    </thead>
-                    @foreach ($rows as $project)
-                        <tr data-row-id="{{ $project->id }}" @if($project->status != 'draft') data-actions-disabled="edit" @endif data-redirect-url="{{ $project->view_url }}">
-                            <td>{{ $project->id }}</td>
-                            <td>{{ $project->name }}</td>
-                            <td>{{ $project->created_at }}</td>
-                        </tr>
-                    @endforeach
-                </table>
+                @if($rating_mode)
+                    @include('projects.index.common.list_ratings')
+                @else
+                    @include('projects.index.jury_list_details')
+                @endif
             </div>
         @else
             @include('common.empty_list')

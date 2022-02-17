@@ -69,6 +69,28 @@
 }
 
 
+table.table-vertical-headers th,
+table.table-vertical-headers td {
+    text-align: center;
+}
+
+table.table-vertical-headers th:first-child,
+table.table-vertical-headers td:first-child {
+    text-align: left;
+}
+
+table.table-vertical-headers th a {
+    white-space: nowrap;
+    writing-mode: sideways-lr;
+    text-orientation: sideways-left;
+    height: auto;
+    text-align: center;
+}
+
+table.table-vertical-headers th a:hover {
+    text-decoration: none;
+}
+
 
 h1,h2,h3,h4,h5,h6 {
     font-family: "Bebas Neue";
@@ -80,6 +102,7 @@ h1,h2,h3,h4,h5,h6 {
     color: $white;
     line-height: 3rem;
     float: right;
+    margin-left: 15px;
 }
 
 .card .card-header h2 {

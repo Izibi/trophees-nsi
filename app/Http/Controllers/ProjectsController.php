@@ -28,6 +28,11 @@ class ProjectsController extends Controller
 
     public function index(Request $request)
     {
+        $rating_mode_accessible = $this->accessible($request->user(), null, 'view_projects_rating');
+        $rating_mode = $request->has('rating_mode');
+        if($rating_mode && !$rating_mode_accessible) {
+            return redirect('/projects');
+        }
         $q = $this->getProjectsQuery($request);
         SortableTable::orderBy($q, $this->getSortFields($request));
         $projects = $q->paginate()->appends($request->all());
@@ -37,14 +42,50 @@ class ProjectsController extends Controller
             $p = parse_url($projects->url($offset));
             $project->view_url = '/project?'.$p['query'].'&refer_page='.urlencode($request->fullUrl());
         }
+
+
         return view('projects.index.'.$request->user()->role, [
             'rows' => $projects,
-            'contest' => $this->contest
+            'contest' => $this->contest,
+            'rating_mode_accessible' => $rating_mode_accessible,
+            'rating_mode' => $rating_mode,
         ]);
     }
 
 
     private function getSortFields($request) {
+        if($request->has('rating_mode')) {
+            return $this->getSortFieldsRatingMode($request);
+        } else {
+            return $this->getSortFieldsDetailsMode($request);
+        }
+    }
+
+
+    private function getSortFieldsRatingMode($request) {
+        return [
+            'name' => 'projects.name',
+            'score_total' => 'projects.score_total',
+            'score_idea' => 'projects.score_idea',
+            'score_communication' => 'projects.score_communication',
+            'score_presentation' => 'projects.score_presentation',
+            'score_image' => 'projects.score_image',
+            'score_logic' => 'projects.score_logic',
+            'score_creativity' => 'projects.score_creativity',
+            'score_organisation' => 'projects.score_organisation',
+            'score_operationality' => 'projects.score_operationality',
+            'score_ouverture' => 'projects.score_ouverture',
+            'ratings_amount' => 'projects.ratings_amount',
+            'award_mixed' => 'projects.award_mixed',
+            'award_citizenship' => 'projects.award_citizenship',
+            'award_engineering' => 'projects.award_engineering',
+            'award_heart' => 'projects.award_heart',
+            'award_originality' => 'projects.award_originality',
+        ];
+    }
+
+
+    private function getSortFieldsDetailsMode($request) {
         $user_role = $request->user()->role;
         $res = [];
         $res['id'] = 'projects.id';
@@ -69,18 +110,17 @@ class ProjectsController extends Controller
         $q->where('projects.contest_id', '=', $this->contest->id);
 
         if($user->role == 'teacher') {
-            $q->select(DB::raw('projects.id, projects.name, schools.name as school_name, projects.created_at, projects.status'));
+            $q->select(DB::raw('projects.*, schools.name as school_name'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
             $q->where('projects.user_id', '=', $user->id);
-
         } else if($user->role == 'jury') {
-            $q->select(DB::raw('projects.id, projects.name, projects.created_at, projects.status'));
+            $q->select(DB::raw('projects.*'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
             $q->where('schools.region_id', '=', $user->region_id);
             $q->where('projects.status', '=', 'validated');
             $q->where('projects.status', '<>', 'masked');
         } else if($user->role == 'admin') {
-            $q->select(DB::raw('projects.id, projects.name, schools.name as school_name, users.name as user_name, regions.name as region_name, projects.created_at, projects.status'));
+            $q->select(DB::raw('projects.*, schools.name as school_name, users.name as user_name, regions.name as region_name'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
             $q->leftJoin('users', 'projects.user_id', '=', 'users.id');
             $q->leftJoin('regions', 'schools.region_id', '=', 'regions.id');
@@ -341,16 +381,10 @@ class ProjectsController extends Controller
                     $project->contest_id == $this->contest->id &&
                     ($this->contest->status == 'grading' || $this->contest->status == 'deliberating');
                 break;
-            case 'view_aggregated_ratings':
+            case 'view_projects_rating':
                 return
                     $user->role == 'admin' ||
-                    (
-                        $user->role == 'jury' &&
-                        $user->region_id == $project->school->region_id &&
-                        $project->status == 'validated' &&
-                        $project->contest_id == $this->contest->id &&
-                        $this->contest->status == 'deliberating'
-                    );
+                    ($user->role == 'jury' && $this->contest->status == 'deliberating');
                 break;
         }
     }

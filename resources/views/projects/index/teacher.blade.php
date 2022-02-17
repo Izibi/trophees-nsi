@@ -6,18 +6,18 @@
     <div class="card mt-3 mb-3">
         <div class="card-header">
             <h2>Projets</h2>
-            @include('projects.index.filter')
+            @include('projects.index.common.filter')
         </div>
         @if(count($rows))
             <div class="table-responsive">
                 <table class="table table-striped table-borderless active-table">
                     <thead>
                         <tr>
-                            <th>{!! SortableTable::th('id', 'ID') !!}</th>
-                            <th>{!! SortableTable::th('name', 'Nom') !!}</th>
-                            <th>{!! SortableTable::th('school_name', 'Établissement') !!}</th>
-                            <th>{!! SortableTable::th('created_at', 'Date de soumission') !!}</th>
-                            <th>{!! SortableTable::th('status', 'Statut') !!}</th>
+                            <th class="col-1">{!! SortableTable::th('id', 'ID') !!}</th>
+                            <th class="col-5">{!! SortableTable::th('name', 'Nom') !!}</th>
+                            <th class="col-3">{!! SortableTable::th('school_name', 'Établissement') !!}</th>
+                            <th class="col-2">{!! SortableTable::th('created_at', 'Date de soumission') !!}</th>
+                            <th class="col-1">{!! SortableTable::th('status', 'Statut') !!}</th>
                         </tr>
                     </thead>
                     @foreach ($rows as $project)
