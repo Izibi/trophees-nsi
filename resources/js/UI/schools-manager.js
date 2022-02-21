@@ -8,6 +8,14 @@ function formatSchoolName(school) {
 }
 
 
+function handleUnauthorizedResponse(xhr) {
+    if(xhr.status == 401) {
+        alert('Veuillez vous reconnecter pour continuer.');
+        window.location = '/';
+    }
+}
+
+
 
 function UserSchools() {
 
@@ -62,6 +70,9 @@ function UserSchools() {
                 window.user_schools = data;
                 refreshParentSelect();
                 render();
+            },
+            error: function(xhr, status, error) {
+                handleUnauthorizedResponse(xhr);
             }
         });
     }
@@ -146,6 +157,9 @@ function SearchSchool() {
                 overlay.hide();
                 list = data;
                 render();
+            },
+            error: function(xhr, status, error) {
+                handleUnauthorizedResponse(xhr);
             }
         });
     }
@@ -243,6 +257,7 @@ function FormSchool(options) {
                 }
             },
             error: function(xhr, status, error) {
+                handleUnauthorizedResponse(xhr);
                 var res = xhr.responseJSON;
                 if(res.errors) {
                     overlay.hide();

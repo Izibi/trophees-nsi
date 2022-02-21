@@ -10,7 +10,7 @@ Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile']);
 Route::get('/oauth_callback/login', [App\Http\Controllers\OAuthCallbackController::class, 'login']);
 Route::get('/oauth_callback/profile', [App\Http\Controllers\OAuthCallbackController::class, 'profile']);
 
-Route::middleware('auth')->group(function() {
+Route::middleware(['auth', 'relogin'])->group(function() {
 
     Route::resource('projects', App\Http\Controllers\ProjectsController::class);
     Route::get('/project', [App\Http\Controllers\ProjectsController::class, 'showPaginated']);

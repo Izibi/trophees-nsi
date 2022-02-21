@@ -73,6 +73,7 @@ class OAuthCallbackController extends Controller
         $attributes = $this->getUserAttributes($user_data);
         $user->fill($attributes);
         $user->last_login_at = Carbon::now();
+        $user->relogin_required = false;
         $user->save();
         return $user;
     }
