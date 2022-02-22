@@ -45,7 +45,6 @@ class UsersController extends Controller
             ->leftJoin('countries', 'users.country_id', '=', 'countries.id')
             ->leftJoin('regions', 'users.region_id', '=', 'regions.id');
         if($request->has('filter')) {
-            $filter_name = $request->get('filter_id');
             $filter_name = $request->get('filter_name');
             if(strlen($filter_name) > 0) {
                 $q->where('users.name', 'LIKE', '%'.$filter_name.'%');
