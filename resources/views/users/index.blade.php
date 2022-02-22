@@ -1,12 +1,13 @@
 @extends('layout')
 
 @section('content')
-    @if(count($rows))
-        <div class="card mt-3 mb-3">
-            <div class="card-header">
-                <h2>Utilisateurs</h2>
-            </div>
+    <div class="card mt-3 mb-3">
+        <div class="card-header">
+            <h2>Utilisateurs</h2>
+            @include('users.filter')
+        </div>
 
+        @if(count($rows))
             <div class="table-responsive">
                 <table class="table table-striped table-borderless active-table">
                     <thead>
@@ -37,15 +38,17 @@
                     @endforeach
                 </table>
             </div>
-        </div>
+        @else
+            @include('common.empty_list')
+        @endif
+    </div>
 
-        <div class="mt-3 mb-3">
+    @include('common.paginator')
+
+    <div class="mt-3 mb-3">
+        @if(count($rows))
             <button class="btn btn-primary active-button" data-action="/users/:id/edit" data-method="GET">Modifier l'utilisateur sélectionné</button>
-            <a class="btn btn-primary" href="export/users" target="_blank">Télécharger au format CSV</a>
-        </div>
-
-        @include('common.paginator')
-    @else
-        @include('common.empty_list')
-    @endif
+        @endif
+        <a class="btn btn-primary" href="export/users" target="_blank">Télécharger au format CSV</a>
+    </div>
 @endsection

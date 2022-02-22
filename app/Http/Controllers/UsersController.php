@@ -29,15 +29,44 @@ class UsersController extends Controller
 
     public function index(Request $request)
     {
+        $q = $this->getUsersQuery($request);
+        SortableTable::orderBy($q, $this->sort_fields);
+        $users = $q->paginate()->appends($request->all());
+        return view('users.index', [
+            'rows' => $users,
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray()
+        ]);
+    }
+
+
+    private function getUsersQuery($request) {
         $q = DB::table('users')
             ->select(DB::raw('users.id, users.name, users.email, users.secondary_email, users.validated, users.role, countries.name as country_name, regions.name as region_name, users.created_at, users.last_login_at'))
             ->leftJoin('countries', 'users.country_id', '=', 'countries.id')
             ->leftJoin('regions', 'users.region_id', '=', 'regions.id');
-        SortableTable::orderBy($q, $this->sort_fields);
-        $users = $q->paginate()->appends($request->all());
-        return view('users.index', [
-            'rows' => $users
-        ]);
+        if($request->has('filter')) {
+            $filter_name = $request->get('filter_id');
+            $filter_name = $request->get('filter_name');
+            if(strlen($filter_name) > 0) {
+                $q->where('users.name', 'LIKE', '%'.$filter_name.'%');
+            }
+            $filter_email = $request->get('filter_email');
+            if(strlen($filter_email) > 0) {
+                $filter_email = '%'.$filter_email.'%';
+                $q->where(function($q) use ($filter_email) {
+                    $q->where('users.email', 'LIKE', $filter_email)->orWhere('users.secondary_email', 'LIKE', $filter_email);
+                });
+            }
+            $filter_role = $request->get('filter_role');
+            if($filter_role) {
+                $q->where('users.role', $filter_role);
+            }
+            $filter_region_id = $request->get('filter_region_id');
+            if(strlen($filter_region_id) > 0) {
+                $q->where('users.region_id', '=', $filter_region_id);
+            }
+        }
+        return $q;
     }
 
 
