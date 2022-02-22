@@ -1,12 +1,14 @@
 @extends('layout')
 
 @section('content')
-    @if(count($rows))
-        <div class="card mt-3 mb-3">
-            <div class="card-header">
-                <h2>Schools</h2>
-            </div>
 
+    <div class="card mt-3 mb-3">
+        <div class="card-header">
+            <h2>Schools</h2>
+            @include('schools.filter')
+        </div>
+
+        @if(count($rows))
             <div class="table-responsive">
                 <table class="table table-striped table-borderless active-table">
                     <thead>
@@ -41,15 +43,17 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        @else
+            @include('common.empty_list')
+        @endif
+    </div>
 
+    @include('common.paginator')
+
+    @if(count($rows))
         <div class="mt-3 mb-3">
             <button class="btn btn-primary active-button" data-action="/schools/:id/edit" data-method="GET">Modifier l'établissement sélectionné</button>
             <button class="btn btn-primary active-button" data-action="/schools/:id/hide" data-method="POST">Cacher l'établissement sélectionné</button>
         </div>
-
-        @include('common.paginator')
-    @else
-        @include('common.empty_list')
     @endif
 @endsection

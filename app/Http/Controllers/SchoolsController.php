@@ -34,7 +34,17 @@ class SchoolsController extends Controller
 
     public function index(Request $request)
     {
-        $contest =
+        $q = $this->getSchoolsQuery($request);
+        SortableTable::orderBy($q, $this->sort_fields);
+        $schools = $q->paginate()->appends($request->all());
+        return view('schools.index', [
+            'rows' => $schools,
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray()
+        ]);
+    }
+
+
+    private function getSchoolsQuery($request) {
         $q = DB::table('schools')
             ->select(DB::raw('
                 schools.id,
@@ -50,11 +60,38 @@ class SchoolsController extends Controller
             '))
             ->leftJoin('regions', 'schools.region_id', '=', 'regions.id')
             ->leftJoin('countries', 'schools.country_id', '=', 'countries.id');
-        SortableTable::orderBy($q, $this->sort_fields);
-        $schools = $q->paginate()->appends($request->all());
-        return view('schools.index', [
-            'rows' => $schools
-        ]);
+
+        if($request->has('filter')) {
+            $filter_name = $request->get('filter_name');
+            if(strlen($filter_name) > 0) {
+                $q->where('schools.name', 'LIKE', '%'.$filter_name.'%');
+            }
+            $filter_address = $request->get('filter_address');
+            if(strlen($filter_address) > 0) {
+                $q->where('schools.address', 'LIKE', '%'.$filter_address.'%');
+            }
+            $filter_city = $request->get('filter_city');
+            if(strlen($filter_city) > 0) {
+                $q->where('schools.city', 'LIKE', '%'.$filter_city.'%');
+            }
+            $filter_zip = $request->get('filter_zip');
+            if(strlen($filter_zip) > 0) {
+                $q->where('schools.zip', 'LIKE', '%'.$filter_zip.'%');
+            }
+            $filter_region_id = $request->get('filter_region_id');
+            if(strlen($filter_region_id) > 0) {
+                $q->where('schools.region_id', '=', $filter_region_id);
+            }
+            $filter_uai = $request->get('filter_uai');
+            if(strlen($filter_uai) > 0) {
+                $q->where('schools.uai', 'LIKE', '%'.$filter_uai.'%');
+            }
+            $filter_hidden = $request->get('filter_hidden');
+            if(strlen($filter_hidden) > 0) {
+                $q->where('schools.hidden', '=', $filter_hidden);
+            }
+        }
+        return $q;
     }
 
 
