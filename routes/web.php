@@ -30,6 +30,9 @@ Route::middleware(['auth', 'relogin'])->group(function() {
         Route::get('export/users', [App\Http\Controllers\ExportController::class, 'users']);
 
         Route::get('admin/users', [App\Http\Controllers\AdminController::class, 'users']);
+
+        //Route::post('platfrom_callback/user/logout', [App\Http\Controllers\PlatformCallbackController::class, 'userLogout']);
+        //Route::post('platfrom_callback/user/refresh', [App\Http\Controllers\PlatformCallbackController::class, 'userUpdate']);
     });
 
     Route::get('user_schools/search', [App\Http\Controllers\UserSchoolsController::class, 'search']);
