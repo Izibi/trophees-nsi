@@ -34,6 +34,7 @@ class StorePojectRequest extends FormRequest
             'description' => 'required_if:finalize,1|max:'.config('nsi.project.description_max_length'),
             'video' => 'required_if:finalize,1|nullable|url',
             'cb_tested_by_teacher' => 'accepted_if:finalize,1',
+            'cb_reglament_accepted' => 'accepted_if:finalize,1',
             'presentation_file' => 'max:'.$conf['presentation_file_size_max'],
             'image_file' => 'max:'.$conf['image_file_size_max'],
             'zip_file' => 'max:'.$conf['zip_file_size_max'],

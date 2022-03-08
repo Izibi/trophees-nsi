@@ -131,8 +131,13 @@
                 ->attrs(['style' => 'height: 200px']) !!}
 
             <div class="mt-5">
+                <input type="hidden" name="cb_reglament_accepted" value="0"/>
+                {!! Form::checkbox('cb_reglament_accepted', 'Je certifie également avoir testé moi-même le projet, et confirme que celui-ci fonctionne comme présenté dans la vidéo. Je certifie enfin que tous les éleves dont l\'image ou la voix est présente sur la vidéo ont une autorisation parentale signée.')
+                    ->checked($project && $project->reglament_accepted) !!}
+            </div>
+            <div class="mt-2">
                 <input type="hidden" name="cb_tested_by_teacher" value="0"/>
-                {!! Form::checkbox('cb_tested_by_teacher', 'Je certifie que le projet soumis est en conformité avec le <a href="https://trophees-nsi.fr/le-reglement" target="_blank">règlement du concours</a>. Je certifie également avoir testé moi-même le projet, et confirme que celui-ci fonctionne comme présenté dans la vidéo. Je certifie enfin que tous les éleves dont l\'image ou la voix est présente sur la vidéo ont une autorisation parentale signée.')
+                {!! Form::checkbox('cb_tested_by_teacher', 'Je certifie avoir lu et accepté le <a href="https://trophees-nsi.fr/le-reglement" target="_blank">règlement du concours</a>.')
                     ->checked($project && $project->tested_by_teacher) !!}
             </div>
 
