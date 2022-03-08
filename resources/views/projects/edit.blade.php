@@ -114,7 +114,7 @@
                     @else
                         <div class="custom-file mt-2">
                             <span class="custom-file-clear" title="Clear">&times;</span>
-                            <input name="parental_permissions_file" id="inp-parental_permissions_file" type="file" class="custom-file-input {{ $errors->get('parental_permissions_file') ? 'is-invalid' : '' }}">
+                            <input name="parental_permissions_file" id="inp-parental_permissions_file" type="file" accept=".pdf" class="custom-file-input {{ $errors->get('parental_permissions_file') ? 'is-invalid' : '' }}">
                             <label for="inp-parental_permissions_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
                         </div>
                         @error('parental_permissions_file')
