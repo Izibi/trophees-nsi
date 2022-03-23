@@ -66,7 +66,7 @@
                                 <small>{{ $message }}</small>
                             </div>
                         @enderror
-			<small>Veuillez fournir une image carrée, de taille 500px &#10005; 500px.</small>
+			<small>Taille maximum : 20Mo. Veuillez fournir une image carrée, de taille 500px &#10005; 500px.</small>
                     @endif
                 </div>
                 <div class="col-6 file-box mb-4">
@@ -85,7 +85,7 @@
                                 <small>{{ $message }}</small>
                             </div>
                         @enderror
-                        <small>Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
+                        <small>Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
                     @endif
                 </div>
                 <div class="col-6 file-box mb-4">
@@ -104,7 +104,7 @@
                                 <small>{{ $message }}</small>
                             </div>
                         @enderror
-                        <small>Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce zip.</small>
+                        <small>Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce zip.</small>
                     @endif
                 </div>
                 <div class="col-6 file-box mb-4">
@@ -123,7 +123,7 @@
                                 <small>{{ $message }}</small>
                             </div>
                         @enderror
-                        <small>Voir <a href="#" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
+                        <small>Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
                     @endif
                 </div>
             </div>
