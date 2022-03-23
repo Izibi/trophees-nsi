@@ -66,6 +66,7 @@
                                 <small>{{ $message }}</small>
                             </div>
                         @enderror
+			<small>Veuillez fournir une image carrée, de taille 500px &#10005; 500px.</small>
                     @endif
                 </div>
                 <div class="col-6 file-box mb-4">
