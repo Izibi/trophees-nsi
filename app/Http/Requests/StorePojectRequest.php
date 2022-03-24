@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePojectRequest extends FormRequest
 {
@@ -36,7 +37,10 @@ class StorePojectRequest extends FormRequest
             'cb_tested_by_teacher' => 'accepted_if:finalize,1',
             'cb_reglament_accepted' => 'accepted_if:finalize,1',
             'presentation_file' => 'max:'.$conf['presentation_file_size_max'],
-            'image_file' => 'max:'.$conf['image_file_size_max'],
+            'image_file' => [
+                'max:'.$conf['image_file_size_max'],
+                Rule::dimensions()->maxWidth($conf['image_max_width'])->maxHeight($conf['image_max_height'])
+            ],
             'zip_file' => 'max:'.$conf['zip_file_size_max'],
             'parental_permissions_file' => 'max:'.$conf['parental_permissions_file_size_max']
         ];

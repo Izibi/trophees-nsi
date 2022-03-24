@@ -5,6 +5,8 @@ return [
         'team_size_min' => 2,
         'team_size_max' => 5,
         'presentation_file_size_max' => 1024, // size in Kbytes
+        'image_max_width' => 500, // px
+        'image_max_height' => 500, // px
         'image_file_size_max' => 1024, // size in Kbytes
         'zip_file_size_max' => 1024, // size in Kbytes
         'parental_permissions_file_size_max' => 1024, // size in Kbytes

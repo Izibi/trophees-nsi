@@ -66,7 +66,11 @@
                                 <small>{{ $message }}</small>
                             </div>
                         @enderror
-			<small>Taille maximum : 20Mo. Veuillez fournir une image carrée, de taille 500px &#10005; 500px.</small>
+			            <small>
+                            Taille maximum : 20Mo.
+                            Veuillez fournir une image carrée, de taille
+                            {{ config('nsi.project.image_max_width') }}px &#10005; {{ config('nsi.project.image_max_height') }}px.
+                        </small>
                     @endif
                 </div>
                 <div class="col-6 file-box mb-4">
