@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
-class PlatformCallbackController extends Controller
+class AdminInterfaceController extends Controller
 {
 
     protected $redirect_url = '/';
 
     public function userLogout(Request $request) {
+        $this->validateRequest($request);
         $user = $this->getUser($request);
         $user->relogin_required = true;
         $user->save();
@@ -19,6 +21,7 @@ class PlatformCallbackController extends Controller
 
 
     public function refreshUser(Request $request) {
+        $this->validateRequest($request);
         $user = $this->getUser($request);
         $user->relogin_required = true;
         $user->save();
@@ -38,5 +41,12 @@ class PlatformCallbackController extends Controller
             $url = config('app.url').$this->redirect_url;
         }
         return redirect($url);
+    }
+
+
+    private function validateRequest($request) {
+        if($request->user()->role != 'admin') {
+            abort(403);
+        }
     }
 }

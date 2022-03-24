@@ -31,8 +31,8 @@ Route::middleware(['auth', 'relogin'])->group(function() {
 
         Route::get('admin/users', [App\Http\Controllers\AdminController::class, 'users']);
 
-        //Route::post('platfrom_callback/user/logout', [App\Http\Controllers\PlatformCallbackController::class, 'userLogout']);
-        //Route::post('platfrom_callback/user/refresh', [App\Http\Controllers\PlatformCallbackController::class, 'userUpdate']);
+        Route::get('admin_interface/user/logout', [App\Http\Controllers\AdminInterfaceController::class, 'userLogout']);
+        Route::get('admin_interface/user/refresh', [App\Http\Controllers\AdminInterfaceController::class, 'userUpdate']);
     });
 
     Route::get('user_schools/search', [App\Http\Controllers\UserSchoolsController::class, 'search']);
