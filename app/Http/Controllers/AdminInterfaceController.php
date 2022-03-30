@@ -20,10 +20,10 @@ class AdminInterfaceController extends Controller
     }
 
 
-    public function refreshUser(Request $request) {
+    public function userRefresh(Request $request) {
         $this->validateRequest($request);
         $user = $this->getUser($request);
-        $user->relogin_required = true;
+        $user->refresh_required = true;
         $user->save();
         return $this->getResponse($request);
     }

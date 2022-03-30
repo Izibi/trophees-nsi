@@ -10,7 +10,7 @@ Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile']);
 Route::get('/oauth_callback/login', [App\Http\Controllers\OAuthCallbackController::class, 'login']);
 Route::get('/oauth_callback/profile', [App\Http\Controllers\OAuthCallbackController::class, 'profile']);
 
-Route::middleware(['auth', 'relogin'])->group(function() {
+Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
 
     Route::resource('projects', App\Http\Controllers\ProjectsController::class);
     Route::get('/project', [App\Http\Controllers\ProjectsController::class, 'showPaginated']);
@@ -32,7 +32,7 @@ Route::middleware(['auth', 'relogin'])->group(function() {
         Route::get('admin/users', [App\Http\Controllers\AdminController::class, 'users']);
 
         Route::get('admin_interface/user/logout', [App\Http\Controllers\AdminInterfaceController::class, 'userLogout']);
-        Route::get('admin_interface/user/refresh', [App\Http\Controllers\AdminInterfaceController::class, 'userUpdate']);
+        Route::get('admin_interface/user/refresh', [App\Http\Controllers\AdminInterfaceController::class, 'userRefresh']);
     });
 
     Route::get('user_schools/search', [App\Http\Controllers\UserSchoolsController::class, 'search']);
