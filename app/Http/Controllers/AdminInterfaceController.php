@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AdminInterfaceController extends Controller
 {
@@ -26,6 +28,15 @@ class AdminInterfaceController extends Controller
         $user->refresh_required = true;
         $user->save();
         return $this->getResponse($request);
+    }
+
+
+    public function userLogin(Request $request) {
+        $this->validateRequest($request);
+        $user = $this->getUser($request);
+        Auth::logout();
+        Session::flush();
+        return redirect('/login');
     }
 
 

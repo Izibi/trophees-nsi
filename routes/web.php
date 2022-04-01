@@ -31,6 +31,7 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
 
         Route::get('admin/users', [App\Http\Controllers\AdminController::class, 'users']);
 
+        Route::get('admin_interface/user/login', [App\Http\Controllers\AdminInterfaceController::class, 'userLogin']);
         Route::get('admin_interface/user/logout', [App\Http\Controllers\AdminInterfaceController::class, 'userLogout']);
         Route::get('admin_interface/user/refresh', [App\Http\Controllers\AdminInterfaceController::class, 'userRefresh']);
     });
