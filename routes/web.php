@@ -34,6 +34,8 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
         Route::get('admin_interface/user/login', [App\Http\Controllers\AdminInterfaceController::class, 'userLogin']);
         Route::get('admin_interface/user/logout', [App\Http\Controllers\AdminInterfaceController::class, 'userLogout']);
         Route::get('admin_interface/user/refresh', [App\Http\Controllers\AdminInterfaceController::class, 'userRefresh']);
+        Route::get('admin_interface/user/delete', [App\Http\Controllers\AdminInterfaceController::class, 'showUserDelete']);
+        Route::post('admin_interface/user/delete', [App\Http\Controllers\AdminInterfaceController::class, 'userDelete'])->name('admin_interface.user_delete');
     });
 
     Route::get('user_schools/search', [App\Http\Controllers\UserSchoolsController::class, 'search']);
