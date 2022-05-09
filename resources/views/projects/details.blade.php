@@ -76,7 +76,7 @@
         </div>
     @endif
 
-    @if(!is_null($project->parental_permissions_file) && Auth::user()->role == 'admin')
+    @if(!is_null($project->parental_permissions_file) && Auth::user()->role != 'jury')
         <div class="col-6">
             <a href="{{ Storage::disk('uploads')->url($project->parental_permissions_file) }}" target="_blank">
                 <i class="icon-file-pdf"></i>
