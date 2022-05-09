@@ -24,6 +24,7 @@
 
     <div class="mt-5 mb-3">
         @if(count($rows))
+            <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Modifier le projet sélectionné</button>
             <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">Afficher le projet sélectionné</button>
         @endif
     </div>

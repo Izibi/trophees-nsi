@@ -367,11 +367,12 @@ class ProjectsController extends Controller
                 break;
             case 'edit':
                 return
-                    $user->role == 'teacher' &&
+                    $user->role == 'admin' ||
+                    ($user->role == 'teacher' &&
                     $user->id == $project->user_id &&
                     $project->status == 'draft' &&
                     $project->contest_id == $this->contest->id &&
-                    $this->contest->status == 'open';
+                    $this->contest->status == 'open');
                 break;
             case 'change_status':
                 return $user->role == 'admin';
