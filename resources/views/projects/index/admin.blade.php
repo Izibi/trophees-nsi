@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout', ['containerstyle' => 'max-width: none;'])
 
 @section('content')
     <div class="card mt-3 mb-3">

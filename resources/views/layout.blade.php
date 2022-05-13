@@ -19,7 +19,7 @@
         @if (Auth::check())
             @include('nav')
         @endif
-        <main class="container mt-5 mb-5">
+	<main class="container mt-5 mb-5" style="{{ $containerstyle ?? '' }}">
             @if (\Session::has('message'))
                 <div class="alert alert-success">{!! \Session::get('message') !!}</div>
             @endif
