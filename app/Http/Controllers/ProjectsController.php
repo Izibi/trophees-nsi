@@ -411,20 +411,25 @@ class ProjectsController extends Controller
 
         $team_size = $project->team_girls + $project->team_boys + $project->team_not_provided;
         if($team_size < $config['team_size_min'] || $team_size > $config['team_size_max']) {
-            $errors[] = strtr('Total size of the team must be between team_size_min and team_size_max', $config);
+//            $errors[] = strtr('Total size of the team must be between team_size_min and team_size_max', $config);
+            $errors[] = strtr('La taille totale de l\'équipe doit être entre team_size_min et team_size_max', $config);
         }
 
         if(empty($project->presentation_file)) {
-            $errors[] = 'Presentation PDF not uploaded.';
+//            $errors[] = 'Presentation PDF not uploaded.';
+            $errors[] = 'PDF de présentation manquant.';
         }
         if(empty($project->zip_file)) {
-            $errors[] = 'Zip of project not uploaded.';
+//            $errors[] = 'Zip of project not uploaded.';
+            $errors[] = 'Zip du projet manquant.';
         }
         if(empty($project->image_file)) {
-            $errors[] = 'Image not uploaded.';
+//            $errors[] = 'Image not uploaded.';
+            $errors[] = 'Image manquante.';
         }
         if(empty($project->parental_permissions_file)) {
-            $errors[] = 'Parental permissions not uploaded.';
+//            $errors[] = 'Parental permissions not uploaded.';
+            $errors[] = 'Autorisations parentales manquantes.';
         }
 
         if(count($errors)) {

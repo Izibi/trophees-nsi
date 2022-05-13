@@ -1,23 +1,27 @@
 <table class="table table-striped table-borderless active-table table-vertical-headers">
     <thead>
         <tr>
-            <th>{!! SortableTable::th('name', 'Nom') !!}</th>
-            <th>{!! SortableTable::th('ratings_amount', 'Ratings amount') !!}</th>
-            <th>{!! SortableTable::th('score_idea', 'Score idea') !!}</th>
-            <th>{!! SortableTable::th('score_communication', 'Score  communication') !!}</th>
-            <th>{!! SortableTable::th('score_presentation', 'Score presentation') !!}</th>
-            <th>{!! SortableTable::th('score_image', 'Score image') !!}</th>
-            <th>{!! SortableTable::th('score_logic', 'Score logic') !!}</th>
-            <th>{!! SortableTable::th('score_creativity', 'Score creativity') !!}</th>
-            <th>{!! SortableTable::th('score_organisation', 'Score organisation') !!}</th>
-            <th>{!! SortableTable::th('score_operationality', 'Score operationality') !!}</th>
-            <th>{!! SortableTable::th('score_ouverture', 'Score ouverture') !!}</th>
-            <th>{!! SortableTable::th('score_total', 'Score total') !!}</th>
-            <th>{!! SortableTable::th('award_mixed', 'Awards mixed') !!}</th>
-            <th>{!! SortableTable::th('award_citizenship', 'Awards citizenship') !!}</th>
-            <th>{!! SortableTable::th('award_engineering', 'Awards engineering') !!}</th>
-            <th>{!! SortableTable::th('award_heart', 'Awards heart') !!}</th>
-            <th>{!! SortableTable::th('award_originality', 'Awards originality') !!}</th>
+            <th rowspan="2" style="vertical-align: middle;">{!! SortableTable::th('name', 'Nom') !!}</th>
+	    <th rowspan="2" style="vertical-align: middle;">{!! SortableTable::th('ratings_amount', 'Nombre de notes') !!}</th>
+            <th colspan="10">Scores</th>
+            <th colspan="5">Récompenses suggérées</th>
+        </tr>
+        <tr>
+            <th>{!! SortableTable::th('score_idea', 'Idée') !!}</th>
+            <th>{!! SortableTable::th('score_communication', 'Communication') !!}</th>
+            <th>{!! SortableTable::th('score_presentation', 'Presentation') !!}</th>
+            <th>{!! SortableTable::th('score_image', 'Image') !!}</th>
+            <th>{!! SortableTable::th('score_logic', 'Logique') !!}</th>
+            <th>{!! SortableTable::th('score_creativity', 'Créativité') !!}</th>
+            <th>{!! SortableTable::th('score_organisation', 'Organisation') !!}</th>
+            <th>{!! SortableTable::th('score_operationality', 'Opérationnalité') !!}</th>
+            <th>{!! SortableTable::th('score_ouverture', 'Ouverture') !!}</th>
+            <th>{!! SortableTable::th('score_total', 'Total') !!}</th>
+            <th>{!! SortableTable::th('award_mixed', 'Mixité') !!}</th>
+            <th>{!! SortableTable::th('award_citizenship', 'Citoyenneté') !!}</th>
+            <th>{!! SortableTable::th('award_engineering', 'Ingénierie') !!}</th>
+            <th>{!! SortableTable::th('award_heart', 'Coup de coeur') !!}</th>
+            <th>{!! SortableTable::th('award_originality', 'Originalité') !!}</th>
         </tr>
     </thead>
     @foreach ($rows as $project)
