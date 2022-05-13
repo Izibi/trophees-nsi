@@ -7,7 +7,7 @@ class Rating {
         $res = [
             '' => ''
         ];
-        for($i=1; $i<=$max; $i++) {
+        for($i=0; $i<=$max; $i++) {
             $res[''.$i] = $i.' / '.$max;
         }
         return $res;
