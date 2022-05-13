@@ -41,16 +41,20 @@ class Rating extends Model
     protected static function boot() {
         parent::boot();
         static::saving(function($rating) {
-            $rating->score_total =
-                $rating->score_idea +
-                $rating->score_communication +
-                $rating->score_presentation +
-                $rating->score_image +
-                $rating->score_logic +
-                $rating->score_creativity +
-                $rating->score_organisation +
-                $rating->score_operationality +
-                $rating->score_ouverture;
+            if($rating->published) {
+                $rating->score_total =
+                    $rating->score_idea +
+                    $rating->score_communication +
+                    $rating->score_presentation +
+                    $rating->score_image +
+                    $rating->score_logic +
+                    $rating->score_creativity +
+                    $rating->score_organisation +
+                    $rating->score_operationality +
+                    $rating->score_ouverture;
+            } else {
+                $rating->score_total = 0;
+            }
         });
 
         static::saved(function($rating) {

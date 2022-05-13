@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class SetProjectRatingRequest extends FormRequest
 {
@@ -24,15 +25,15 @@ class SetProjectRatingRequest extends FormRequest
     public function rules()
     {
         return [
-            'score_idea' => 'required|integer|min:1,max:5',
-            'score_communication' => 'required|integer|min:1,max:5',
-            'score_presentation' => 'required|integer|min:1,max:5',
-            'score_image' => 'required|integer|min:1,max:2',
-            'score_logic' => 'required|integer|min:1,max:5',
-            'score_creativity' => 'required|integer|min:1,max:5',
-            'score_organisation' => 'required|integer|min:1,max:5',
-            'score_operationality' => 'required|integer|min:1,max:5',
-            'score_ouverture' => 'required|integer|min:1,max:3',
+            'score_idea' => 'required_if:published,1|nullable|integer|min:1,max:5',
+            'score_communication' => 'required_if:published,1|nullable|integer|min:1,max:5',
+            'score_presentation' => 'required_if:published,1|nullable|integer|min:1,max:5',
+            'score_image' => 'required_if:published,1|nullable|integer|min:1,max:2',
+            'score_logic' => 'required_if:published,1|nullable|integer|min:1,max:5',
+            'score_creativity' => 'required_if:published,1|nullable|integer|min:1,max:5',
+            'score_organisation' => 'required_if:published,1|nullable|integer|min:1,max:5',
+            'score_operationality' => 'required_if:published,1|nullable|integer|min:1,max:5',
+            'score_ouverture' => 'required_if:published,1|nullable|integer|min:1,max:3',
         ];
     }
 }

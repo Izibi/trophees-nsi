@@ -82,7 +82,7 @@ class ProjectsController extends Controller
             'award_citizenship' => 'projects.award_citizenship',
             'award_engineering' => 'projects.award_engineering',
             'award_heart' => 'projects.award_heart',
-            'award_originality' => 'projects.award_originality',
+            'award_originality' => 'projects.award_originality'
         ];
     }
 
@@ -98,6 +98,9 @@ class ProjectsController extends Controller
         if($user_role == 'admin') {
             $res['region_name'] = 'regions.name';
             $res['user_name'] = 'users.name';
+        }
+        if($user_role == 'jury') {
+            $res['rating_published'] = 'ratings.published';
         }
         $res['created_at'] = 'projects.created_at';
         $res['status'] = 'projects.status';
@@ -116,11 +119,14 @@ class ProjectsController extends Controller
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
             $q->where('projects.user_id', '=', $user->id);
         } else if($user->role == 'jury') {
-            $q->select(DB::raw('projects.*'));
+            $q->select(DB::raw('projects.*, ratings.published as rating_published'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
             $q->where('schools.region_id', '=', $user->region_id);
             $q->where('projects.status', '=', 'validated');
-            $q->where('projects.status', '<>', 'masked');
+            $q->leftJoin('ratings', function($join) use ($user) {
+                $join->on('projects.id', '=', 'ratings.project_id');
+                $join->on(DB::raw($user->id), '=', 'ratings.user_id');
+            });
         } else if($user->role == 'admin') {
             $q->select(DB::raw('projects.*, schools.name as school_name, users.name as user_name, regions.name as region_name'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');

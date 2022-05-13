@@ -64,7 +64,9 @@
         @if($contest->status == 'grading' || $contest->status == 'deliberating')
             <div class="mt-3">
                 @if(!$rating || !$rating->published)
-                    {!! Form::submit('Enregistrer le brouillon') !!}
+                    <div class="mb-2">
+                        {!! Form::submit('Enregistrer le brouillon') !!}
+                    </div>
                 @endif
                 <a class="btn btn-primary" href="#" id="btn-submit-rating">Finaliser</a>
                 <a class="btn btn-primary" href="{{ $refer_page }}">Annuler</a>
