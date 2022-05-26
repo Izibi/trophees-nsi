@@ -12,7 +12,7 @@
 
             {!! Form::text('name', 'Nom du projet') !!}
 
-            {!! Form::select('school_id', 'Établissement', $schools['options'])->help('<a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>') !!}
+            {!! Form::select('school_id', 'Établissement', $schools['options'])->help(Auth::user()->role == 'teacher' ? '<a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>' : false) !!}
 
             {!! Form::select('grade_id', 'Niveau', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
 

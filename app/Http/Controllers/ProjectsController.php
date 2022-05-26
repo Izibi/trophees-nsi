@@ -258,7 +258,7 @@ class ProjectsController extends Controller
         return view('projects.edit', [
             'submit_route' => 'projects.update',
             'project' => $project,
-            'schools' => $this->getUserSchools($user),
+            'schools' => $this->getUserSchools($user->role != 'admin' ? $user : $project->user),
             'grades' => Grade::orderBy('name')->get(),
             'countries' => Country::orderBy('name')->get(),
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
