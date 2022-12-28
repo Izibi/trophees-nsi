@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\TeamMember;
 use App\Models\School;
 use App\Models\Grade;
 use App\Models\Rating;
@@ -16,6 +17,7 @@ use App\Http\Requests\SetProjectStatusRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\SortableTable;
 use App\Classes\ActiveContest;
+use App\Models\Academy;
 
 class ProjectsController extends Controller
 {
@@ -167,9 +169,10 @@ class ProjectsController extends Controller
         if(!$this->accessible($user, null, 'create')) {
             return $this->accessDeniedResponse();
         }
-        return view('projects.edit', [
+        return view('projects.edit.index', [
             'project' => null,
             'schools' => $this->getUserSchools($user),
+            'academies' => Academy::get(),
             'grades' => Grade::orderBy('name')->get(),
             'countries' => Country::orderBy('name')->get(),
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
@@ -189,6 +192,7 @@ class ProjectsController extends Controller
         $project->user_id = $user->id;
         $project->contest_id = $this->contest->id;
         $project->save();
+        $this->syncTeamMembers($project, $request);
         if($request->has('finalize')) {
             $res = $this->finalizeProject($project, $request);
             if($res !== true) {
@@ -255,10 +259,11 @@ class ProjectsController extends Controller
         if(!$this->accessible($user, $project, 'edit')) {
             return $this->accessDeniedResponse();
         }
-        return view('projects.edit', [
+        return view('projects.edit.index', [
             'submit_route' => 'projects.update',
             'project' => $project,
             'schools' => $this->getUserSchools($user->role != 'admin' ? $user : $project->user),
+            'academies' => Academy::get(),
             'grades' => Grade::orderBy('name')->get(),
             'countries' => Country::orderBy('name')->get(),
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
@@ -272,15 +277,12 @@ class ProjectsController extends Controller
         if(!$this->accessible($request->user(), $project, 'edit')) {
             return $this->accessDeniedResponse();
         }
-        if($request->has('delete_uploads')) {
-            $to_delete = $request->get('delete_uploads');
-            foreach($to_delete as $attr) {
-                $project->$attr = null;
-            }
-        }
+
+        $this->deleteUploads($project, $request);
         $project->uploadFiles($request);
         $project->fill($request->all());
         $project->save();
+        $this->syncTeamMembers($project, $request);
 
         if($request->has('finalize')) {
             $res = $this->finalizeProject($project, $request);
@@ -419,19 +421,19 @@ class ProjectsController extends Controller
 //            $errors[] = 'Presentation PDF not uploaded.';
             $errors[] = 'PDF de présentation manquant.';
         }
-        if(empty($project->zip_file)) {
-//            $errors[] = 'Zip of project not uploaded.';
-            $errors[] = 'Zip du projet manquant.';
-        }
         if(empty($project->image_file)) {
 //            $errors[] = 'Image not uploaded.';
             $errors[] = 'Image manquante.';
         }
-        if(empty($project->parental_permissions_file)) {
-//            $errors[] = 'Parental permissions not uploaded.';
-            $errors[] = 'Autorisations parentales manquantes.';
+        foreach($project->team_members as $team_member) {
+            if(empty($team_member->parental_permissions_file)) {
+                $errors[] = 'Autorisations parentales manquantes.';
+                break;
+            }
         }
-
+        if(empty($project->url)) {
+            $errors[] = 'URL du projet manquant.';
+        }
         if(count($errors)) {
             return redirect()->route('projects.edit', $project)->withError($errors);
         }
@@ -467,4 +469,72 @@ class ProjectsController extends Controller
         }
         return (array) $res;
     }
+
+
+    private function syncTeamMembers($project, $request) {
+        $members = $project->team_members->keyBy('id')->all();
+
+        $team_member_id = $request->get('team_member_id') ?? [];
+        $parental_permissions_file = $request->file('team_member_parental_permissions_file');
+
+        $saved_ids = [];
+
+        $project->team_girls = 0;
+        $project->team_boys = 0;
+        $project->team_not_provided = 0;
+        for($i=0; $i<count($team_member_id); $i++) {
+            $data = [
+                'project_id' => $project->id,
+                'first_name' => $request->get('team_member_first_name')[$i] ?? '',
+                'last_name' => $request->get('team_member_last_name')[$i] ?? '',
+                'gender' => $request->get('team_member_gender')[$i] ?? ''
+            ];
+            $id = $team_member_id[$i];
+
+            if(empty($id)) {
+                $member = new TeamMember($data);
+            } else if(isset($members[$id])) {
+                $saved_ids[$id] = true;
+                $member = $members[$id];
+                $member->fill($data);
+            }
+            if(isset($parental_permissions_file[$i])) {
+                $member->uploadFile($request->file('team_member_parental_permissions_file')[$i]);
+            }
+            $member->save();
+
+            if($member->gender == 'male') {
+                $project->team_boys++;
+            } else if($member->gender == 'female') {
+                $project->team_girls++;
+            } else {
+                $project->team_not_provided++;
+            }
+        }
+        $project->save();
+
+        foreach($members as $member) {
+            if(!isset($saved_ids[$member->id])) {
+                $member->delete();
+            }
+        }
+    }
+
+
+    private function deleteUploads($project, $request) {
+        if($request->has('delete_uploads')) {
+            $to_delete = $request->get('delete_uploads');
+            foreach($to_delete as $attr) {
+                list($target, $pointer) = explode('.', $attr);
+                if($target == 'project') {
+                    $project->$pointer = null;
+                } else if($target == 'team_member') {
+                    $team_member = $project->team_members()->where('id', $pointer)->first();
+                    $team_member->parental_permissions_file = null;
+                    $team_member->save();
+                }
+            }
+        }
+    }
+
 }

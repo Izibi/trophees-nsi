@@ -1,6 +1,14 @@
 @extends('layout')
 
 @section('content')
+    <div style="display: none" id="team-member-template">
+        @include(
+            'projects.edit.team-member',
+            [ 'member' => null ]
+        )
+    </div>
+
+
     <div id="edit-form">
         {!! Form::open()
             ->multipart()
@@ -16,18 +24,26 @@
 
             {!! Form::select('grade_id', 'Niveau', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
 
-            <div class="row">
-                <div class="col-4">
-                    {!! Form::text('team_girls', 'Nombre de filles')->wrapperAttrs(['class' => 'mb-0']) !!}
+            {!! Form::select('academy_id', 'Choisir une académie', [null => ''] + $academies->pluck('name', 'id')->toArray()) !!}
+
+            <div class="mt-5 mb-5">
+                <h5>Team members</h5>
+                <p><small class="form-text text-muted">Précisez la composition de l'équipe pour ce projet. La mixité de l'équipe pourra être prise en compte pour certains prix.</small></p>
+                <div id="team-members">
+                    @if($project)
+                        @foreach($project->team_members as $member)
+                            @include('projects.edit.team-member', [
+                                'member' => $member
+                            ])
+                        @endforeach
+                    @endif
                 </div>
-                <div class="col-4">
-                    {!! Form::text('team_boys', 'Nombre de garçons')->wrapperAttrs(['class' => 'mb-0']) !!}
-                </div>
-                <div class="col-4">
-                    {!! Form::text('team_not_provided', 'Non renseigné')->wrapperAttrs(['class' => 'mb-0']) !!}
-                </div>
+                <a href="#" id="btn-add-member">Add team member</a>
             </div>
-            <p><small class="form-text text-muted">Précisez la composition de l'équipe pour ce projet. La mixité de l'équipe pourra être prise en compte pour certains prix.</small></p>
+
+
+
+
 
             <div class="row">
                 <div class="col-4">
@@ -47,89 +63,29 @@
                 ->help('<div id="description-counter" class="text-right text-muted"></div>') !!}
 
             {!! Form::text('video', 'Vidéo')
+                ->placeholder('https://')
                 ->help('La vidéo doit être publiée sur <a href="https://peertube.fr" target="_blank">peertube.fr</a>. Renseignez ici son URL.') !!}
 
+            {!! Form::text('url', 'URL')->placeholder('https://') !!}
+
             <div class="row">
-                <div class="col-6 file-box mb-4">
-                    <span class="file-box-title">Image</span>
-                    @if($project && !is_null($project->image_file))
-                        - <a href="{{ Storage::disk('uploads')->url($project->image_file) }}" target="_blank">télécharger</a> ou
-                        <a href="#" class="link-delete-file" data-file="image_file">supprimer</a>
-                    @else
-                        <div class="custom-file mt-2">
-                            <span class="custom-file-clear" title="Clear">&times;</span>
-                            <input name="image_file" id="inp-image_file" type="file" accept=".jpg,.jpeg,.png,.gif" class="custom-file-input {{ $errors->get('image_file') ? 'is-invalid' : '' }}">
-                            <label for="inp-image_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
-                        </div>
-                        @error('image_file')
-                            <div class="text-danger">
-                                <small>{{ $message }}</small>
-                            </div>
-                        @enderror
-			            <small>
-                            Taille maximum : 20Mo.
-                            Veuillez fournir une image carrée, de taille
-                            {{ config('nsi.project.image_max_width') }}px &#10005; {{ config('nsi.project.image_max_height') }}px.
-                        </small>
-                    @endif
-                </div>
-                <div class="col-6 file-box mb-4">
-                    <span class="file-box-title">PDF de présentation</span>
-                    @if($project && !is_null($project->presentation_file))
-                        - <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">télécharger</a> ou
-                        <a href="#" class="link-delete-file" data-file="presentation_file">supprimer</a>
-                    @else
-                        <div class="custom-file mt-2">
-                            <span class="custom-file-clear" title="Clear">&times;</span>
-                            <input name="presentation_file" id="inp-presentation_file" type="file" accept=".pdf" class="custom-file-input {{ $errors->get('presentation_file') ? 'is-invalid' : '' }}">
-                            <label for="inp-presentation_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
-                        </div>
-                        @error('presentation_file')
-                            <div class="text-danger">
-                                <small>{{ $message }}</small>
-                            </div>
-                        @enderror
-                        <small>Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
-                    @endif
-                </div>
-                <div class="col-6 file-box mb-4">
-                    <span class="file-box-title">Zip du projet</span>
-                    @if($project && !is_null($project->zip_file))
-                        - <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">télécharger</a> ou
-                        <a href="#" class="link-delete-file" data-file="zip_file">supprimer</a>
-                    @else
-                        <div class="custom-file mt-2">
-                            <span class="custom-file-clear" title="Clear">&times;</span>
-                            <input name="zip_file" id="inp-zip_file" type="file" accept=".zip" class="custom-file-input {{ $errors->get('zip_file') ? 'is-invalid' : '' }}">
-                            <label for="inp-zip_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
-                        </div>
-                        @error('zip_file')
-                            <div class="text-danger">
-                                <small>{{ $message }}</small>
-                            </div>
-                        @enderror
-                        <small>Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce zip.</small>
-                    @endif
-                </div>
-                <div class="col-6 file-box mb-4">
-                    <span class="file-box-title">Autorisations parentales</span>
-                    @if($project && !is_null($project->parental_permissions_file))
-                        - <a href="{{ Storage::disk('uploads')->url($project->parental_permissions_file) }}" target="_blank">télécharger</a> ou
-                        <a href="#" class="link-delete-file" data-file="parental_permissions_file">supprimer</a>
-                    @else
-                        <div class="custom-file mt-2">
-                            <span class="custom-file-clear" title="Clear">&times;</span>
-                            <input name="parental_permissions_file" id="inp-parental_permissions_file" type="file" accept=".pdf" class="custom-file-input {{ $errors->get('parental_permissions_file') ? 'is-invalid' : '' }}">
-                            <label for="inp-parental_permissions_file" class="custom-file-label text-truncate">Choisir un fichier...</label>
-                        </div>
-                        @error('parental_permissions_file')
-                            <div class="text-danger">
-                                <small>{{ $message }}</small>
-                            </div>
-                        @enderror
-                        <small>Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
-                    @endif
-                </div>
+                @include('projects.edit.file-input', [
+                    'title' => 'Image',
+                    'description' => 'Taille maximum : 20Mo. Veuillez fournir une image carrée, de taille '.config('nsi.project.image_max_width').'px &#10005;'.config('nsi.project.image_max_height').' px.',
+                    'extensions' => '.jpg,.jpeg,.png,.gif',
+                    'key' => 'image_file',
+                    'file' => $project ? $project->image_file : null,
+                    'class' => 'col-6 file-box mb-4'
+                ])
+
+                @include('projects.edit.file-input', [
+                    'title' => 'PDF de présentation',
+                    'description' => 'Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.',
+                    'extensions' => '.pdf',
+                    'key' => 'presentation_file',
+                    'file' => $project ? $project->presentation_file : null,
+                    'class' => 'col-6 file-box mb-4'
+                ])
             </div>
 
             {!! Form::textarea('teacher_notes', 'Remarques de l\'enseignant')
@@ -238,12 +194,34 @@
             $('.link-delete-file').on('click', function(e) {
                 e.preventDefault();
                 var el = $(this);
-                var file = el.data('file');
+
+                var team_member_row = el.closest('.team-member-row');
+                if(team_member_row.length) {
+                    var file = 'team_member.' + team_member_row.find('input[name="team_member_id[]"]').val();
+                } else {
+                    var file = 'project.' + el.data('file');
+                }
                 var text = el.siblings('.file-box-title').text() + ' - ' + el.text();
                 el.closest('.file-box').empty().append(text).append(
                     $('<input type="hidden">').attr('name', 'delete_uploads[]').val(file)
                 )
             })
+
+
+            // team members
+            $('#btn-add-member').on('click', function(e) {
+                e.preventDefault();
+                var row = $('#team-member-template').clone(true);
+                row.find('.is-valid').removeClass('.is-valid');
+                $('#team-members').append(row);
+                row.show();
+            })
+
+            $('.btn-remove-member').on('click', function(e) {
+                e.preventDefault();
+                $(this).closest('.team-member-row').remove();
+            })
+
 
             // debug
             //schools_manager.show();

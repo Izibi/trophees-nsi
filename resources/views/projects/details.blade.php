@@ -23,6 +23,9 @@
         @if($project->grade_id)
             Niveau : {{ $project->grade->name }}<br>
         @endif
+        @if($project->academy_id)
+            Académie : {{ $project->academy->name }}<br>
+        @endif
 
         Composition de l'équipe :
         @if(!is_null($project->team_girls))
@@ -50,6 +53,12 @@
 
         @if(!is_null($project->video))
             Vidéo : <a href="{{ $project->video }}" target="_blank">{{ $project->video }}</a>
+            <br>
+        @endif
+
+        @if(!is_null($project->url))
+            URL : <a href="{{ $project->url }}" target="_blank">{{ $project->url }}</a>
+            <br>
         @endif
     </div>
 </div>
@@ -75,13 +84,25 @@
             </a>
         </div>
     @endif
-
     @if(!is_null($project->parental_permissions_file) && Auth::user()->role != 'jury')
         <div class="col-6">
             <a href="{{ Storage::disk('uploads')->url($project->parental_permissions_file) }}" target="_blank">
                 <i class="icon-file-pdf"></i>
                 Autorisations parentales
             </a>
+        </div>
+    @endif
+
+    @if(Auth::user()->role != 'jury')
+        <div class="col-6">
+        @foreach($project->team_members as $team_member)
+            <div>
+                <a href="{{ Storage::disk('uploads')->url($team_member->parental_permissions_file) }}" target="_blank">
+                    <i class="icon-file-pdf"></i>
+                    Autorisations parentales
+                </a>
+            </div>
+        @endforeach
         </div>
     @endif
 </div>

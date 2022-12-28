@@ -29,11 +29,10 @@ class StorePojectRequest extends FormRequest
             'name' => 'required|max:255',
             'school_id' => 'required|exists:schools,id',
             'grade_id' => 'required_if:finalize,1|exists:grades,id',
-            'team_girls' => 'required_if:finalize,1|nullable|integer|min:0|max:1000',
-            'team_boys' => 'required_if:finalize,1|nullable|integer|min:0|max:1000',
-            'team_not_provided' => 'required_if:finalize,1|nullable|integer|min:0|max:1000',
+            'academy_id' => 'nullable|required_if:finalize,1|exists:academies,id',
             'description' => 'required_if:finalize,1|max:'.config('nsi.project.description_max_length'),
             'video' => 'required_if:finalize,1|nullable|url',
+            'url' => 'required_if:finalize,1|nullable|url',
             'cb_tested_by_teacher' => 'accepted_if:finalize,1',
             'cb_reglament_accepted' => 'accepted_if:finalize,1',
             'presentation_file' => 'max:'.$conf['presentation_file_size_max'],
@@ -42,7 +41,7 @@ class StorePojectRequest extends FormRequest
                 Rule::dimensions()->maxWidth($conf['image_max_width'])->maxHeight($conf['image_max_height'])
             ],
             'zip_file' => 'max:'.$conf['zip_file_size_max'],
-            'parental_permissions_file' => 'max:'.$conf['parental_permissions_file_size_max']
+            'team_member_parental_permissions_file.*' => 'max:'.$conf['parental_permissions_file_size_max']
         ];
     }
 }

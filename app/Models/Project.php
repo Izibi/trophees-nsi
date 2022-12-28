@@ -14,11 +14,13 @@ class Project extends Model
         'name',
         'school_id',
         'grade_id',
+        'academy_id',
         'team_girls',
         'team_boys',
         'team_not_provided',
         'description',
         'video',
+        'url',
         'tested_by_teacher',
         'cb_tested_by_teacher',
         'reglament_accepted',
@@ -32,8 +34,7 @@ class Project extends Model
     public $upload_attributes = [
         'presentation_file',
         'image_file',
-        'zip_file',
-        'parental_permissions_file'
+        'zip_file'
     ];
 
 
@@ -86,6 +87,10 @@ class Project extends Model
         return $this->belongsTo(Grade::class);
     }
 
+    public function academy()
+    {
+        return $this->belongsTo(Academy::class);
+    }
 
     public function setCbTestedByTeacherAttribute($v) {
         $this->attributes['tested_by_teacher'] = !empty($v);
@@ -93,6 +98,12 @@ class Project extends Model
 
     public function setCbReglamentAcceptedAttribute($v) {
         $this->attributes['reglament_accepted'] = !empty($v);
+    }
+
+
+    public function team_members()
+    {
+        return $this->hasMany(TeamMember::class);
     }
 
 }
