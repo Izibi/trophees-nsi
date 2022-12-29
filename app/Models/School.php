@@ -17,6 +17,7 @@ class School extends Model
         'country_id',
         'region_id',
         'uai',
+        'academy_id'
     ];
 
     protected $hidden = [
@@ -32,5 +33,10 @@ class School extends Model
     public function region()
     {
         return $this->belongsTo(Region::class);
+    }
+
+    public function academy()
+    {
+        return $this->belongsTo(Academy::class);
     }
 }

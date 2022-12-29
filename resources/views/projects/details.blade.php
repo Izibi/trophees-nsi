@@ -17,14 +17,14 @@
         @endif
 
         <h1>{{ $project->name }}</h1>
+        @if($project->school_id && $project->school->academy_id)
+            Académie : {{ $project->school->academy->name }}<br>
+        @endif
         @if($project->school_id)
             Établissement : {{ $project->school->name }}<br>
         @endif
         @if($project->grade_id)
             Niveau : {{ $project->grade->name }}<br>
-        @endif
-        @if($project->academy_id)
-            Académie : {{ $project->academy->name }}<br>
         @endif
 
         Composition de l'équipe :

@@ -19,16 +19,41 @@
             {!! Form::hidden('refer_page', $refer_page) !!}
 
             {!! Form::text('name', 'Nom du projet') !!}
-
             {!! Form::select('school_id', 'Établissement', $schools['options'])->help(Auth::user()->role == 'teacher' ? '<a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>' : false) !!}
 
-            {!! Form::select('grade_id', 'Niveau', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
 
-            {!! Form::select('academy_id', 'Choisir une académie', [null => ''] + $academies->pluck('name', 'id')->toArray()) !!}
+            <div class="mt-5">
+                <h5>Classe</h5>
+                <div class="row">
+                    <div class="col-3">
+                        {!! Form::select('grade_id', 'Niveau', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
+                    </div>
+                    <div class="col-3">
+                        {!! Form::text('class_girls', 'Nombre de filles')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    </div>
+                    <div class="col-3">
+                        {!! Form::text('class_boys', 'Nombre de garçons')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    </div>
+                    <div class="col-3">
+                        {!! Form::text('class_not_provided', 'Non renseigné')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    </div>
+                </div>
+            </div>
+
 
             <div class="mt-5 mb-5">
                 <h5>Team members</h5>
                 <p><small class="form-text text-muted">Précisez la composition de l'équipe pour ce projet. La mixité de l'équipe pourra être prise en compte pour certains prix.</small></p>
+                <div class="row mt-5 mb-3" id="team-members-header">
+                    <div class="col-1"></div>
+                    <div class="col-2">First name</div>
+                    <div class="col-2">Last name</div>
+                    <div class="col-2">Gender</div>
+                    <div class="col-5">
+                        Autorisations parentales<br>
+                        <small>Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
+                    </div>
+                </div>
                 <div id="team-members">
                     @if($project)
                         @foreach($project->team_members as $member)
@@ -45,17 +70,6 @@
 
 
 
-            <div class="row">
-                <div class="col-4">
-                    {!! Form::text('class_girls', 'Nombre de filles')->wrapperAttrs(['class' => 'mb-0']) !!}
-                </div>
-                <div class="col-4">
-                    {!! Form::text('class_boys', 'Nombre de garçons')->wrapperAttrs(['class' => 'mb-0']) !!}
-                </div>
-                <div class="col-4">
-                    {!! Form::text('class_not_provided', 'Non renseigné')->wrapperAttrs(['class' => 'mb-0']) !!}
-                </div>
-            </div>
             <p><small class="form-text text-muted">Précisez la répartition des élèves en NSI pour le niveau renseigné ci-dessus.</small></p>
 
             {!! Form::textarea('description', 'Résumé du projet')
@@ -66,7 +80,9 @@
                 ->placeholder('https://')
                 ->help('La vidéo doit être publiée sur <a href="https://peertube.fr" target="_blank">peertube.fr</a>. Renseignez ici son URL.') !!}
 
-            {!! Form::text('url', 'URL')->placeholder('https://') !!}
+            {!! Form::text('url', 'URL')
+                ->placeholder('https://')
+                ->help('URL of the source code of your project') !!}
 
             <div class="row">
                 @include('projects.edit.file-input', [
@@ -113,7 +129,7 @@
         {!! Form::close() !!}
     </div>
 
-    @include('projects.school-popup')
+    @include('projects.edit.school-popup')
 
 
     @if($project)
@@ -201,26 +217,37 @@
                 } else {
                     var file = 'project.' + el.data('file');
                 }
-                var text = el.siblings('.file-box-title').text() + ' - ' + el.text();
-                el.closest('.file-box').empty().append(text).append(
+                var text = el.text();
+                el.closest('.file-box').append(
                     $('<input type="hidden">').attr('name', 'delete_uploads[]').val(file)
                 )
+                el.closest('.custom-file-controls').text(text)
             })
 
 
             // team members
+            function toggleTeamMembersHeader() {
+                $('#team-members-header').toggle(
+                    $('#team-members').children().length > 0
+                );
+            }
+
             $('#btn-add-member').on('click', function(e) {
                 e.preventDefault();
                 var row = $('#team-member-template').clone(true);
                 row.find('.is-valid').removeClass('.is-valid');
                 $('#team-members').append(row);
                 row.show();
+                toggleTeamMembersHeader();
             })
 
             $('.btn-remove-member').on('click', function(e) {
                 e.preventDefault();
                 $(this).closest('.team-member-row').remove();
+                toggleTeamMembersHeader();
             })
+            toggleTeamMembersHeader();
+
 
 
             // debug

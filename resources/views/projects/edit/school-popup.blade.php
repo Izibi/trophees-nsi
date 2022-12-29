@@ -48,6 +48,7 @@
                                 {!! Form::text('zip', 'ZIP') !!}
                                 {!! Form::select('region_id', 'Territoire', $regions) !!}
                                 {!! Form::select('country_id', 'Pays', $countries) !!}
+                                {!! Form::select('academy_id', 'Académie', $academies) !!}
                             </div>
                         </div>
                     {!! Form::close() !!}
@@ -65,4 +66,5 @@
     window.regions = {!! json_encode($regions) !!}
     window.countries = {!! json_encode($countries) !!}
     window.user_schools = {!! json_encode($schools['data']) !!}
+    window.academies = {!! json_encode($academies) !!}
 </script>

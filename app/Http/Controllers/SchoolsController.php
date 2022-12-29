@@ -10,6 +10,7 @@ use App\Models\Country;
 use App\Models\Region;
 use App\Http\Requests\StoreSchoolRequest;
 use App\Classes\ActiveContest;
+use App\Models\Academy;
 
 class SchoolsController extends Controller
 {
@@ -39,7 +40,7 @@ class SchoolsController extends Controller
         $schools = $q->paginate()->appends($request->all());
         return view('schools.index', [
             'rows' => $schools,
-            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray()
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray(),
         ]);
     }
 
@@ -100,6 +101,7 @@ class SchoolsController extends Controller
         return view('schools.edit', [
             'countries' => Country::orderBy('name')->get(),
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
+            'academies' => Academy::orderBy('name')->get(),
             'refer_page' => $request->get('refer_page', '/projects'),
             'school' => $school
         ]);

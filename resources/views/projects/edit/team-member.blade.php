@@ -1,23 +1,26 @@
-<div class="row mb-4 team-member-row">
+<div class="row team-member-row">
+    <div class="col-1">
+        <a href="#" class="btn-remove-member" title="Remove team member">&times;</a>
+    </div>
     <input type="hidden" name="team_member_id[]" value="{{ $member ? $member->id : '' }}"/>
-    <div class="col-md-2 col-sm-6">
+    <div class="col-2">
         {!! Form::text(
             'team_member_first_name[]',
-            'First name',
+            null,
             $member ? $member->first_name : ''
         )->wrapperAttrs(['class' => 'mb-0']) !!}
     </div>
-    <div class="col-md-2 col-sm-6">
+    <div class="col-2">
         {!! Form::text(
             'team_member_last_name[]',
-            'Last name',
+            null,
             $member ? $member->last_name : ''
         )->wrapperAttrs(['class' => 'mb-0']) !!}
     </div>
-    <div class="col-md-2 col-sm-6">
+    <div class="col-2">
         {!! Form::select(
             'team_member_gender[]',
-            'Gender',
+            false,
             [
                 null => '',
                 'male' => 'Male',
@@ -27,15 +30,12 @@
         ) !!}
     </div>
     @include('projects.edit.file-input', [
-        'title' => 'Autorisations parentales',
-        'description' => 'Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.',
+        'title' => false,
+        'description' => false,
         'extensions' => '.pdf',
         'key' => 'team_member_parental_permissions_file[]',
         'file' => $member ? $member->parental_permissions_file : null,
         'class' => 'col-5 file-box'
     ])
 
-    <div class="col-1">
-        <a href="#" class="btn-remove-member" title="Remove team member">&times;</a>
-    </div>
 </div>

@@ -172,10 +172,10 @@ class ProjectsController extends Controller
         return view('projects.edit.index', [
             'project' => null,
             'schools' => $this->getUserSchools($user),
-            'academies' => Academy::get(),
             'grades' => Grade::orderBy('name')->get(),
             'countries' => Country::orderBy('name')->get(),
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
+            'academies' => Academy::orderBy('name')->get(),
             'refer_page' => $request->get('refer_page', '/projects')
         ]);
     }
@@ -263,10 +263,10 @@ class ProjectsController extends Controller
             'submit_route' => 'projects.update',
             'project' => $project,
             'schools' => $this->getUserSchools($user->role != 'admin' ? $user : $project->user),
-            'academies' => Academy::get(),
             'grades' => Grade::orderBy('name')->get(),
             'countries' => Country::orderBy('name')->get(),
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
+            'academies' => Academy::orderBy('name')->get(),
             'refer_page' => $request->get('refer_page', '/projects')
         ]);
     }

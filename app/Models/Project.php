@@ -14,7 +14,6 @@ class Project extends Model
         'name',
         'school_id',
         'grade_id',
-        'academy_id',
         'team_girls',
         'team_boys',
         'team_not_provided',
@@ -85,11 +84,6 @@ class Project extends Model
     public function grade()
     {
         return $this->belongsTo(Grade::class);
-    }
-
-    public function academy()
-    {
-        return $this->belongsTo(Academy::class);
     }
 
     public function setCbTestedByTeacherAttribute($v) {

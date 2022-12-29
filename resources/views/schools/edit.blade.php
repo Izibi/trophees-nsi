@@ -20,6 +20,8 @@
             {!! Form::select('region_id', 'Rétion', $regions) !!}
             {!! Form::select('country_id', 'Pays', [null => ''] + $countries->pluck('name', 'id')->toArray()) !!}
             {!! Form::text('uai', 'UAI') !!}
+
+            {!! Form::select('academy_id', 'Choisir une académie', [null => ''] + $academies->pluck('name', 'id')->toArray()) !!}
         {!! Form::close() !!}
         <div class="mt-5">
             <a class="btn btn-primary" id="btn-ok" href="#">Ok</a>
@@ -39,6 +41,7 @@
     <script>
         window.regions = {!! json_encode($regions) !!}
         window.countries = {!! json_encode($countries) !!}
+        window.academies = {!! json_encode($academies) !!}
 
 
         $(document).ready(function() {

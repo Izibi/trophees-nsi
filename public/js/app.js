@@ -1,1 +1,1474 @@
-(self.webpackChunk=self.webpackChunk||[]).push([[773],{530:()=>{$(document).ready((function(){var e=null,r=$(".active-button");function n(){r.each((function(){var r=-1!==$(this).data("action").indexOf(":id");$(this).prop("disabled",r&&!e)}))}$("table.active-table tr").each((function(){var i=$(this);i.on("click",(function(){!function(i){var o=i.data("row-id");if(!isNaN(o)){e&&e.el.removeClass("active-row"),e={id:o,el:i},i.addClass("active-row"),n();var t=i.data("actions-disabled");void 0!==t&&(t=t.split(","),r.each((function(){var e=$(this),r=e.data("action-name");e.prop("disabled",r&&-1!==t.indexOf(r))})))}}(i)}))})),n(),r.each((function(){var r=$(this);r.on("click",(function(){var n,i=r.data("confirmation");i&&!confirm(i)||("REDIRECT"==r.data("method")?(n=e.el.data("redirect-url"))&&(location.href=n):function(r,n){if(-1!==r.indexOf(":id")){if(!e)return;r=r.replace(":id",e.id)}var i,o=$("<form>");o.attr("action",r),n=n||"GET",o.attr("method",n),(i=$('<input type="hidden" name="refer_page"/>')).val(location.href),o.append(i),"POST"==n&&((i=$('<input type="hidden" name="_token"/>')).val($('meta[name="csrf-token"]').attr("content")),o.append(i)),$(document.body).append(o),o.submit()}(r.data("action"),r.data("method")))}))}))}))},537:()=>{window.overlay={el:!1,render:function(){this.el||(this.el=$('<div class="screen-overlay"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>'),$(document.body).append(this.el))},show:function(){this.render(),this.el.show()},hide:function(){this.el.hide()}}},178:()=>{window.RegionSelector=function(e){var r=e.find("select[name=region_id]").first(),n=e.find("select[name=country_id]").first(),i=window.regions.find((function(e){return null!==e.country_id})).id;function o(e){var o,t=r.val(),a=(o=t,window.regions.find((function(e){return e.id==o}))),s=a&&null!==a.country_id;!e&&a&&n.val(s?a.country_id:""),n.find('option[value="'+i+'"]').prop("disabled",!s),n.attr("readonly",s),n.closest(".form-group").toggle(a&&!s)}return r.on("change",(function(){o()})),o(!0),{reset:function(){if(window.regions.length){var e=window.regions[0];r.val(e.id),o()}}}}},492:()=>{function e(e){var r=e.name+", "+e.zip+" "+e.city+", ";return null!==e.region.country_id&&(r+=e.region.name+", "),r+=e.country.name}function r(e){401==e.status&&(alert("Veuillez vous reconnecter pour continuer."),window.location="/")}function n(){var n=null,i=[];function o(e){n=e,$("#btn-school-add").prop("disabled",null===n)}function t(n){o(null),overlay.show(),$.ajax({dataType:"json",url:"/user_schools/search",data:{q:n},success:function(r){overlay.hide(),i=r,function(){var r=$("#schools-search");if(r.empty(),i.length){for(var n=0;n<i.length;n++)r.append('<div class="list-item" data-school-id="'+i[n].id+'">'+e(i[n])+"</div>");r.find("div").on("click",(function(){r.find("div.list-item-selected").removeClass("list-item-selected"),$(this).addClass("list-item-selected"),o($(this).data("school-id"))}))}else r.text("Your search did not match any schools.")}()},error:function(e,n,i){r(e)}})}return $("#inp-school-search-q").val(""),o(null),{search:function(e){$("#schools-search").empty(),t(e)},getSelection:function(){return n}}}function i(e){var n=$("#section-schools-editor .form-group");function i(){n.each((function(){var e=$(this);e.find(".invalid-feedback").remove(),e.find(".form-control").removeClass("is-invalid")})),n.each((function(){$(this).find(".form-control").val("")})),t.reset()}function o(o){overlay.show(),$.ajax({dataType:"json",url:"/user_schools/create",data:o,method:"POST",success:function(r){overlay.hide(),r.success&&(i(),e.onCreate(r.schools))},error:function(e,i,o){r(e);var t,a=e.responseJSON;a.errors&&(overlay.hide(),t=a.errors,n.each((function(){var e,r,n=$(this),i=n.find(".form-control").attr("name");i in t?(e=n,r=t[i][0],e.find(".form-control").addClass("is-invalid"),e.find(".invalid-feedback").remove(),e.append('<div class="invalid-feedback">'+r+"</div>")):function(e){e.find(".invalid-feedback").remove(),e.find(".form-control").removeClass("is-invalid")}(n)})))}})}var t=RegionSelector($("#section-schools-editor"));return{reset:function(){i()},submit:function(){var e;o((e={},n.each((function(){var r=$(this).find(".form-control"),n=r.attr("name");e[n]=r.val()})),e))}}}window.SchoolsManager=function(){var o=$("#schools-manager-modal"),t=function(){var n=null;function i(){var r=$("#schools-my");r.empty();for(var n=0;n<window.user_schools.length;n++)r.append('<div class="list-item" data-school-id="'+window.user_schools[n].id+'">'+e(window.user_schools[n])+"</div>");r.find("div").on("click",(function(){r.find("div.list-item-selected").removeClass("list-item-selected"),$(this).addClass("list-item-selected"),o($(this).data("school-id"))}))}function o(e){n=e,$("#btn-school-use").prop("disabled",null===n),$("#btn-school-delete").prop("disabled",null===n)}function t(){var r,i=$("#edit-form select[name=school_id]");i.empty();for(var o=0;o<window.user_schools.length;o++)r=$("<option/>").attr("value",window.user_schools[o].id).text(e(window.user_schools[o])),i.append(r);i.val(n)}function a(e,n){o(null),overlay.show(),$.ajax({dataType:"json",url:"/user_schools/"+n,method:"POST",data:{id:e},success:function(e){overlay.hide(),window.user_schools=e,t(),i()},error:function(e,n,i){r(e)}})}return"user_schools"in window||(window.user_schools=[]),{refresh:function(){i(),o(null)},setSchools:function(e){window.user_schools=e,i(),o(null)},refreshParentSelect:function(){null!==n&&t()},addSchool:function(e){a(e,"add")},removeSeleted:function(){null!==n&&a(n,"remove")}}}(),a=n(),s=i({onCreate:function(e){$("#section-schools-editor").hide(),t.setSchools(e),$("#section-schools-manager").show()}});return $("#btn-school-use").on("click",(function(){t.refreshParentSelect(),o.modal("hide")})),$("#btn-school-search").on("click",(function(){var e=$("#inp-school-search-q").val().trim();e.length>0&&a.search(e)})),$("#btn-school-add").on("click",(function(){var e=a.getSelection();t.addSchool(e)})),$("#btn-school-delete").on("click",(function(){t.removeSeleted()})),$("#btn-school-show-create").on("click",(function(){s.reset(),$("#section-schools-manager").hide(),$("#section-schools-editor").show()})),$("#btn-school-create-cancel").on("click",(function(){$("#section-schools-manager").show(),$("#section-schools-editor").hide()})),$("#btn-school-create").on("click",(function(){s.submit()})),{show:function(){o.modal("show"),t.refresh()},hide:function(){o.modal("hide")}}}},80:(e,r,n)=>{window.$=window.jQuery=n(755),window.Popper=n(981).default,window.tinymce=n(575),n(860),n(890),n(107),n(190),n(835),n(414),n(682),n(236),n(619),n(580),n(734),n(537),n(530),n(492),n(178)},580:()=>{tinymce.addI18n("fr",{Redo:"Rétablir",Undo:"Annuler",Cut:"Couper",Copy:"Copier",Paste:"Coller","Select all":"Sélectionner tout","New document":"Nouveau document",Ok:"OK",Cancel:"Annuler","Visual aids":"Aides visuelles",Bold:"Gras",Italic:"Italique",Underline:"Souligné",Strikethrough:"Barré",Superscript:"Exposant",Subscript:"Indice","Clear formatting":"Effacer la mise en forme","Align left":"Aligner à gauche","Align center":"Centrer","Align right":"Aligner à droite",Justify:"Justifier","Bullet list":"Liste à puces","Numbered list":"Liste numérotée","Decrease indent":"Réduire le retrait","Increase indent":"Augmenter le retrait",Close:"Fermer",Formats:"Formats","Your browser doesn't support direct access to the clipboard. Please use the Ctrl+X/C/V keyboard shortcuts instead.":"Votre navigateur ne supporte pas l’accès direct au presse-papiers. Merci d'utiliser les raccourcis clavier Ctrl+X/C/V.",Headers:"En-têtes","Header 1":"En-tête 1","Header 2":"En-tête 2","Header 3":"En-tête 3","Header 4":"En-tête 4","Header 5":"En-tête 5","Header 6":"En-tête 6",Headings:"Titres","Heading 1":"Titre 1","Heading 2":"Titre 2","Heading 3":"Titre 3","Heading 4":"Titre 4","Heading 5":"Titre 5","Heading 6":"Titre 6",Preformatted:"Préformaté",Div:"Div",Pre:"Pre",Code:"Code",Paragraph:"Paragraphe",Blockquote:"Blockquote",Inline:"En ligne",Blocks:"Blocs","Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.":'Le presse-papiers est maintenant en mode "texte plein". Les contenus seront collés sans retenir les formatages jusqu\'à ce que vous désactiviez cette option.',Fonts:"Polices","Font Sizes":"Tailles de police",Class:"Classe","Browse for an image":"Rechercher une image",OR:"OU","Drop an image here":"Déposer une image ici",Upload:"Télécharger",Block:"Bloc",Align:"Aligner",Default:"Par défaut",Circle:"Cercle",Disc:"Disque",Square:"Carré","Lower Alpha":"Alpha minuscule","Lower Greek":"Grec minuscule","Lower Roman":"Romain minuscule","Upper Alpha":"Alpha majuscule","Upper Roman":"Romain majuscule","Anchor...":"Ancre...",Name:"Nom",Id:"Id","Id should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.":"L'Id doit commencer par une lettre suivi par des lettres, nombres, tirets, points, deux-points ou underscores","You have unsaved changes are you sure you want to navigate away?":"Vous avez des modifications non enregistrées, êtes-vous sûr de quitter la page?","Restore last draft":"Restaurer le dernier brouillon","Special character...":"Caractère spécial...","Source code":"Code source","Insert/Edit code sample":"Insérer / modifier une exemple de code",Language:"Langue","Code sample...":"Exemple de code...","Color Picker":"Sélecteur de couleurs",R:"R",G:"V",B:"B","Left to right":"Gauche à droite","Right to left":"Droite à gauche",Emoticons:"Emoticônes","Emoticons...":"Émoticônes...","Metadata and Document Properties":"Métadonnées et propriétés du document",Title:"Titre",Keywords:"Mots-clés",Description:"Description",Robots:"Robots",Author:"Auteur",Encoding:"Encodage",Fullscreen:"Plein écran",Action:"Action",Shortcut:"Raccourci",Help:"Aide",Address:"Adresse","Focus to menubar":"Cibler la barre de menu","Focus to toolbar":"Cibler la barre d'outils","Focus to element path":"Cibler le chemin vers l'élément","Focus to contextual toolbar":"Cibler la barre d'outils contextuelle","Insert link (if link plugin activated)":"Insérer un lien (si le module link est activé)","Save (if save plugin activated)":"Enregistrer (si le module save est activé)","Find (if searchreplace plugin activated)":"Rechercher (si le module searchreplace est activé)","Plugins installed ({0}):":"Modules installés ({0}) : ","Premium plugins:":"Modules premium :","Learn more...":"En savoir plus...","You are using {0}":"Vous utilisez {0}",Plugins:"Plugins","Handy Shortcuts":"Raccourcis utiles","Horizontal line":"Ligne horizontale","Insert/edit image":"Insérer/modifier une image","Alternative description":"Description alternative",Accessibility:"Accessibilité","Image is decorative":"L'image est décorative",Source:"Source",Dimensions:"Dimensions","Constrain proportions":"Conserver les proportions",General:"Général",Advanced:"Avancé",Style:"Style","Vertical space":"Espacement vertical","Horizontal space":"Espacement horizontal",Border:"Bordure","Insert image":"Insérer une image","Image...":"Image...","Image list":"Liste d'images","Rotate counterclockwise":"Rotation anti-horaire","Rotate clockwise":"Rotation horaire","Flip vertically":"Retournement vertical","Flip horizontally":"Retournement horizontal","Edit image":"Modifier l'image","Image options":"Options de l'image","Zoom in":"Zoomer","Zoom out":"Dézoomer",Crop:"Rogner",Resize:"Redimensionner",Orientation:"Orientation",Brightness:"Luminosité",Sharpen:"Affiner",Contrast:"Contraste","Color levels":"Niveaux de couleur",Gamma:"Gamma",Invert:"Inverser",Apply:"Appliquer",Back:"Retour","Insert date/time":"Insérer date/heure","Date/time":"Date/heure","Insert/edit link":"Insérer/modifier un lien","Text to display":"Texte à afficher",Url:"Url","Open link in...":"Ouvrir le lien dans...","Current window":"Fenêtre active",None:"n/a","New window":"Nouvelle fenêtre","Open link":"Ouvrir le lien","Remove link":"Enlever le lien",Anchors:"Ancres","Link...":"Lien...","Paste or type a link":"Coller ou taper un lien","The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?":"L'URL que vous avez entrée semble être une adresse e-mail. Voulez-vous ajouter le préfixe mailto: nécessaire?","The URL you entered seems to be an external link. Do you want to add the required http:// prefix?":"L'URL que vous avez entrée semble être un lien externe. Voulez-vous ajouter le préfixe http:// nécessaire?","The URL you entered seems to be an external link. Do you want to add the required https:// prefix?":"L'URL que vous avez saisie semble être un lien externe. Voulez-vous ajouter le préfixe https:// requis ?","Link list":"Liste de liens","Insert video":"Insérer une vidéo","Insert/edit video":"Insérer/modifier une vidéo","Insert/edit media":"Insérer/modifier un média","Alternative source":"Source alternative","Alternative source URL":"URL de la source alternative","Media poster (Image URL)":"Affiche de média (URL de l'image)","Paste your embed code below:":"Collez votre code d'intégration ci-dessous :",Embed:"Intégrer","Media...":"Média...","Nonbreaking space":"Espace insécable","Page break":"Saut de page","Paste as text":"Coller comme texte",Preview:"Prévisualiser","Print...":"Imprimer...",Save:"Enregistrer",Find:"Chercher","Replace with":"Remplacer par",Replace:"Remplacer","Replace all":"Tout remplacer",Previous:"Précédente",Next:"Suiv","Find and Replace":"Trouver et remplacer","Find and replace...":"Trouver et remplacer...","Could not find the specified string.":"Impossible de trouver la chaîne spécifiée.","Match case":"Respecter la casse","Find whole words only":"Mot entier","Find in selection":"Trouver dans la sélection",Spellcheck:"Vérification orthographique","Spellcheck Language":"Langue du correcteur orthographique","No misspellings found.":"Aucune faute d'orthographe trouvée.",Ignore:"Ignorer","Ignore all":"Tout ignorer",Finish:"Finie","Add to Dictionary":"Ajouter au dictionnaire","Insert table":"Insérer un tableau","Table properties":"Propriétés du tableau","Delete table":"Supprimer le tableau",Cell:"Cellule",Row:"Ligne",Column:"Colonne","Cell properties":"Propriétés de la cellule","Merge cells":"Fusionner les cellules","Split cell":"Diviser la cellule","Insert row before":"Insérer une ligne avant","Insert row after":"Insérer une ligne après","Delete row":"Effacer la ligne","Row properties":"Propriétés de la ligne","Cut row":"Couper la ligne","Copy row":"Copier la ligne","Paste row before":"Coller la ligne avant","Paste row after":"Coller la ligne après","Insert column before":"Insérer une colonne avant","Insert column after":"Insérer une colonne après","Delete column":"Effacer la colonne",Cols:"Colonnes",Rows:"Lignes",Width:"Largeur",Height:"Hauteur","Cell spacing":"Espacement inter-cellulles","Cell padding":"Espacement interne cellule",Caption:"Titre","Show caption":"Afficher le sous-titrage",Left:"Gauche",Center:"Centré",Right:"Droite","Cell type":"Type de cellule",Scope:"Etendue",Alignment:"Alignement","H Align":"Alignement H","V Align":"Alignement V",Top:"Haut",Middle:"Milieu",Bottom:"Bas","Header cell":"Cellule d'en-tête","Row group":"Groupe de lignes","Column group":"Groupe de colonnes","Row type":"Type de ligne",Header:"En-tête",Body:"Corps",Footer:"Pied","Border color":"Couleur de la bordure","Insert template...":"Insérer un modèle...",Templates:"Thèmes",Template:"Modèle","Text color":"Couleur du texte","Background color":"Couleur d'arrière-plan","Custom...":"Personnalisé...","Custom color":"Couleur personnalisée","No color":"Aucune couleur","Remove color":"Supprimer la couleur","Table of Contents":"Table des matières","Show blocks":"Afficher les blocs","Show invisible characters":"Afficher les caractères invisibles","Word count":"Nombre de mots",Count:"Total",Document:"Document",Selection:"Sélection",Words:"Mots","Words: {0}":"Mots : {0}","{0} words":"{0} mots",File:"Fichier",Edit:"Editer",Insert:"Insérer",View:"Voir",Format:"Format",Table:"Tableau",Tools:"Outils","Powered by {0}":"Propulsé par {0}","Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help":"Zone Texte Riche. Appuyer sur ALT-F9 pour le menu. Appuyer sur ALT-F10 pour la barre d'outils. Appuyer sur ALT-0 pour de l'aide.","Image title":"Titre d'image","Border width":"Épaisseur de la bordure","Border style":"Style de la bordure",Error:"Erreur",Warn:"Avertir",Valid:"Valide","To open the popup, press Shift+Enter":"Pour ouvrir la popup, appuyez sur Maj+Entrée","Rich Text Area. Press ALT-0 for help.":"Zone de texte riche. Appuyez sur ALT-0 pour l'aide.","System Font":"Police système","Failed to upload image: {0}":"Échec d'envoi de l'image : {0}","Failed to load plugin: {0} from url {1}":"Échec de chargement du plug-in : {0} à partir de l’URL {1}","Failed to load plugin url: {0}":"Échec de chargement de l'URL du plug-in : {0}","Failed to initialize plugin: {0}":"Échec d'initialisation du plug-in : {0}",example:"exemple",Search:"Rechercher",All:"Tout",Currency:"Devise",Text:"Texte",Quotations:"Citations",Mathematical:"Opérateurs mathématiques","Extended Latin":"Latin étendu",Symbols:"Symboles",Arrows:"Flèches","User Defined":"Défini par l'utilisateur","dollar sign":"Symbole dollar","currency sign":"Symbole devise","euro-currency sign":"Symbole euro","colon sign":"Symbole colón","cruzeiro sign":"Symbole cruzeiro","french franc sign":"Symbole franc français","lira sign":"Symbole lire","mill sign":"Symbole millième","naira sign":"Symbole naira","peseta sign":"Symbole peseta","rupee sign":"Symbole roupie","won sign":"Symbole won","new sheqel sign":"Symbole nouveau chékel","dong sign":"Symbole dong","kip sign":"Symbole kip","tugrik sign":"Symbole tougrik","drachma sign":"Symbole drachme","german penny symbol":"Symbole pfennig","peso sign":"Symbole peso","guarani sign":"Symbole guarani","austral sign":"Symbole austral","hryvnia sign":"Symbole hryvnia","cedi sign":"Symbole cedi","livre tournois sign":"Symbole livre tournois","spesmilo sign":"Symbole spesmilo","tenge sign":"Symbole tenge","indian rupee sign":"Symbole roupie indienne","turkish lira sign":"Symbole lire turque","nordic mark sign":"Symbole du mark nordique","manat sign":"Symbole manat","ruble sign":"Symbole rouble","yen character":"Sinogramme Yen","yuan character":"Sinogramme Yuan","yuan character, in hong kong and taiwan":"Sinogramme Yuan, Hong Kong et Taiwan","yen/yuan character variant one":"Sinogramme Yen/Yuan, première variante","Loading emoticons...":"Chargement des émoticônes en cours...","Could not load emoticons":"Échec de chargement des émoticônes",People:"Personnes","Animals and Nature":"Animaux & nature","Food and Drink":"Nourriture & boissons",Activity:"Activité","Travel and Places":"Voyages & lieux",Objects:"Objets",Flags:"Drapeaux",Characters:"Caractères","Characters (no spaces)":"Caractères (espaces non compris)","{0} characters":"{0} caractères","Error: Form submit field collision.":"Erreur : conflit de champs lors de la soumission du formulaire.","Error: No form element found.":"Erreur : aucun élément de formulaire trouvé.",Update:"Mettre à jour","Color swatch":"Échantillon de couleurs",Turquoise:"Turquoise",Green:"Vert",Blue:"Bleu",Purple:"Violet","Navy Blue":"Bleu marine","Dark Turquoise":"Turquoise foncé","Dark Green":"Vert foncé","Medium Blue":"Bleu moyen","Medium Purple":"Violet moyen","Midnight Blue":"Bleu de minuit",Yellow:"Jaune",Orange:"Orange",Red:"Rouge","Light Gray":"Gris clair",Gray:"Gris","Dark Yellow":"Jaune foncé","Dark Orange":"Orange foncé","Dark Red":"Rouge foncé","Medium Gray":"Gris moyen","Dark Gray":"Gris foncé","Light Green":"Vert clair","Light Yellow":"Jaune clair","Light Red":"Rouge clair","Light Purple":"Violet clair","Light Blue":"Bleu clair","Dark Purple":"Violet foncé","Dark Blue":"Bleu foncé",Black:"Noir",White:"Blanc","Switch to or from fullscreen mode":"Passer en ou quitter le mode plein écran","Open help dialog":"Ouvrir la boîte de dialogue d'aide",history:"historique",styles:"styles",formatting:"mise en forme",alignment:"alignement",indentation:"retrait",Font:"Police",Size:"Taille","More...":"Plus...","Select...":"Sélectionner...",Preferences:"Préférences",Yes:"Oui",No:"Non","Keyboard Navigation":"Navigation au clavier",Version:"Version","Code view":"Affichage du code","Open popup menu for split buttons":"Ouvrir le menu contextuel pour les boutons partagés","List Properties":"Propriétés de la liste","List properties...":"Lister les propriétés...","Start list at number":"Liste de départ au numéro","Line height":"Hauteur de la ligne",comments:"commentaires","Format Painter":"Reproduire la mise en forme","Insert/edit iframe":"Insérer/modifier iframe",Capitalization:"Mise en majuscules",lowercase:"minuscule",UPPERCASE:"MAJUSCULE","Title Case":"Casse du titre","permanent pen":"feutre indélébile","Permanent Pen Properties":"Propriétés du feutre indélébile","Permanent pen properties...":"Propriétés du feutre indélébile...","case change":"changement de cas","page embed":"intégration de page","Advanced sort...":"Tri avancé...","Advanced Sort":"Tri avancé","Sort table by column ascending":"Trier le tableau par colonne ascendante","Sort table by column descending":"Trier le tableau par colonne en ordre décroissant",Sort:"Sorte",Order:"Ordre","Sort by":"Trier par",Ascending:"Ascendant",Descending:"Descendant","Column {0}":"Colonne {0}","Row {0}":"Ligne {0}","Spellcheck...":"Vérification orthographique...","Misspelled word":"Mot mal orthographié",Suggestions:"Suggestions",Change:"Changement","Finding word suggestions":"Trouver des suggestions de mots",Success:"Succès",Repair:"Réparation","Issue {0} of {1}":" {0} Erreur sur  {1}","Images must be marked as decorative or have an alternative text description":"Les images doivent être marquées comme décoratives ou avoir une description textuelle alternative","Images must have an alternative text description. Decorative images are not allowed.":"Les images doivent avoir une description textuelle alternative. Les images décoratives ne sont pas autorisées.","Or provide alternative text:":"Ou fournissez un texte alternatif :","Make image decorative:":"Rendre l'image décorative :","ID attribute must be unique":"L'attribut ID doit être unique","Make ID unique":"Rendre l'identifiant unique","Keep this ID and remove all others":"Conservez cet identifiant et supprimez tous les autres","Remove this ID":"Supprimer cet identifiant","Remove all IDs":"Supprimer tous les identifiants",Checklist:"Liste de contrôle",Anchor:"Ancre","Special character":"Caractères spéciaux","Code sample":"Extrait de code",Color:"Couleur","Document properties":"Propriété du document","Image description":"Description de l'image",Image:"Image","Insert link":"Insérer un lien",Target:"Cible",Link:"Lien",Poster:"Publier",Media:"Média",Print:"Imprimer",Prev:"Préc ","Find and replace":"Trouver et remplacer","Whole words":"Mots entiers","Insert template":"Ajouter un thème"})},645:e=>{"use strict";e.exports=function(e){var r=[];return r.toString=function(){return this.map((function(r){var n=e(r);return r[2]?"@media ".concat(r[2]," {").concat(n,"}"):n})).join("")},r.i=function(e,n,i){"string"==typeof e&&(e=[[null,e,""]]);var o={};if(i)for(var t=0;t<this.length;t++){var a=this[t][0];null!=a&&(o[a]=!0)}for(var s=0;s<e.length;s++){var l=[].concat(e[s]);i&&o[l[0]]||(n&&(l[2]?l[2]="".concat(n," and ").concat(l[2]):l[2]=n),r.push(l))}},r}},792:()=>{},379:(e,r,n)=>{"use strict";var i,o=function(){return void 0===i&&(i=Boolean(window&&document&&document.all&&!window.atob)),i},t=function(){var e={};return function(r){if(void 0===e[r]){var n=document.querySelector(r);if(window.HTMLIFrameElement&&n instanceof window.HTMLIFrameElement)try{n=n.contentDocument.head}catch(e){n=null}e[r]=n}return e[r]}}(),a=[];function s(e){for(var r=-1,n=0;n<a.length;n++)if(a[n].identifier===e){r=n;break}return r}function l(e,r){for(var n={},i=[],o=0;o<e.length;o++){var t=e[o],l=r.base?t[0]+r.base:t[0],c=n[l]||0,u="".concat(l," ").concat(c);n[l]=c+1;var d=s(u),m={css:t[1],media:t[2],sourceMap:t[3]};-1!==d?(a[d].references++,a[d].updater(m)):a.push({identifier:u,updater:g(m,r),references:1}),i.push(u)}return i}function c(e){var r=document.createElement("style"),i=e.attributes||{};if(void 0===i.nonce){var o=n.nc;o&&(i.nonce=o)}if(Object.keys(i).forEach((function(e){r.setAttribute(e,i[e])})),"function"==typeof e.insert)e.insert(r);else{var a=t(e.insert||"head");if(!a)throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");a.appendChild(r)}return r}var u,d=(u=[],function(e,r){return u[e]=r,u.filter(Boolean).join("\n")});function m(e,r,n,i){var o=n?"":i.media?"@media ".concat(i.media," {").concat(i.css,"}"):i.css;if(e.styleSheet)e.styleSheet.cssText=d(r,o);else{var t=document.createTextNode(o),a=e.childNodes;a[r]&&e.removeChild(a[r]),a.length?e.insertBefore(t,a[r]):e.appendChild(t)}}function p(e,r,n){var i=n.css,o=n.media,t=n.sourceMap;if(o?e.setAttribute("media",o):e.removeAttribute("media"),t&&"undefined"!=typeof btoa&&(i+="\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(t))))," */")),e.styleSheet)e.styleSheet.cssText=i;else{for(;e.firstChild;)e.removeChild(e.firstChild);e.appendChild(document.createTextNode(i))}}var h=null,f=0;function g(e,r){var n,i,o;if(r.singleton){var t=f++;n=h||(h=c(r)),i=m.bind(null,n,t,!1),o=m.bind(null,n,t,!0)}else n=c(r),i=p.bind(null,n,r),o=function(){!function(e){if(null===e.parentNode)return!1;e.parentNode.removeChild(e)}(n)};return i(e),function(r){if(r){if(r.css===e.css&&r.media===e.media&&r.sourceMap===e.sourceMap)return;i(e=r)}else o()}}e.exports=function(e,r){(r=r||{}).singleton||"boolean"==typeof r.singleton||(r.singleton=o());var n=l(e=e||[],r);return function(e){if(e=e||[],"[object Array]"===Object.prototype.toString.call(e)){for(var i=0;i<n.length;i++){var o=s(n[i]);a[o].references--}for(var t=l(e,r),c=0;c<n.length;c++){var u=s(n[c]);0===a[u].references&&(a[u].updater(),a.splice(u,1))}n=t}}}}},e=>{var r=r=>e(e.s=r);e.O(0,[555,170],(()=>(r(80),r(792))));e.O()}]);
+(self["webpackChunk"] = self["webpackChunk"] || []).push([["/js/app"],{
+
+/***/ "./resources/js/UI/active-tables.js":
+/*!******************************************!*\
+  !*** ./resources/js/UI/active-tables.js ***!
+  \******************************************/
+/***/ (() => {
+
+function init() {
+  var selection = null;
+  var buttons = $('.active-button'); // tables
+
+  function select(tr) {
+    var id = tr.data('row-id');
+
+    if (isNaN(id)) {
+      return;
+    }
+
+    if (selection) {
+      selection.el.removeClass('active-row');
+    }
+
+    selection = {
+      id: id,
+      el: tr
+    };
+    tr.addClass('active-row');
+    refreshButtons();
+    var disabled_actions = tr.data('actions-disabled');
+
+    if (typeof disabled_actions !== 'undefined') {
+      disabled_actions = disabled_actions.split(',');
+      buttons.each(function () {
+        var btn = $(this);
+        var action = btn.data('action-name');
+        btn.prop('disabled', action && disabled_actions.indexOf(action) !== -1);
+      });
+    }
+  }
+
+  $('table.active-table tr').each(function () {
+    var tr = $(this);
+    tr.on('click', function () {
+      select(tr);
+    });
+  }); // buttons
+
+  function refreshButtons() {
+    buttons.each(function () {
+      var btn = $(this);
+      var action = btn.data('action');
+      var require_selection = action.indexOf(':id') !== -1;
+      $(this).prop('disabled', require_selection && !selection);
+    });
+  }
+
+  refreshButtons();
+
+  function callAction(action, method) {
+    //console.log(action, method, selection)
+    if (action.indexOf(':id') !== -1) {
+      if (!selection) {
+        return;
+      }
+
+      action = action.replace(':id', selection.id);
+    }
+
+    var form = $('<form>');
+    form.attr('action', action);
+    method = method || 'GET';
+    form.attr('method', method);
+    var hidden = $('<input type="hidden" name="refer_page"/>');
+    hidden.val(location.href);
+    form.append(hidden);
+
+    if (method == 'POST') {
+      var hidden = $('<input type="hidden" name="_token"/>');
+      hidden.val($('meta[name="csrf-token"]').attr('content'));
+      form.append(hidden);
+    }
+
+    $(document.body).append(form);
+    form.submit();
+  }
+
+  function redirect() {
+    var url = selection.el.data('redirect-url');
+
+    if (url) {
+      location.href = url;
+    }
+  }
+
+  buttons.each(function () {
+    var btn = $(this);
+    btn.on('click', function () {
+      var confirmation = btn.data('confirmation');
+
+      if (!confirmation || confirm(confirmation)) {
+        var method = btn.data('method');
+
+        if (method == 'REDIRECT') {
+          redirect();
+        } else {
+          callAction(btn.data('action'), btn.data('method'));
+        }
+      }
+    });
+  });
+}
+
+$(document).ready(init);
+
+/***/ }),
+
+/***/ "./resources/js/UI/overlay.js":
+/*!************************************!*\
+  !*** ./resources/js/UI/overlay.js ***!
+  \************************************/
+/***/ (() => {
+
+window.overlay = {
+  el: false,
+  render: function render() {
+    if (this.el) {
+      return;
+    }
+
+    this.el = $('<div class="screen-overlay"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>');
+    $(document.body).append(this.el);
+  },
+  show: function show() {
+    this.render();
+    this.el.show();
+  },
+  hide: function hide() {
+    this.el.hide();
+  }
+};
+
+/***/ }),
+
+/***/ "./resources/js/UI/region-selector.js":
+/*!********************************************!*\
+  !*** ./resources/js/UI/region-selector.js ***!
+  \********************************************/
+/***/ (() => {
+
+// reqire window.regions and window.countries arrays
+window.RegionSelector = function (form) {
+  var region_sel = form.find('select[name=region_id]').first();
+  var country_sel = form.find('select[name=country_id]').first();
+  var academy_sel = form.find('select[name=academy_id]').first();
+  var main_country_id = window.regions.find(function (r) {
+    return r.country_id !== null;
+  }).id;
+
+  function getRegion(id) {
+    return window.regions.find(function (r) {
+      return r.id == id;
+    });
+  }
+
+  function onRegionChange(initial) {
+    var region_id = region_sel.val();
+    var region = getRegion(region_id);
+    var is_main_country = region && region.country_id !== null;
+
+    if (!initial && region) {
+      country_sel.val(is_main_country ? region.country_id : '');
+    }
+
+    country_sel.find('option[value="' + main_country_id + '"]').prop('disabled', !is_main_country);
+    country_sel.attr('readonly', is_main_country);
+    country_sel.closest('.form-group').toggle(region && !is_main_country);
+    var region_academies = [];
+
+    for (var i = 0; i < window.academies.length; i++) {
+      if (window.academies[i].region_id == region_id) {
+        region_academies.push('' + window.academies[i].id);
+      }
+    }
+
+    if (!initial) {
+      if (region_academies.length == 1) {
+        academy_sel.val(region_academies[0]);
+      } else {
+        academy_sel.val('');
+      }
+    }
+
+    academy_sel.find('option').each(function () {
+      var opt = $(this);
+
+      if (region_academies.indexOf(opt.val()) === -1) {
+        opt.hide();
+      } else {
+        opt.show();
+      }
+    });
+    academy_sel.closest('.form-group').toggle(region_academies.length > 0);
+  }
+
+  region_sel.on('change', function () {
+    onRegionChange();
+  });
+  onRegionChange(true);
+  return {
+    reset: function reset() {
+      if (!window.regions.length) {
+        return;
+      }
+
+      var r = window.regions[0];
+      region_sel.val(r.id);
+      onRegionChange();
+    }
+  };
+};
+
+/***/ }),
+
+/***/ "./resources/js/UI/schools-manager.js":
+/*!********************************************!*\
+  !*** ./resources/js/UI/schools-manager.js ***!
+  \********************************************/
+/***/ (() => {
+
+function formatSchoolName(school) {
+  var res = school.name + ', ' + school.zip + ' ' + school.city + ', ';
+
+  if (school.region.country_id !== null) {
+    res += school.region.name + ', ';
+  }
+
+  res += school.country.name;
+  return res;
+}
+
+function handleUnauthorizedResponse(xhr) {
+  if (xhr.status == 401) {
+    alert('Veuillez vous reconnecter pour continuer.');
+    window.location = '/';
+  }
+}
+
+function UserSchools() {
+  var selection = null;
+
+  if (!('user_schools' in window)) {
+    window.user_schools = [];
+  }
+
+  function render() {
+    var el = $('#schools-my');
+    el.empty();
+
+    for (var i = 0; i < window.user_schools.length; i++) {
+      el.append('<div class="list-item" data-school-id="' + window.user_schools[i].id + '">' + formatSchoolName(window.user_schools[i]) + '</div>');
+    }
+
+    el.find('div').on('click', function () {
+      el.find('div.list-item-selected').removeClass('list-item-selected');
+      $(this).addClass('list-item-selected');
+      var id = $(this).data('school-id');
+      select(id);
+    });
+  }
+
+  function select(id) {
+    selection = id;
+    $('#btn-school-use').prop('disabled', selection === null);
+    $('#btn-school-delete').prop('disabled', selection === null);
+  }
+
+  function _refreshParentSelect() {
+    var el = $('#edit-form select[name=school_id]');
+    el.empty();
+    var option;
+
+    for (var i = 0; i < window.user_schools.length; i++) {
+      option = $('<option/>').attr('value', window.user_schools[i].id).text(formatSchoolName(window.user_schools[i]));
+      el.append(option);
+    }
+
+    el.val(selection);
+  }
+
+  function doRequest(id, action) {
+    select(null);
+    overlay.show();
+    $.ajax({
+      dataType: 'json',
+      url: '/user_schools/' + action,
+      method: 'POST',
+      data: {
+        id: id
+      },
+      success: function success(data) {
+        overlay.hide();
+        window.user_schools = data;
+
+        _refreshParentSelect();
+
+        render();
+      },
+      error: function error(xhr, status, _error) {
+        handleUnauthorizedResponse(xhr);
+      }
+    });
+  }
+
+  return {
+    refresh: function refresh() {
+      render();
+      select(null);
+    },
+    setSchools: function setSchools(schools) {
+      window.user_schools = schools;
+      render();
+      select(null);
+    },
+    refreshParentSelect: function refreshParentSelect() {
+      if (selection !== null) {
+        _refreshParentSelect();
+      }
+    },
+    addSchool: function addSchool(id) {
+      doRequest(id, 'add');
+    },
+    removeSeleted: function removeSeleted() {
+      if (selection !== null) {
+        doRequest(selection, 'remove');
+      }
+    }
+  };
+}
+
+function SearchSchool() {
+  var selection = null;
+  var list = [];
+  $('#inp-school-search-q').val('');
+
+  function select(id) {
+    selection = id;
+    $('#btn-school-add').prop('disabled', selection === null);
+  }
+
+  select(null);
+
+  function render() {
+    var el = $('#schools-search');
+    el.empty();
+
+    if (!list.length) {
+      el.text('Your search did not match any schools.');
+      return;
+    }
+
+    for (var i = 0; i < list.length; i++) {
+      el.append('<div class="list-item" data-school-id="' + list[i].id + '">' + formatSchoolName(list[i]) + '</div>');
+    }
+
+    el.find('div').on('click', function () {
+      el.find('div.list-item-selected').removeClass('list-item-selected');
+      $(this).addClass('list-item-selected');
+      var id = $(this).data('school-id');
+      select(id);
+    });
+  }
+
+  function load(q) {
+    select(null);
+    overlay.show();
+    $.ajax({
+      dataType: 'json',
+      url: '/user_schools/search',
+      data: {
+        q: q
+      },
+      success: function success(data) {
+        overlay.hide();
+        list = data;
+        render();
+      },
+      error: function error(xhr, status, _error2) {
+        handleUnauthorizedResponse(xhr);
+      }
+    });
+  }
+
+  return {
+    search: function search(q) {
+      $('#schools-search').empty();
+      load(q);
+    },
+    getSelection: function getSelection() {
+      return selection;
+    }
+  };
+}
+
+function FormSchool(options) {
+  var groups = $('#section-schools-editor .form-group');
+
+  function showGroupError(form_group, message) {
+    form_group.find('.form-control').addClass('is-invalid');
+    form_group.find('.invalid-feedback').remove();
+    form_group.append('<div class="invalid-feedback">' + message + '</div>');
+  }
+
+  function hideGroupError(form_group) {
+    form_group.find('.invalid-feedback').remove();
+    form_group.find('.form-control').removeClass('is-invalid');
+  }
+
+  function displayErrors(errors) {
+    groups.each(function () {
+      var group = $(this);
+      var control = group.find('.form-control');
+      var name = control.attr('name');
+
+      if (name in errors) {
+        showGroupError(group, errors[name][0]);
+      } else {
+        hideGroupError(group);
+      }
+    });
+  }
+
+  function resetErrors() {
+    groups.each(function () {
+      var group = $(this);
+      group.find('.invalid-feedback').remove();
+      group.find('.form-control').removeClass('is-invalid');
+    });
+  }
+
+  function resetValues() {
+    groups.each(function () {
+      var group = $(this);
+      var control = group.find('.form-control');
+      control.val('');
+    });
+  }
+
+  function _reset() {
+    resetErrors();
+    resetValues();
+    region_selector.reset();
+  }
+
+  function collectFormData() {
+    var res = {};
+    groups.each(function () {
+      var group = $(this);
+      var control = group.find('.form-control');
+      var name = control.attr('name');
+      res[name] = control.val();
+    });
+    return res;
+  }
+
+  function sendRequest(data) {
+    overlay.show();
+    $.ajax({
+      dataType: 'json',
+      url: '/user_schools/create',
+      data: data,
+      method: 'POST',
+      success: function success(data) {
+        overlay.hide();
+
+        if (data.success) {
+          _reset();
+
+          options.onCreate(data.schools);
+        }
+      },
+      error: function error(xhr, status, _error3) {
+        handleUnauthorizedResponse(xhr);
+        var res = xhr.responseJSON;
+
+        if (res.errors) {
+          overlay.hide();
+          displayErrors(res.errors);
+        }
+      }
+    });
+  }
+
+  var region_selector = RegionSelector($('#section-schools-editor'));
+  /*
+      var region_sel = $('#section-schools-editor select[name=region_id]').first();
+      var country_sel = $('#section-schools-editor select[name=country_id]').first();
+      function refreshRegions() {
+          region_sel.empty();
+          var country_id = country_sel.val();
+          var first_region_id = null;
+          var option;
+          for(var i=0; i<regions.length; i++) {
+              if(regions[i].country_id != country_id) {
+                  continue;
+              }
+              if(first_region_id === null) {
+                  first_region_id = regions[i].id;
+              }
+              option = $('<option/>').attr('value', regions[i].id).text(regions[i].name);
+              region_sel.append(option);
+          }
+          region_sel.val(first_region_id);
+      }
+      country_sel.on('change', refreshRegions);
+      refreshRegions();
+  */
+
+  return {
+    reset: function reset() {
+      _reset();
+    },
+    submit: function submit() {
+      var data = collectFormData();
+      sendRequest(data);
+    }
+  };
+}
+
+window.SchoolsManager = function () {
+  var modal_el = $('#schools-manager-modal');
+  var user_schools = UserSchools();
+  var search_school = SearchSchool();
+  var form_school = FormSchool({
+    onCreate: function onCreate(schools) {
+      $('#section-schools-editor').hide();
+      user_schools.setSchools(schools);
+      $('#section-schools-manager').show();
+    }
+  }); // schools manager section
+
+  $('#btn-school-use').on('click', function () {
+    user_schools.refreshParentSelect();
+    modal_el.modal('hide');
+  });
+  $('#btn-school-search').on('click', function () {
+    var q = $('#inp-school-search-q').val().trim();
+
+    if (q.length > 0) {
+      search_school.search(q);
+    }
+  });
+  $('#btn-school-add').on('click', function () {
+    var id = search_school.getSelection();
+    user_schools.addSchool(id);
+  });
+  $('#btn-school-delete').on('click', function () {
+    user_schools.removeSeleted();
+  }); // create school editor section
+
+  $('#btn-school-show-create').on('click', function () {
+    form_school.reset();
+    $('#section-schools-manager').hide();
+    $('#section-schools-editor').show();
+  });
+  $('#btn-school-create-cancel').on('click', function () {
+    $('#section-schools-manager').show();
+    $('#section-schools-editor').hide();
+  });
+  $('#btn-school-create').on('click', function () {
+    form_school.submit();
+  });
+  return {
+    show: function show() {
+      modal_el.modal('show');
+      user_schools.refresh();
+    },
+    hide: function hide() {
+      modal_el.modal('hide');
+    }
+  };
+};
+
+/***/ }),
+
+/***/ "./resources/js/app.js":
+/*!*****************************!*\
+  !*** ./resources/js/app.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+window.$ = window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+window.Popper = (__webpack_require__(/*! popper.js */ "./node_modules/popper.js/dist/esm/popper.js")["default"]);
+window.tinymce = __webpack_require__(/*! tinymce */ "./node_modules/tinymce/tinymce.js");
+
+__webpack_require__(/*! tinymce/themes/silver */ "./node_modules/tinymce/themes/silver/index.js");
+
+__webpack_require__(/*! tinymce/icons/default */ "./node_modules/tinymce/icons/default/index.js");
+
+__webpack_require__(/*! tinymce/skins/ui/oxide/skin.css */ "./node_modules/tinymce/skins/ui/oxide/skin.css"); //require('tinymce/plugins/advlist');
+
+
+__webpack_require__(/*! tinymce/plugins/code */ "./node_modules/tinymce/plugins/code/index.js");
+
+__webpack_require__(/*! tinymce/plugins/emoticons */ "./node_modules/tinymce/plugins/emoticons/index.js");
+
+__webpack_require__(/*! tinymce/plugins/emoticons/js/emojis */ "./node_modules/tinymce/plugins/emoticons/js/emojis.js");
+
+__webpack_require__(/*! tinymce/plugins/link */ "./node_modules/tinymce/plugins/link/index.js");
+
+__webpack_require__(/*! tinymce/plugins/lists */ "./node_modules/tinymce/plugins/lists/index.js");
+
+__webpack_require__(/*! tinymce/plugins/table */ "./node_modules/tinymce/plugins/table/index.js");
+
+__webpack_require__(/*! ./tinymce/langs/fr.js */ "./resources/js/tinymce/langs/fr.js");
+
+__webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
+
+__webpack_require__(/*! ./UI/overlay.js */ "./resources/js/UI/overlay.js");
+
+__webpack_require__(/*! ./UI/active-tables.js */ "./resources/js/UI/active-tables.js");
+
+__webpack_require__(/*! ./UI/schools-manager.js */ "./resources/js/UI/schools-manager.js");
+
+__webpack_require__(/*! ./UI/region-selector.js */ "./resources/js/UI/region-selector.js");
+
+/***/ }),
+
+/***/ "./resources/js/tinymce/langs/fr.js":
+/*!******************************************!*\
+  !*** ./resources/js/tinymce/langs/fr.js ***!
+  \******************************************/
+/***/ (() => {
+
+tinymce.addI18n('fr', {
+  "Redo": "R\xE9tablir",
+  "Undo": "Annuler",
+  "Cut": "Couper",
+  "Copy": "Copier",
+  "Paste": "Coller",
+  "Select all": "S\xE9lectionner tout",
+  "New document": "Nouveau document",
+  "Ok": "OK",
+  "Cancel": "Annuler",
+  "Visual aids": "Aides visuelles",
+  "Bold": "Gras",
+  "Italic": "Italique",
+  "Underline": "Soulign\xE9",
+  "Strikethrough": "Barr\xE9",
+  "Superscript": "Exposant",
+  "Subscript": "Indice",
+  "Clear formatting": "Effacer la mise en forme",
+  "Align left": "Aligner \xE0 gauche",
+  "Align center": "Centrer",
+  "Align right": "Aligner \xE0 droite",
+  "Justify": "Justifier",
+  "Bullet list": "Liste \xE0 puces",
+  "Numbered list": "Liste num\xE9rot\xE9e",
+  "Decrease indent": "R\xE9duire le retrait",
+  "Increase indent": "Augmenter le retrait",
+  "Close": "Fermer",
+  "Formats": "Formats",
+  "Your browser doesn't support direct access to the clipboard. Please use the Ctrl+X\/C\/V keyboard shortcuts instead.": "Votre navigateur ne supporte pas l\u2019acc\xE8s direct au presse-papiers. Merci d'utiliser les raccourcis clavier Ctrl+X/C/V.",
+  "Headers": "En-t\xEAtes",
+  "Header 1": "En-t\xEAte 1",
+  "Header 2": "En-t\xEAte 2",
+  "Header 3": "En-t\xEAte 3",
+  "Header 4": "En-t\xEAte 4",
+  "Header 5": "En-t\xEAte 5",
+  "Header 6": "En-t\xEAte 6",
+  "Headings": "Titres",
+  "Heading 1": "Titre\xA01",
+  "Heading 2": "Titre\xA02",
+  "Heading 3": "Titre\xA03",
+  "Heading 4": "Titre\xA04",
+  "Heading 5": "Titre\xA05",
+  "Heading 6": "Titre\xA06",
+  "Preformatted": "Pr\xE9format\xE9",
+  "Div": "Div",
+  "Pre": "Pre",
+  "Code": "Code",
+  "Paragraph": "Paragraphe",
+  "Blockquote": "Blockquote",
+  "Inline": "En ligne",
+  "Blocks": "Blocs",
+  "Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.": "Le presse-papiers est maintenant en mode \"texte plein\". Les contenus seront coll\xE9s sans retenir les formatages jusqu'\xE0 ce que vous d\xE9sactiviez cette option.",
+  "Fonts": "Polices",
+  "Font Sizes": "Tailles de police",
+  "Class": "Classe",
+  "Browse for an image": "Rechercher une image",
+  "OR": "OU",
+  "Drop an image here": "D\xE9poser une image ici",
+  "Upload": "T\xE9l\xE9charger",
+  "Block": "Bloc",
+  "Align": "Aligner",
+  "Default": "Par d\xE9faut",
+  "Circle": "Cercle",
+  "Disc": "Disque",
+  "Square": "Carr\xE9",
+  "Lower Alpha": "Alpha minuscule",
+  "Lower Greek": "Grec minuscule",
+  "Lower Roman": "Romain minuscule",
+  "Upper Alpha": "Alpha majuscule",
+  "Upper Roman": "Romain majuscule",
+  "Anchor...": "Ancre...",
+  "Name": "Nom",
+  "Id": "Id",
+  "Id should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.": "L'Id doit commencer par une lettre suivi par des lettres, nombres, tirets, points, deux-points ou underscores",
+  "You have unsaved changes are you sure you want to navigate away?": "Vous avez des modifications non enregistr\xE9es, \xEAtes-vous s\xFBr de quitter la page?",
+  "Restore last draft": "Restaurer le dernier brouillon",
+  "Special character...": "Caract\xE8re sp\xE9cial...",
+  "Source code": "Code source",
+  "Insert\/Edit code sample": "Ins\xE9rer / modifier une exemple de code",
+  "Language": "Langue",
+  "Code sample...": "Exemple de code...",
+  "Color Picker": "S\xE9lecteur de couleurs",
+  "R": "R",
+  "G": "V",
+  "B": "B",
+  "Left to right": "Gauche \xE0 droite",
+  "Right to left": "Droite \xE0 gauche",
+  "Emoticons": "Emotic\xF4nes",
+  "Emoticons...": "\xC9motic\xF4nes...",
+  "Metadata and Document Properties": "M\xE9tadonn\xE9es et propri\xE9t\xE9s du document",
+  "Title": "Titre",
+  "Keywords": "Mots-cl\xE9s",
+  "Description": "Description",
+  "Robots": "Robots",
+  "Author": "Auteur",
+  "Encoding": "Encodage",
+  "Fullscreen": "Plein \xE9cran",
+  "Action": "Action",
+  "Shortcut": "Raccourci",
+  "Help": "Aide",
+  "Address": "Adresse",
+  "Focus to menubar": "Cibler la barre de menu",
+  "Focus to toolbar": "Cibler la barre d'outils",
+  "Focus to element path": "Cibler le chemin vers l'\xE9l\xE9ment",
+  "Focus to contextual toolbar": "Cibler la barre d'outils contextuelle",
+  "Insert link (if link plugin activated)": "Ins\xE9rer un lien (si le module link est activ\xE9)",
+  "Save (if save plugin activated)": "Enregistrer (si le module save est activ\xE9)",
+  "Find (if searchreplace plugin activated)": "Rechercher (si le module searchreplace est activ\xE9)",
+  "Plugins installed ({0}):": "Modules install\xE9s ({0}) : ",
+  "Premium plugins:": "Modules premium :",
+  "Learn more...": "En savoir plus...",
+  "You are using {0}": "Vous utilisez {0}",
+  "Plugins": "Plugins",
+  "Handy Shortcuts": "Raccourcis utiles",
+  "Horizontal line": "Ligne horizontale",
+  "Insert\/edit image": "Ins\xE9rer/modifier une image",
+  "Alternative description": "Description alternative",
+  "Accessibility": "Accessibilit\xE9",
+  "Image is decorative": "L'image est d\xE9corative",
+  "Source": "Source",
+  "Dimensions": "Dimensions",
+  "Constrain proportions": "Conserver les proportions",
+  "General": "G\xE9n\xE9ral",
+  "Advanced": "Avanc\xE9",
+  "Style": "Style",
+  "Vertical space": "Espacement vertical",
+  "Horizontal space": "Espacement horizontal",
+  "Border": "Bordure",
+  "Insert image": "Ins\xE9rer une image",
+  "Image...": "Image...",
+  "Image list": "Liste d'images",
+  "Rotate counterclockwise": "Rotation anti-horaire",
+  "Rotate clockwise": "Rotation horaire",
+  "Flip vertically": "Retournement vertical",
+  "Flip horizontally": "Retournement horizontal",
+  "Edit image": "Modifier l'image",
+  "Image options": "Options de l'image",
+  "Zoom in": "Zoomer",
+  "Zoom out": "D\xE9zoomer",
+  "Crop": "Rogner",
+  "Resize": "Redimensionner",
+  "Orientation": "Orientation",
+  "Brightness": "Luminosit\xE9",
+  "Sharpen": "Affiner",
+  "Contrast": "Contraste",
+  "Color levels": "Niveaux de couleur",
+  "Gamma": "Gamma",
+  "Invert": "Inverser",
+  "Apply": "Appliquer",
+  "Back": "Retour",
+  "Insert date\/time": "Ins\xE9rer date/heure",
+  "Date\/time": "Date\/heure",
+  "Insert\/edit link": "Ins\xE9rer/modifier un lien",
+  "Text to display": "Texte \xE0 afficher",
+  "Url": "Url",
+  "Open link in...": "Ouvrir le lien dans...",
+  "Current window": "Fen\xEAtre active",
+  "None": "n\/a",
+  "New window": "Nouvelle fen\xEAtre",
+  "Open link": "Ouvrir le lien",
+  "Remove link": "Enlever le lien",
+  "Anchors": "Ancres",
+  "Link...": "Lien...",
+  "Paste or type a link": "Coller ou taper un lien",
+  "The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?": "L'URL que vous avez entr\xE9e semble \xEAtre une adresse e-mail. Voulez-vous ajouter le pr\xE9fixe mailto: n\xE9cessaire?",
+  "The URL you entered seems to be an external link. Do you want to add the required http:\/\/ prefix?": "L'URL que vous avez entr\xE9e semble \xEAtre un lien externe. Voulez-vous ajouter le pr\xE9fixe http:// n\xE9cessaire?",
+  "The URL you entered seems to be an external link. Do you want to add the required https:\/\/ prefix?": "L'URL que vous avez saisie semble \xEAtre un lien externe. Voulez-vous ajouter le pr\xE9fixe https:// requis\xA0?",
+  "Link list": "Liste de liens",
+  "Insert video": "Ins\xE9rer une vid\xE9o",
+  "Insert\/edit video": "Ins\xE9rer/modifier une vid\xE9o",
+  "Insert\/edit media": "Ins\xE9rer/modifier un m\xE9dia",
+  "Alternative source": "Source alternative",
+  "Alternative source URL": "URL de la source alternative",
+  "Media poster (Image URL)": "Affiche de m\xE9dia (URL de l'image)",
+  "Paste your embed code below:": "Collez votre code d'int\xE9gration ci-dessous :",
+  "Embed": "Int\xE9grer",
+  "Media...": "M\xE9dia...",
+  "Nonbreaking space": "Espace ins\xE9cable",
+  "Page break": "Saut de page",
+  "Paste as text": "Coller comme texte",
+  "Preview": "Pr\xE9visualiser",
+  "Print...": "Imprimer...",
+  "Save": "Enregistrer",
+  "Find": "Chercher",
+  "Replace with": "Remplacer par",
+  "Replace": "Remplacer",
+  "Replace all": "Tout remplacer",
+  "Previous": "Pr\xE9c\xE9dente",
+  "Next": "Suiv",
+  "Find and Replace": "Trouver et remplacer",
+  "Find and replace...": "Trouver et remplacer...",
+  "Could not find the specified string.": "Impossible de trouver la cha\xEEne sp\xE9cifi\xE9e.",
+  "Match case": "Respecter la casse",
+  "Find whole words only": "Mot entier",
+  "Find in selection": "Trouver dans la s\xE9lection",
+  "Spellcheck": "V\xE9rification orthographique",
+  "Spellcheck Language": "Langue du correcteur orthographique",
+  "No misspellings found.": "Aucune faute d'orthographe trouv\xE9e.",
+  "Ignore": "Ignorer",
+  "Ignore all": "Tout ignorer",
+  "Finish": "Finie",
+  "Add to Dictionary": "Ajouter au dictionnaire",
+  "Insert table": "Ins\xE9rer un tableau",
+  "Table properties": "Propri\xE9t\xE9s du tableau",
+  "Delete table": "Supprimer le tableau",
+  "Cell": "Cellule",
+  "Row": "Ligne",
+  "Column": "Colonne",
+  "Cell properties": "Propri\xE9t\xE9s de la cellule",
+  "Merge cells": "Fusionner les cellules",
+  "Split cell": "Diviser la cellule",
+  "Insert row before": "Ins\xE9rer une ligne avant",
+  "Insert row after": "Ins\xE9rer une ligne apr\xE8s",
+  "Delete row": "Effacer la ligne",
+  "Row properties": "Propri\xE9t\xE9s de la ligne",
+  "Cut row": "Couper la ligne",
+  "Copy row": "Copier la ligne",
+  "Paste row before": "Coller la ligne avant",
+  "Paste row after": "Coller la ligne apr\xE8s",
+  "Insert column before": "Ins\xE9rer une colonne avant",
+  "Insert column after": "Ins\xE9rer une colonne apr\xE8s",
+  "Delete column": "Effacer la colonne",
+  "Cols": "Colonnes",
+  "Rows": "Lignes",
+  "Width": "Largeur",
+  "Height": "Hauteur",
+  "Cell spacing": "Espacement inter-cellulles",
+  "Cell padding": "Espacement interne cellule",
+  "Caption": "Titre",
+  "Show caption": "Afficher le sous-titrage",
+  "Left": "Gauche",
+  "Center": "Centr\xE9",
+  "Right": "Droite",
+  "Cell type": "Type de cellule",
+  "Scope": "Etendue",
+  "Alignment": "Alignement",
+  "H Align": "Alignement H",
+  "V Align": "Alignement V",
+  "Top": "Haut",
+  "Middle": "Milieu",
+  "Bottom": "Bas",
+  "Header cell": "Cellule d'en-t\xEAte",
+  "Row group": "Groupe de lignes",
+  "Column group": "Groupe de colonnes",
+  "Row type": "Type de ligne",
+  "Header": "En-t\xEAte",
+  "Body": "Corps",
+  "Footer": "Pied",
+  "Border color": "Couleur de la bordure",
+  "Insert template...": "Ins\xE9rer un mod\xE8le...",
+  "Templates": "Th\xE8mes",
+  "Template": "Mod\xE8le",
+  "Text color": "Couleur du texte",
+  "Background color": "Couleur d'arri\xE8re-plan",
+  "Custom...": "Personnalis\xE9...",
+  "Custom color": "Couleur personnalis\xE9e",
+  "No color": "Aucune couleur",
+  "Remove color": "Supprimer la couleur",
+  "Table of Contents": "Table des mati\xE8res",
+  "Show blocks": "Afficher les blocs",
+  "Show invisible characters": "Afficher les caract\xE8res invisibles",
+  "Word count": "Nombre de mots",
+  "Count": "Total",
+  "Document": "Document",
+  "Selection": "S\xE9lection",
+  "Words": "Mots",
+  "Words: {0}": "Mots : {0}",
+  "{0} words": "{0} mots",
+  "File": "Fichier",
+  "Edit": "Editer",
+  "Insert": "Ins\xE9rer",
+  "View": "Voir",
+  "Format": "Format",
+  "Table": "Tableau",
+  "Tools": "Outils",
+  "Powered by {0}": "Propuls\xE9 par {0}",
+  "Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help": "Zone Texte Riche. Appuyer sur ALT-F9 pour le menu. Appuyer sur ALT-F10 pour la barre d'outils. Appuyer sur ALT-0 pour de l'aide.",
+  "Image title": "Titre d'image",
+  "Border width": "\xC9paisseur de la bordure",
+  "Border style": "Style de la bordure",
+  "Error": "Erreur",
+  "Warn": "Avertir",
+  "Valid": "Valide",
+  "To open the popup, press Shift+Enter": "Pour ouvrir la popup, appuyez sur Maj+Entr\xE9e",
+  "Rich Text Area. Press ALT-0 for help.": "Zone de texte riche. Appuyez sur ALT-0 pour l'aide.",
+  "System Font": "Police syst\xE8me",
+  "Failed to upload image: {0}": "\xC9chec d'envoi de l'image\xA0: {0}",
+  "Failed to load plugin: {0} from url {1}": "\xC9chec de chargement du plug-in\xA0: {0} \xE0 partir de l\u2019URL {1}",
+  "Failed to load plugin url: {0}": "\xC9chec de chargement de l'URL du plug-in\xA0: {0}",
+  "Failed to initialize plugin: {0}": "\xC9chec d'initialisation du plug-in\xA0: {0}",
+  "example": "exemple",
+  "Search": "Rechercher",
+  "All": "Tout",
+  "Currency": "Devise",
+  "Text": "Texte",
+  "Quotations": "Citations",
+  "Mathematical": "Op\xE9rateurs math\xE9matiques",
+  "Extended Latin": "Latin \xE9tendu",
+  "Symbols": "Symboles",
+  "Arrows": "Fl\xE8ches",
+  "User Defined": "D\xE9fini par l'utilisateur",
+  "dollar sign": "Symbole dollar",
+  "currency sign": "Symbole devise",
+  "euro-currency sign": "Symbole euro",
+  "colon sign": "Symbole col\xF3n",
+  "cruzeiro sign": "Symbole cruzeiro",
+  "french franc sign": "Symbole franc fran\xE7ais",
+  "lira sign": "Symbole lire",
+  "mill sign": "Symbole milli\xE8me",
+  "naira sign": "Symbole naira",
+  "peseta sign": "Symbole peseta",
+  "rupee sign": "Symbole roupie",
+  "won sign": "Symbole won",
+  "new sheqel sign": "Symbole nouveau ch\xE9kel",
+  "dong sign": "Symbole dong",
+  "kip sign": "Symbole kip",
+  "tugrik sign": "Symbole tougrik",
+  "drachma sign": "Symbole drachme",
+  "german penny symbol": "Symbole pfennig",
+  "peso sign": "Symbole peso",
+  "guarani sign": "Symbole guarani",
+  "austral sign": "Symbole austral",
+  "hryvnia sign": "Symbole hryvnia",
+  "cedi sign": "Symbole cedi",
+  "livre tournois sign": "Symbole livre tournois",
+  "spesmilo sign": "Symbole spesmilo",
+  "tenge sign": "Symbole tenge",
+  "indian rupee sign": "Symbole roupie indienne",
+  "turkish lira sign": "Symbole lire turque",
+  "nordic mark sign": "Symbole du mark nordique",
+  "manat sign": "Symbole manat",
+  "ruble sign": "Symbole rouble",
+  "yen character": "Sinogramme Yen",
+  "yuan character": "Sinogramme Yuan",
+  "yuan character, in hong kong and taiwan": "Sinogramme Yuan, Hong Kong et Taiwan",
+  "yen\/yuan character variant one": "Sinogramme Yen/Yuan, premi\xE8re variante",
+  "Loading emoticons...": "Chargement des \xE9motic\xF4nes en cours...",
+  "Could not load emoticons": "\xC9chec de chargement des \xE9motic\xF4nes",
+  "People": "Personnes",
+  "Animals and Nature": "Animaux & nature",
+  "Food and Drink": "Nourriture & boissons",
+  "Activity": "Activit\xE9",
+  "Travel and Places": "Voyages & lieux",
+  "Objects": "Objets",
+  "Flags": "Drapeaux",
+  "Characters": "Caract\xE8res",
+  "Characters (no spaces)": "Caract\xE8res (espaces non compris)",
+  "{0} characters": "{0}\xA0caract\xE8res",
+  "Error: Form submit field collision.": "Erreur\xA0: conflit de champs lors de la soumission du formulaire.",
+  "Error: No form element found.": "Erreur : aucun \xE9l\xE9ment de formulaire trouv\xE9.",
+  "Update": "Mettre \xE0 jour",
+  "Color swatch": "\xC9chantillon de couleurs",
+  "Turquoise": "Turquoise",
+  "Green": "Vert",
+  "Blue": "Bleu",
+  "Purple": "Violet",
+  "Navy Blue": "Bleu marine",
+  "Dark Turquoise": "Turquoise fonc\xE9",
+  "Dark Green": "Vert fonc\xE9",
+  "Medium Blue": "Bleu moyen",
+  "Medium Purple": "Violet moyen",
+  "Midnight Blue": "Bleu de minuit",
+  "Yellow": "Jaune",
+  "Orange": "Orange",
+  "Red": "Rouge",
+  "Light Gray": "Gris clair",
+  "Gray": "Gris",
+  "Dark Yellow": "Jaune fonc\xE9",
+  "Dark Orange": "Orange fonc\xE9",
+  "Dark Red": "Rouge fonc\xE9",
+  "Medium Gray": "Gris moyen",
+  "Dark Gray": "Gris fonc\xE9",
+  "Light Green": "Vert clair",
+  "Light Yellow": "Jaune clair",
+  "Light Red": "Rouge clair",
+  "Light Purple": "Violet clair",
+  "Light Blue": "Bleu clair",
+  "Dark Purple": "Violet fonc\xE9",
+  "Dark Blue": "Bleu fonc\xE9",
+  "Black": "Noir",
+  "White": "Blanc",
+  "Switch to or from fullscreen mode": "Passer en ou quitter le mode plein \xE9cran",
+  "Open help dialog": "Ouvrir la bo\xEEte de dialogue d'aide",
+  "history": "historique",
+  "styles": "styles",
+  "formatting": "mise en forme",
+  "alignment": "alignement",
+  "indentation": "retrait",
+  "Font": "Police",
+  "Size": "Taille",
+  "More...": "Plus...",
+  "Select...": "S\xE9lectionner...",
+  "Preferences": "Pr\xE9f\xE9rences",
+  "Yes": "Oui",
+  "No": "Non",
+  "Keyboard Navigation": "Navigation au clavier",
+  "Version": "Version",
+  "Code view": "Affichage du code",
+  "Open popup menu for split buttons": "Ouvrir le menu contextuel pour les boutons partag\xE9s",
+  "List Properties": "Propri\xE9t\xE9s de la liste",
+  "List properties...": "Lister les propri\xE9t\xE9s...",
+  "Start list at number": "Liste de d\xE9part au num\xE9ro",
+  "Line height": "Hauteur de la ligne",
+  "comments": "commentaires",
+  "Format Painter": "Reproduire la mise en forme",
+  "Insert\/edit iframe": "Ins\xE9rer/modifier iframe",
+  "Capitalization": "Mise en majuscules",
+  "lowercase": "minuscule",
+  "UPPERCASE": "MAJUSCULE",
+  "Title Case": "Casse du titre",
+  "permanent pen": "feutre ind\xE9l\xE9bile",
+  "Permanent Pen Properties": "Propri\xE9t\xE9s du feutre ind\xE9l\xE9bile",
+  "Permanent pen properties...": "Propri\xE9t\xE9s du feutre ind\xE9l\xE9bile...",
+  "case change": "changement de cas",
+  "page embed": "int\xE9gration de page",
+  "Advanced sort...": "Tri avanc\xE9...",
+  "Advanced Sort": "Tri avanc\xE9",
+  "Sort table by column ascending": "Trier le tableau par colonne ascendante",
+  "Sort table by column descending": "Trier le tableau par colonne en ordre d\xE9croissant",
+  "Sort": "Sorte",
+  "Order": "Ordre",
+  "Sort by": "Trier par",
+  "Ascending": "Ascendant",
+  "Descending": "Descendant",
+  "Column {0}": "Colonne {0}",
+  "Row {0}": "Ligne {0}",
+  "Spellcheck...": "V\xE9rification orthographique...",
+  "Misspelled word": "Mot mal orthographi\xE9",
+  "Suggestions": "Suggestions",
+  "Change": "Changement",
+  "Finding word suggestions": "Trouver des suggestions de mots",
+  "Success": "Succ\xE8s",
+  "Repair": "R\xE9paration",
+  "Issue {0} of {1}": " {0} Erreur sur  {1}",
+  "Images must be marked as decorative or have an alternative text description": "Les images doivent \xEAtre marqu\xE9es comme d\xE9coratives ou avoir une description textuelle alternative",
+  "Images must have an alternative text description. Decorative images are not allowed.": "Les images doivent avoir une description textuelle alternative. Les images d\xE9coratives ne sont pas autoris\xE9es.",
+  "Or provide alternative text:": "Ou fournissez un texte alternatif\xA0:",
+  "Make image decorative:": "Rendre l'image d\xE9corative\xA0:",
+  "ID attribute must be unique": "L'attribut ID doit \xEAtre unique",
+  "Make ID unique": "Rendre l'identifiant unique",
+  "Keep this ID and remove all others": "Conservez cet identifiant et supprimez tous les autres",
+  "Remove this ID": "Supprimer cet identifiant",
+  "Remove all IDs": "Supprimer tous les identifiants",
+  "Checklist": "Liste de contr\xF4le",
+  "Anchor": "Ancre",
+  "Special character": "Caract\xE8res sp\xE9ciaux",
+  "Code sample": "Extrait de code",
+  "Color": "Couleur",
+  "Document properties": "Propri\xE9t\xE9 du document",
+  "Image description": "Description de l'image",
+  "Image": "Image",
+  "Insert link": "Ins\xE9rer un lien",
+  "Target": "Cible",
+  "Link": "Lien",
+  "Poster": "Publier",
+  "Media": "M\xE9dia",
+  "Print": "Imprimer",
+  "Prev": "Pr\xE9c ",
+  "Find and replace": "Trouver et remplacer",
+  "Whole words": "Mots entiers",
+  "Insert template": "Ajouter un th\xE8me"
+});
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/runtime/api.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/css-loader/dist/runtime/api.js ***!
+  \*****************************************************/
+/***/ ((module) => {
+
+"use strict";
+
+
+/*
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+// eslint-disable-next-line func-names
+module.exports = function (cssWithMappingToString) {
+  var list = []; // return the list of modules as css string
+
+  list.toString = function toString() {
+    return this.map(function (item) {
+      var content = cssWithMappingToString(item);
+
+      if (item[2]) {
+        return "@media ".concat(item[2], " {").concat(content, "}");
+      }
+
+      return content;
+    }).join("");
+  }; // import a list of modules into the list
+  // eslint-disable-next-line func-names
+
+
+  list.i = function (modules, mediaQuery, dedupe) {
+    if (typeof modules === "string") {
+      // eslint-disable-next-line no-param-reassign
+      modules = [[null, modules, ""]];
+    }
+
+    var alreadyImportedModules = {};
+
+    if (dedupe) {
+      for (var i = 0; i < this.length; i++) {
+        // eslint-disable-next-line prefer-destructuring
+        var id = this[i][0];
+
+        if (id != null) {
+          alreadyImportedModules[id] = true;
+        }
+      }
+    }
+
+    for (var _i = 0; _i < modules.length; _i++) {
+      var item = [].concat(modules[_i]);
+
+      if (dedupe && alreadyImportedModules[item[0]]) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+
+      if (mediaQuery) {
+        if (!item[2]) {
+          item[2] = mediaQuery;
+        } else {
+          item[2] = "".concat(mediaQuery, " and ").concat(item[2]);
+        }
+      }
+
+      list.push(item);
+    }
+  };
+
+  return list;
+};
+
+/***/ }),
+
+/***/ "./resources/css/app.scss":
+/*!********************************!*\
+  !*** ./resources/css/app.scss ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
+  \****************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+var isOldIE = function isOldIE() {
+  var memo;
+  return function memorize() {
+    if (typeof memo === 'undefined') {
+      // Test for IE <= 9 as proposed by Browserhacks
+      // @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+      // Tests for existence of standard globals is to allow style-loader
+      // to operate correctly into non-standard environments
+      // @see https://github.com/webpack-contrib/style-loader/issues/177
+      memo = Boolean(window && document && document.all && !window.atob);
+    }
+
+    return memo;
+  };
+}();
+
+var getTarget = function getTarget() {
+  var memo = {};
+  return function memorize(target) {
+    if (typeof memo[target] === 'undefined') {
+      var styleTarget = document.querySelector(target); // Special case to return head of iframe instead of iframe itself
+
+      if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
+        try {
+          // This will throw an exception if access to iframe is blocked
+          // due to cross-origin restrictions
+          styleTarget = styleTarget.contentDocument.head;
+        } catch (e) {
+          // istanbul ignore next
+          styleTarget = null;
+        }
+      }
+
+      memo[target] = styleTarget;
+    }
+
+    return memo[target];
+  };
+}();
+
+var stylesInDom = [];
+
+function getIndexByIdentifier(identifier) {
+  var result = -1;
+
+  for (var i = 0; i < stylesInDom.length; i++) {
+    if (stylesInDom[i].identifier === identifier) {
+      result = i;
+      break;
+    }
+  }
+
+  return result;
+}
+
+function modulesToDom(list, options) {
+  var idCountMap = {};
+  var identifiers = [];
+
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i];
+    var id = options.base ? item[0] + options.base : item[0];
+    var count = idCountMap[id] || 0;
+    var identifier = "".concat(id, " ").concat(count);
+    idCountMap[id] = count + 1;
+    var index = getIndexByIdentifier(identifier);
+    var obj = {
+      css: item[1],
+      media: item[2],
+      sourceMap: item[3]
+    };
+
+    if (index !== -1) {
+      stylesInDom[index].references++;
+      stylesInDom[index].updater(obj);
+    } else {
+      stylesInDom.push({
+        identifier: identifier,
+        updater: addStyle(obj, options),
+        references: 1
+      });
+    }
+
+    identifiers.push(identifier);
+  }
+
+  return identifiers;
+}
+
+function insertStyleElement(options) {
+  var style = document.createElement('style');
+  var attributes = options.attributes || {};
+
+  if (typeof attributes.nonce === 'undefined') {
+    var nonce =  true ? __webpack_require__.nc : 0;
+
+    if (nonce) {
+      attributes.nonce = nonce;
+    }
+  }
+
+  Object.keys(attributes).forEach(function (key) {
+    style.setAttribute(key, attributes[key]);
+  });
+
+  if (typeof options.insert === 'function') {
+    options.insert(style);
+  } else {
+    var target = getTarget(options.insert || 'head');
+
+    if (!target) {
+      throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
+    }
+
+    target.appendChild(style);
+  }
+
+  return style;
+}
+
+function removeStyleElement(style) {
+  // istanbul ignore if
+  if (style.parentNode === null) {
+    return false;
+  }
+
+  style.parentNode.removeChild(style);
+}
+/* istanbul ignore next  */
+
+
+var replaceText = function replaceText() {
+  var textStore = [];
+  return function replace(index, replacement) {
+    textStore[index] = replacement;
+    return textStore.filter(Boolean).join('\n');
+  };
+}();
+
+function applyToSingletonTag(style, index, remove, obj) {
+  var css = remove ? '' : obj.media ? "@media ".concat(obj.media, " {").concat(obj.css, "}") : obj.css; // For old IE
+
+  /* istanbul ignore if  */
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = replaceText(index, css);
+  } else {
+    var cssNode = document.createTextNode(css);
+    var childNodes = style.childNodes;
+
+    if (childNodes[index]) {
+      style.removeChild(childNodes[index]);
+    }
+
+    if (childNodes.length) {
+      style.insertBefore(cssNode, childNodes[index]);
+    } else {
+      style.appendChild(cssNode);
+    }
+  }
+}
+
+function applyToTag(style, options, obj) {
+  var css = obj.css;
+  var media = obj.media;
+  var sourceMap = obj.sourceMap;
+
+  if (media) {
+    style.setAttribute('media', media);
+  } else {
+    style.removeAttribute('media');
+  }
+
+  if (sourceMap && typeof btoa !== 'undefined') {
+    css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
+  } // For old IE
+
+  /* istanbul ignore if  */
+
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    while (style.firstChild) {
+      style.removeChild(style.firstChild);
+    }
+
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+var singleton = null;
+var singletonCounter = 0;
+
+function addStyle(obj, options) {
+  var style;
+  var update;
+  var remove;
+
+  if (options.singleton) {
+    var styleIndex = singletonCounter++;
+    style = singleton || (singleton = insertStyleElement(options));
+    update = applyToSingletonTag.bind(null, style, styleIndex, false);
+    remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+  } else {
+    style = insertStyleElement(options);
+    update = applyToTag.bind(null, style, options);
+
+    remove = function remove() {
+      removeStyleElement(style);
+    };
+  }
+
+  update(obj);
+  return function updateStyle(newObj) {
+    if (newObj) {
+      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap) {
+        return;
+      }
+
+      update(obj = newObj);
+    } else {
+      remove();
+    }
+  };
+}
+
+module.exports = function (list, options) {
+  options = options || {}; // Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+  // tags it will allow on a page
+
+  if (!options.singleton && typeof options.singleton !== 'boolean') {
+    options.singleton = isOldIE();
+  }
+
+  list = list || [];
+  var lastIdentifiers = modulesToDom(list, options);
+  return function update(newList) {
+    newList = newList || [];
+
+    if (Object.prototype.toString.call(newList) !== '[object Array]') {
+      return;
+    }
+
+    for (var i = 0; i < lastIdentifiers.length; i++) {
+      var identifier = lastIdentifiers[i];
+      var index = getIndexByIdentifier(identifier);
+      stylesInDom[index].references--;
+    }
+
+    var newLastIdentifiers = modulesToDom(newList, options);
+
+    for (var _i = 0; _i < lastIdentifiers.length; _i++) {
+      var _identifier = lastIdentifiers[_i];
+
+      var _index = getIndexByIdentifier(_identifier);
+
+      if (stylesInDom[_index].references === 0) {
+        stylesInDom[_index].updater();
+
+        stylesInDom.splice(_index, 1);
+      }
+    }
+
+    lastIdentifiers = newLastIdentifiers;
+  };
+};
+
+/***/ })
+
+},
+/******/ __webpack_require__ => { // webpackRuntimeModules
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ __webpack_require__.O(0, ["js/vendor","css/app"], () => (__webpack_exec__("./resources/js/app.js"), __webpack_exec__("./resources/css/app.scss")));
+/******/ var __webpack_exports__ = __webpack_require__.O();
+/******/ }
+]);

@@ -164,6 +164,10 @@ select[readonly] {
     display: block;
 }
 
+.custom-file-controls {
+    line-height: calc(1.5em + 0.75rem + 4px);
+}
+
 
 .nav-tabs a,
 .nav-tabs a:hover {
@@ -181,4 +185,16 @@ select[readonly] {
 .pagination-compact .page-item:first-child,
 .pagination-compact .page-item:last-child {
     display: block;
+}
+
+.team-member-row .form-group label {
+    display: none !important;
+}
+
+.team-member-row .btn-remove-member {
+    font-size: 170%;
+}
+
+.team-member-row .btn-remove-member:hover {
+    text-decoration: none;
 }

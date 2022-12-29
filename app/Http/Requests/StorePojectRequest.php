@@ -29,7 +29,6 @@ class StorePojectRequest extends FormRequest
             'name' => 'required|max:255',
             'school_id' => 'required|exists:schools,id',
             'grade_id' => 'required_if:finalize,1|exists:grades,id',
-            'academy_id' => 'nullable|required_if:finalize,1|exists:academies,id',
             'description' => 'required_if:finalize,1|max:'.config('nsi.project.description_max_length'),
             'video' => 'required_if:finalize,1|nullable|url',
             'url' => 'required_if:finalize,1|nullable|url',

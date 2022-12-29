@@ -1,10 +1,14 @@
 <div class="{{ $class }}">
-    <span class="file-box-title">{{ $title }}</span>
+    @if($title)
+        <span class="file-box-title mb-2">{{ $title }}</span>
+    @endif
     @if($file)
-        - <a href="{{ Storage::disk('uploads')->url($file) }}" target="_blank">télécharger</a> ou
-        <a href="#" class="link-delete-file" data-file="{{ $key }}">supprimer</a>
+        <div class="custom-file-controls">
+            <a href="{{ Storage::disk('uploads')->url($file) }}" target="_blank">Télécharger</a> ou
+            <a href="#" class="link-delete-file" data-file="{{ $key }}">Supprimer</a>
+        </div>
     @else
-        <div class="custom-file mt-2">
+        <div class="custom-file">
             <span class="custom-file-clear" title="Clear">&times;</span>
             <input name="{{ $key }}" type="file"
                 accept="{{ $extensions }}"
@@ -16,6 +20,8 @@
                 <small>{{ $message }}</small>
             </div>
         @enderror
-        <small>{!! $description !!}</small>
+        @if($description)
+            <small>{!! $description !!}</small>
+        @endif
     @endif
 </div>

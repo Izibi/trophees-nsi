@@ -31,7 +31,8 @@ class StoreSchoolRequest extends FormRequest
             'zip' => 'required|max:255',
             'country_id' => 'required_with:region_id|exists:countries,id',
             'region_id' => 'required|exists:regions,id',
-            'uai' => 'max:255'
+            'uai' => 'max:255',
+            'academy_id' => 'required|nullable|exists:academies,id'
         ];
         if($this->has('region_id')) {
             $region = Region::find($this->get('region_id'));
