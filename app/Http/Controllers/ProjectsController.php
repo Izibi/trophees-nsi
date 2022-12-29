@@ -199,8 +199,11 @@ class ProjectsController extends Controller
                 return $res;
             }
         }
+        session()->flash('message', 'Projet créé');
         $url = $request->get('refer_page', '/projects');
-        return redirect($url)->withMessage('Projet créé');
+        return response()->json([
+            'location' => $url
+        ]);
     }
 
 
@@ -290,9 +293,11 @@ class ProjectsController extends Controller
                 return $res;
             }
         }
-
+        session()->flash('message', 'Project enregistré');
         $url = $request->get('refer_page', '/projects');
-        return redirect($url)->withMessage('Project enregistré');
+        return response()->json([
+            'location' => $url
+        ]);
     }
 
 
@@ -435,7 +440,9 @@ class ProjectsController extends Controller
             $errors[] = 'URL du projet manquant.';
         }
         if(count($errors)) {
-            return redirect()->route('projects.edit', $project)->withError($errors);
+            return response()->json([
+                'finalization_errors' => $errors
+            ]);
         }
 
         $project->status = 'finalized';

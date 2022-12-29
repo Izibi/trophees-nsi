@@ -19,3 +19,4 @@ require('./UI/overlay.js');
 require('./UI/active-tables.js');
 require('./UI/schools-manager.js');
 require('./UI/region-selector.js');
+require('./UI/project-editor');

@@ -118,7 +118,7 @@
                     ->checked($project && $project->tested_by_teacher) !!}
             </div>
 
-            <div class="mt-5">
+            <div class="mt-5" id="controls-bar">
                 <a class="btn btn-primary" id="btn-save-draft" href="#">Enregistrer le brouillon</a>
                 <a class="btn btn-secondary" id="btn-submit-finalized" href="#">Soumettre le projet finalisé</a>
                 @if($project)
@@ -143,20 +143,28 @@
 
     <script>
         $(document).ready(function() {
-            var config = {!! json_encode(config('nsi.project')) !!}
+            var config = {!! json_encode(config('nsi.project')) !!};
 
-            var form = $('#edit-form>form').first();
+            var project_editor = ProjectEditor({
+                form: $('#edit-form>form').first(),
+                config: config,
+                onError: function() {
+                    $('#controls-bar').show();
+                }
+            });
 
             $('#btn-save-draft').click(function(e) {
-                e.preventDefault();
-                form.submit();
+                $('#controls-bar').hide();
+                project_editor.submit();
             })
 
             $('#btn-submit-finalized').click(function(e) {
-                e.preventDefault();
-                if(confirm('Vous êtes sur le point de soumettre le projet, il ne sera plus possible de le modifier. Continuer ?')) {
-                    form.append('<input type="hidden" name="finalize" value="1"/>');
-                    form.submit();
+                var text = 'Vous êtes sur le point de soumettre le projet, il ne sera plus possible de le modifier. Continuer ?';
+                if(confirm(text)) {
+                    $('#controls-bar').hide();
+                    project_editor.submit({
+                        finalize: '1'
+                    });
                 }
             });
 
@@ -168,6 +176,9 @@
                 }
             });
 
+
+
+
             // schools popup
             var schools_manager = SchoolsManager();
 
@@ -177,76 +188,8 @@
 
 
 
-            // description counter
-            var inp_description = $('#inp-description');
-            var description_counter = $('#description-counter');
-            function refreshDescriptionCounter() {
-                var l = inp_description.val().length;
-                if(l >= config.description_max_length) {
-                    inp_description.val(inp_description.val().substr(0, config.description_max_length));
-                    l = config.description_max_length;
-                }
-                description_counter.text(l + '/' + config.description_max_length);
-            }
-            refreshDescriptionCounter();
-            inp_description.bind('input propertychange', refreshDescriptionCounter);
 
 
-            // file inputs
-            $('.custom-file-input').on('change', function() {
-                var el = $(this);
-                var name = el.val().split("\\").pop();
-                el.siblings('.custom-file-label').addClass('selected').html(name);
-                el.closest('.custom-file').addClass('custom-file-selected');
-            });
-            $('.custom-file-clear').on('click', function(e) {
-                e.preventDefault();
-                var el = $(this);
-                el.siblings('input').val('');
-                el.siblings('.custom-file-label').removeClass('selected').html('');
-                el.closest('.custom-file').removeClass('custom-file-selected');
-            });
-
-            $('.link-delete-file').on('click', function(e) {
-                e.preventDefault();
-                var el = $(this);
-
-                var team_member_row = el.closest('.team-member-row');
-                if(team_member_row.length) {
-                    var file = 'team_member.' + team_member_row.find('input[name="team_member_id[]"]').val();
-                } else {
-                    var file = 'project.' + el.data('file');
-                }
-                var text = el.text();
-                el.closest('.file-box').append(
-                    $('<input type="hidden">').attr('name', 'delete_uploads[]').val(file)
-                )
-                el.closest('.custom-file-controls').text(text)
-            })
-
-
-            // team members
-            function toggleTeamMembersHeader() {
-                $('#team-members-header').toggle(
-                    $('#team-members').children().length > 0
-                );
-            }
-
-            $('#btn-add-member').on('click', function(e) {
-                e.preventDefault();
-                var row = $('#team-member-template').children(":first").clone(true);
-                row.find('.is-valid').removeClass('.is-valid');
-                $('#team-members').append(row);
-                row.show();
-                toggleTeamMembersHeader();
-            })
-
-            $('.btn-remove-member').on('click', function(e) {
-                e.preventDefault();
-                $(this).closest('.team-member-row').remove();
-                toggleTeamMembersHeader();
-            })
-            toggleTeamMembersHeader();
 
 
 
