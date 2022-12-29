@@ -47,7 +47,10 @@ class RegionsSeeder extends Seeder
         }
 
         Region::create([
-            'name' => 'Étranger (AEFE)'
+            'name' => 'Lycées français à l\'étranger'
+        ]);
+        Region::create([
+            'name' => 'Collectivités Outre-Mer'
         ]);
     }
 }

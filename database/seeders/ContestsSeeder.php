@@ -40,7 +40,8 @@ PHP_STR;
             'name' => 'Test contest 2',
             'year' => 2022,
             'message' => $msg,
-            'status' => 'open'
+            'status' => 'open',
+            'active' => 1
         ]);
 
 
