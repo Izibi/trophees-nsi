@@ -234,7 +234,7 @@
 
             $('#btn-add-member').on('click', function(e) {
                 e.preventDefault();
-                var row = $('#team-member-template').clone(true);
+                var row = $('#team-member-template').children(":first").clone(true);
                 row.find('.is-valid').removeClass('.is-valid');
                 $('#team-members').append(row);
                 row.show();
