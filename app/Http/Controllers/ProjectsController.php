@@ -435,6 +435,10 @@ class ProjectsController extends Controller
                 $errors[] = 'Autorisations parentales manquantes.';
                 break;
             }
+            if(empty($team_member->firt_name) || empty($team_member->last_name)) {
+                $errors[] = 'Team members list is not completed.';
+                break;
+            }
         }
         if(empty($project->url)) {
             $errors[] = 'URL du projet manquant.';
