@@ -27,8 +27,8 @@ class StorePojectRequest extends FormRequest
         $conf = config('nsi.project');
         return [
             'name' => 'required|max:255',
-            'school_id' => 'required|exists:schools,id',
-            'grade_id' => 'required_if:finalize,1|exists:grades,id',
+            'school_id' => 'required_if:finalize,1|nullable|exists:schools,id',
+            'grade_id' => 'required_if:finalize,1|nullable|exists:grades,id',
             'description' => 'required_if:finalize,1|max:'.config('nsi.project.description_max_length'),
             'video' => 'required_if:finalize,1|nullable|url',
             'url' => 'required_if:finalize,1|nullable|url',

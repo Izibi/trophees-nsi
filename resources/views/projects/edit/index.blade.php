@@ -19,7 +19,7 @@
             {!! Form::hidden('refer_page', $refer_page) !!}
 
             {!! Form::text('name', 'Nom du projet') !!}
-            {!! Form::select('school_id', 'Établissement', $schools['options'])->help(Auth::user()->role == 'teacher' ? '<a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>' : false) !!}
+            {!! Form::select('school_id', 'Établissement', [null => ''] + $schools['options'])->help(Auth::user()->role == 'teacher' ? '<a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>' : false) !!}
 
 
             <div class="mt-5">
