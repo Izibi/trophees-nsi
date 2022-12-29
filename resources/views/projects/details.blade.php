@@ -93,16 +93,24 @@
         </div>
     @endif
 
-    @if(Auth::user()->role != 'jury')
-        <div class="col-6">
-        @foreach($project->team_members as $team_member)
-            <div>
-                <a href="{{ Storage::disk('uploads')->url($team_member->parental_permissions_file) }}" target="_blank">
-                    <i class="icon-file-pdf"></i>
-                    Autorisations parentales
-                </a>
-            </div>
-        @endforeach
+    @if(Auth::user()->role != 'jury' && count($project->team_members))
+        <div class="col-12">
+            <table class="table">
+                @foreach($project->team_members as $team_member)
+                    <tr>
+                        <td>
+                            {{ $team_member->first_name }}
+                            {{ $team_member->last_name }}
+                        </td>
+                        <td class="text-right">
+                            <a href="{{ Storage::disk('uploads')->url($team_member->parental_permissions_file) }}" target="_blank">
+                                <i class="icon-file-pdf"></i>
+                                Autorisations parentales
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </table>
         </div>
     @endif
 </div>
