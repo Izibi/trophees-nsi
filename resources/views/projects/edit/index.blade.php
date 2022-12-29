@@ -82,7 +82,7 @@
 
             {!! Form::text('url', 'URL')
                 ->placeholder('https://')
-                ->help('URL of the source code of your project') !!}
+                ->help('URL of the source code of your project.') !!}
 
             <div class="row">
                 @include('projects.edit.file-input', [
