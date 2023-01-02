@@ -30,8 +30,8 @@
                     <div class="col-2">Nom</div>
                     <div class="col-2">Genre</div>
                     <div class="col-5">
-                        Autorisations parentales<br>
-                        <small>Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
+                        Autorisations signées<br>
+                        <small>Autorisations pour l'utilisation de l'image et/ou de la voix et des œuvres. Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
                     </div>
                 </div>
                 <div id="team-members">
