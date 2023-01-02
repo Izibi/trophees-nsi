@@ -21,37 +21,17 @@
             {!! Form::text('name', 'Nom du projet') !!}
             {!! Form::select('school_id', 'Établissement', [null => ''] + $schools['options'])->help(Auth::user()->role == 'teacher' ? '<a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>' : false) !!}
 
-
-            <div class="mt-5">
-                <h5>Classe</h5>
-                <div class="row">
-                    <div class="col-3">
-                        {!! Form::select('grade_id', 'Niveau', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
-                    </div>
-                    <div class="col-3">
-                        {!! Form::text('class_girls', 'Nombre de filles')->wrapperAttrs(['class' => 'mb-0']) !!}
-                    </div>
-                    <div class="col-3">
-                        {!! Form::text('class_boys', 'Nombre de garçons')->wrapperAttrs(['class' => 'mb-0']) !!}
-                    </div>
-                    <div class="col-3">
-                        {!! Form::text('class_not_provided', 'Non renseigné')->wrapperAttrs(['class' => 'mb-0']) !!}
-                    </div>
-                </div>
-            </div>
-
-
             <div class="mt-5 mb-5">
-                <h5>Team members</h5>
+                <h5>Membres de l'équipe</h5>
                 <p><small class="form-text text-muted">Précisez la composition de l'équipe pour ce projet. La mixité de l'équipe pourra être prise en compte pour certains prix.</small></p>
                 <div class="row mt-5 mb-3" id="team-members-header">
                     <div class="col-1"></div>
-                    <div class="col-2">First name</div>
-                    <div class="col-2">Last name</div>
-                    <div class="col-2">Gender</div>
+                    <div class="col-2">Prénom</div>
+                    <div class="col-2">Nom</div>
+                    <div class="col-2">Genre</div>
                     <div class="col-5">
                         Autorisations parentales<br>
-                        <small>Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
+                        <small>Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
                     </div>
                 </div>
                 <div id="team-members">
@@ -63,14 +43,32 @@
                         @endforeach
                     @endif
                 </div>
-                <a href="#" id="btn-add-member">Add team member</a>
+                <a href="#" id="btn-add-member">Ajouter un membre de l'équipe</a>
             </div>
 
 
+            {!! Form::select('grade_id', 'Niveau scolaire', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
 
 
+            <div class="mt-5">
+                <h5>Classe</h5>
+            	<p><small class="form-text text-muted">Précisez la répartition des élèves en NSI pour le niveau renseigné ci-dessus.</small></p>
 
-            <p><small class="form-text text-muted">Précisez la répartition des élèves en NSI pour le niveau renseigné ci-dessus.</small></p>
+                <div class="row">
+                    <div class="col-4">
+                        {!! Form::text('class_girls', 'Nombre de filles')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    </div>
+                    <div class="col-4">
+                        {!! Form::text('class_boys', 'Nombre de garçons')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    </div>
+                    <div class="col-4">
+                        {!! Form::text('class_not_provided', 'Non renseigné')->wrapperAttrs(['class' => 'mb-0']) !!}
+                    </div>
+                </div>
+            </div>
+
+	    <p>&nbsp;</p>
+
 
             {!! Form::textarea('description', 'Résumé du projet')
                 ->attrs(['style' => 'height: 200px'])
@@ -80,9 +78,9 @@
                 ->placeholder('https://')
                 ->help('La vidéo doit être publiée sur <a href="https://peertube.fr" target="_blank">peertube.fr</a>. Renseignez ici son URL.') !!}
 
-            {!! Form::text('url', 'URL')
+            {!! Form::text('url', 'Dossier technique')
                 ->placeholder('https://')
-                ->help('URL of the source code of your project.') !!}
+                ->help('Lien vers le dossier technique du projet.') !!}
 
             <div class="row">
                 @include('projects.edit.file-input', [
@@ -96,7 +94,7 @@
 
                 @include('projects.edit.file-input', [
                     'title' => 'PDF de présentation',
-                    'description' => 'Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/preparer-votre-participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.',
+                    'description' => 'Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.',
                     'extensions' => '.pdf',
                     'key' => 'presentation_file',
                     'file' => $project ? $project->presentation_file : null,
@@ -109,12 +107,12 @@
 
             <div class="mt-5">
                 <input type="hidden" name="cb_reglament_accepted" value="0"/>
-                {!! Form::checkbox('cb_reglament_accepted', 'Je certifie également avoir testé moi-même le projet, et confirme que celui-ci fonctionne comme présenté dans la vidéo. Je certifie enfin que tous les éleves dont l\'image ou la voix est présente sur la vidéo ont une autorisation parentale signée.')
+		{!! Form::checkbox('cb_reglament_accepted', 'Je certifie avoir testé moi-même le projet, et confirme que celui-ci fonctionne comme présenté dans la vidéo. Je certifie également que tous les éleves de ce projet ont une autorisation signé pour l\'utilisation de l\'image ou de la voix et de leurs oeuvres.')
                     ->checked($project && $project->reglament_accepted) !!}
             </div>
             <div class="mt-2">
                 <input type="hidden" name="cb_tested_by_teacher" value="0"/>
-                {!! Form::checkbox('cb_tested_by_teacher', 'Je certifie avoir lu et accepté le <a href="https://trophees-nsi.fr/le-reglement" target="_blank">règlement du concours</a>.')
+		{!! Form::checkbox('cb_tested_by_teacher', 'Je certifie avoir lu et accepté le <a href="https://trophees-nsi.fr/reglement" target="_blank">règlement du concours</a>.')
                     ->checked($project && $project->tested_by_teacher) !!}
             </div>
 
