@@ -87,7 +87,9 @@ window.ProjectEditor = function(options) {
     }
 
     options.form.find('.form-control,.form-check-input').on('focus', function() {
-        hideGroupError($(this).closest('div'));
+        setTimeout(function() {
+            hideGroupError($(this).closest('div'));
+        }, 100);
     })
 
     function displayErrors(errors) {
@@ -97,17 +99,27 @@ window.ProjectEditor = function(options) {
             var name = control.attr('name');
             if(name in errors) {
                 showGroupError(group, errors[name][0])
+                delete(errors[name]);
             } else {
                 hideGroupError(group)
             }
         });
+        var missed_errors = [];
+        for(var k in errors) {
+            missed_errors.push(errors[k]);
+        }
+        displayErrorsAlert(missed_errors);
     }
 
 
-    function displayFinalizationErrors(errors) {
-        var div = $('#finalization-errors');
+    function displayErrorsAlert(errors) {
+        var div = $('#project-errors-box');
+        if(!errors.length) {
+            div.remove();
+            return;
+        }
         if(!div.length) {
-            div = $('<div class="alert alert-danger"></div>');
+            div = $('<div class="alert alert-danger" id="project-errors-box"></div>');
             div.insertBefore(options.form);
         }
         div.html(errors.join('<br>'));
@@ -142,7 +154,7 @@ window.ProjectEditor = function(options) {
             },
             success: function(res) {
                 if(res.finalization_errors) {
-                    displayFinalizationErrors(res.finalization_errors);
+                    displayErrorsAlert(res.finalization_errors);
                     options.onError && options.onError();
                 } else if(res.location) {
                     window.location = res.location;

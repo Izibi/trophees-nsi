@@ -29,28 +29,30 @@ window.RegionSelector = function(form) {
         country_sel.attr('readonly', is_main_country);
         country_sel.closest('.form-group').toggle(region && !is_main_country);
 
-        var region_academies = [];
-        for(var i=0; i<window.academies.length; i++) {
-            if(window.academies[i].region_id == region_id) {
-                region_academies.push('' + window.academies[i].id);
+        if(window.academies) {
+            var region_academies = [];
+            for(var i=0; i<window.academies.length; i++) {
+                if(window.academies[i].region_id == region_id) {
+                    region_academies.push('' + window.academies[i].id);
+                }
             }
+            if(!initial) {
+                if(region_academies.length == 1) {
+                    academy_sel.val(region_academies[0]);
+                } else {
+                    academy_sel.val('');
+                }
+            }
+            academy_sel.find('option').each(function() {
+                var opt = $(this);
+                if(region_academies.indexOf(opt.val()) === -1) {
+                    opt.hide();
+                } else {
+                    opt.show();
+                }
+            });
+            academy_sel.closest('.form-group').toggle(region_academies.length > 0);
         }
-        if(!initial) {
-            if(region_academies.length == 1) {
-                academy_sel.val(region_academies[0]);
-            } else {
-                academy_sel.val('');
-            }
-        }
-        academy_sel.find('option').each(function() {
-            var opt = $(this);
-            if(region_academies.indexOf(opt.val()) === -1) {
-                opt.hide();
-            } else {
-                opt.show();
-            }
-        });
-        academy_sel.closest('.form-group').toggle(region_academies.length > 0);
     }
 
 
