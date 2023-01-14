@@ -33,28 +33,14 @@
         </div>
         <div class="mt-3">
             À envisager pour un prix spécial :
-            <div class="row">
-                <div class="col-6">
-                    <input type="hidden" name="cb_award_mixed" value="0"/>
-                    {!! Form::checkbox('cb_award_mixed', 'Mixité')->checked($rating ? $rating->award_mixed : false) !!}
-                </div>
-                <div class="col-6">
-                    <input type="hidden" name="cb_award_citizenship" value="0"/>
-                    {!! Form::checkbox('cb_award_citizenship', 'Citoyenneté')->checked($rating ? $rating->award_citizenship : false) !!}
-                </div>
-                <div class="col-6">
-                    <input type="hidden" name="cb_award_engineering" value="0"/>
-                    {!! Form::checkbox('cb_award_engineering', 'Ingénierie')->checked($rating ? $rating->award_engineering : false) !!}
-                </div>
-                <div class="col-6">
-                    <input type="hidden" name="cb_award_heart" value="0"/>
-                    {!! Form::checkbox('cb_award_heart', 'Coup de coeur')->checked($rating ? $rating->award_heart : false) !!}
-                </div>
-                <div class="col-6">
-                    <input type="hidden" name="cb_award_originality" value="0"/>
-                    {!! Form::checkbox('cb_award_originality', 'Originalité')->checked($rating ? $rating->award_originality : false) !!}
-                </div>
-            </div>
+            <input type="hidden" name="cb_award_heart" value="0"/>
+            {!! Form::checkbox('cb_award_heart', 'Prix spécial du jury')->checked($rating ? $rating->award_heart : false) !!}
+            <input type="hidden" name="cb_award_originality" value="0"/>
+            {!! Form::checkbox('cb_award_originality', 'Prix de la créativité')->checked($rating ? $rating->award_originality : false) !!}
+            <input type="hidden" name="cb_award_engineering" value="0"/>
+            {!! Form::checkbox('cb_award_engineering', 'Prix de l’ingénierie')->checked($rating ? $rating->award_engineering : false) !!}
+            <input type="hidden" name="cb_award_citizenship" value="0"/>
+            {!! Form::checkbox('cb_award_citizenship', 'Prix de l’initiative citoyenne')->checked($rating ? $rating->award_citizenship : false) !!}
         </div>
 
         <div class="mt-3">

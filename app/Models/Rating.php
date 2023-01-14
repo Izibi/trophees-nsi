@@ -28,7 +28,7 @@ class Rating extends Model
         'award_engineering',
         'award_heart',
         'award_originality',
-        'cb_award_mixed',
+        //'cb_award_mixed',
         'cb_award_citizenship',
         'cb_award_engineering',
         'cb_award_heart',
@@ -116,11 +116,11 @@ class Rating extends Model
         $project->save();
     }
 
-
+/*
     public function setCbAwardMixedAttribute($v) {
         $this->attributes['award_mixed'] = !empty($v);
     }
-
+*/
     public function setCbAwardCitizenshipAttribute($v) {
         $this->attributes['award_citizenship'] = !empty($v);
     }
