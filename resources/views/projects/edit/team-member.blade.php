@@ -23,8 +23,9 @@
             false,
             [
                 null => '',
-                'male' => 'Male',
-                'female' => 'Female'
+                'male' => 'Masculin',
+		'female' => 'Féminin',
+		'other' => 'Non renseigné'
             ],
             $member ? $member->gender : ''
         ) !!}
