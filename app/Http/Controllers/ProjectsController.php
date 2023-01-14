@@ -193,6 +193,7 @@ class ProjectsController extends Controller
         $project->contest_id = $this->contest->id;
         $project->save();
         $this->syncTeamMembers($project, $request);
+
         if($request->has('finalize')) {
             $res = $this->finalizeProject($project, $request);
             if($res !== true) {
@@ -280,7 +281,6 @@ class ProjectsController extends Controller
         if(!$this->accessible($request->user(), $project, 'edit')) {
             return $this->accessDeniedResponse();
         }
-
         $this->deleteUploads($project, $request);
         $project->uploadFiles($request);
         $project->fill($request->all());
@@ -435,7 +435,7 @@ class ProjectsController extends Controller
                 $errors[] = 'Autorisations parentales manquantes.';
                 break;
             }
-            if(empty($team_member->firt_name) || empty($team_member->last_name)) {
+            if(empty($team_member->first_name) || empty($team_member->last_name)) {
                 $errors[] = 'Team members list is not completed.';
                 break;
             }
