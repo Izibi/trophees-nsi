@@ -193,7 +193,6 @@ class ProjectsController extends Controller
         $project->contest_id = $this->contest->id;
         $project->save();
         $this->syncTeamMembers($project, $request);
-
         if($request->has('finalize')) {
             $res = $this->finalizeProject($project, $request);
             if($res !== true) {
@@ -281,6 +280,7 @@ class ProjectsController extends Controller
         if(!$this->accessible($request->user(), $project, 'edit')) {
             return $this->accessDeniedResponse();
         }
+
         $this->deleteUploads($project, $request);
         $project->uploadFiles($request);
         $project->fill($request->all());
