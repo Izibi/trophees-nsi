@@ -91,6 +91,9 @@ table.table-vertical-headers th a:hover {
     text-decoration: none;
 }
 
+tr.accent td {
+    background-color: rgba(0, 57, 71, 0.05);
+}
 
 h1,h2,h3,h4,h5,h6 {
     font-family: "Bebas Neue";
