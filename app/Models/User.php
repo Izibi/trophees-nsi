@@ -21,7 +21,12 @@ class User extends Authenticatable
         'region_id',
         'validated',
         'role',
+        'cb_coordinator'
     ];
+
+    public function setCbCoordinatorAttribute($v) {
+        $this->attributes['coordinator'] = !empty($v);
+    }
 
     public function getScreenNameAttribute()
     {
@@ -33,13 +38,13 @@ class User extends Authenticatable
             return $this->secondary_email;
         }
         return 'User #'.$this->id;
-    }    
+    }
 
     public function country()
     {
         return $this->belongsTo(Country::class);
-    }    
-    
+    }
+
     public function region()
     {
         return $this->belongsTo(Region::class);

@@ -31,6 +31,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/projects">Projets</a>
                     </li>
+                    @if(Auth::user()->coordinator)
+                        <li class="nav-item">
+                            <a class="nav-link" href="/statistics">Statistics</a>
+                        </li>
+
+                    @endif
+
+
                     @if(Auth::user()->role == 'admin')
                         <li class="nav-item">
                             <a class="nav-link" href="/users">Utilisateurs</a>

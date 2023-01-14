@@ -15,6 +15,10 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::resource('projects', App\Http\Controllers\ProjectsController::class);
     Route::get('/project', [App\Http\Controllers\ProjectsController::class, 'showPaginated']);
 
+    Route::middleware(['attribute:coordinator'])->group(function() {
+        Route::get('/statistics', [App\Http\Controllers\StatisticsController::class, 'index']);
+    });
+
     Route::middleware(['role:jury'])->group(function() {
         Route::post('projects/{project}/set_rating', [App\Http\Controllers\ProjectsController::class, 'setRating'])->name('projects.set_rating');
     });

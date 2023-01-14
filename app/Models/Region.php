@@ -14,4 +14,9 @@ class Region extends Model
         'created_at',
         'updated_at'
     ];
+
+
+    public function academies() {
+        return $this->hasMany(Academy::class);
+    }
 }

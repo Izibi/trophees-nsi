@@ -45,6 +45,11 @@
                 ]
             )!!}
 
+            <div class="mb-3">
+                <input type="hidden" name="cb_coordinator" value="0"/>
+                {!! Form::checkbox('cb_coordinator', 'Coordinator')->checked(!!$user->coordinator) !!}
+            </div>
+
             {!! Form::select('region_id', 'Territoire', [null => ''] + $regions->pluck('name', 'id')->toArray()) !!}
             {!! Form::select('country_id', 'Pays', [null => ''] + $countries->pluck('name', 'id')->toArray()) !!}
 
