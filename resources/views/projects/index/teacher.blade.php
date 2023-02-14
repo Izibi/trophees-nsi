@@ -44,12 +44,12 @@
 
     <div class="mt-5 mb-3">
         @if(count($rows))
-            @if($contest->status == 'open')
+            @if($contest->status == 'open' && !$coordinator)
                 <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Modifier le projet sélectionné</button>
             @endif
             <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">Afficher le projet sélectionné</button>
         @endif
-        @if($contest->status == 'open')
+        @if($contest->status == 'open' && !$coordinator)
             <button class="btn btn-primary active-button" data-action="/projects/create" data-method="GET">Déposer un nouveau projet</button>
         @endif
     </div>

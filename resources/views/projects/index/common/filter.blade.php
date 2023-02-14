@@ -1,3 +1,12 @@
+@if(Auth::user()->coordinator && Auth::user()->role == 'teacher')
+    <h2 class="ml-5">
+        <div class="btn-group" role="group">
+            <a href="/projects" class="btn btn-sm {{ $coordinator ? 'btn-primary' : 'btn-secondary' }}">My projects</a>
+            <a href="/projects?coordinator=1" class="btn btn-sm {{ !$coordinator ? 'btn-primary' : 'btn-secondary' }}">Projects in my territory</a>
+        </div>
+    </h2>
+@endif
+
 <a href="#" class="right-link" data-toggle="collapse" data-target="#projects-filter">Filtre</a>
 
 <div class="border-top collapse {{ Request::has('filter') ? 'show' : '' }}" id="projects-filter">
@@ -8,6 +17,9 @@
             @endif
             @if(Request::has('sort_order'))
                 {!! Form::hidden('sort_order') !!}
+            @endif
+            @if($coordinator)
+                {!! Form::hidden('coordinator', 1) !!}
             @endif
             {!! Form::hidden('filter', '1') !!}
             {!! Form::text('filter_id', 'ID de projet') !!}

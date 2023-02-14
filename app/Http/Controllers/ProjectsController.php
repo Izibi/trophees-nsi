@@ -52,7 +52,8 @@ class ProjectsController extends Controller
             'rating_mode' => $rating_mode,
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray(),
             'awards_count' => $this->countJuryMemberAwards($request),
-            'awards_limit' => config('nsi.awards_limit_per_jury_member')
+            'awards_limit' => config('nsi.awards_limit_per_jury_member'),
+            'coordinator' => $request->get('coordinator') == '1'
         ]);
     }
 
@@ -112,6 +113,7 @@ class ProjectsController extends Controller
 
     private function getProjectsQuery($request) {
         $user = $request->user();
+        $coordinator = $request->get('coordinator') == '1' && !empty($user->region_id);
 
         $q = DB::table('projects');
         $q->where('projects.contest_id', '=', $this->contest->id);
@@ -119,7 +121,11 @@ class ProjectsController extends Controller
         if($user->role == 'teacher') {
             $q->select(DB::raw('projects.*, schools.name as school_name'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
-            $q->where('projects.user_id', '=', $user->id);
+            if($coordinator) {
+                $q->where('schools.region_id', $user->region_id);
+            } else {
+                $q->where('projects.user_id', '=', $user->id);
+            }
         } else if($user->role == 'jury') {
             $q->select(DB::raw('projects.*, ratings.published as rating_published'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
@@ -371,6 +377,7 @@ class ProjectsController extends Controller
             case 'view':
                 return $user->role == 'admin' ||
                     ($user->role == 'teacher' && $user->id == $project->user_id) ||
+                    ($user->coordinator && $user->region_id && $user->region_id === $project->school->region_id) ||
                     ($user->role == 'jury' &&
                         $user->region_id == $project->school->region_id &&
                         $project->status != 'masked' &&
