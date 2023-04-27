@@ -6,6 +6,9 @@
         <div class="custom-file-controls">
             <a href="{{ Storage::disk('uploads')->url($file) }}" target="_blank">Télécharger</a> ou
             <a href="#" class="link-delete-file" data-file="{{ $key }}">Supprimer</a>
+            <input style="display: none;" name="{{ $key }}" type="file"
+                accept="{{ $extensions }}"
+                class="custom-file-input {{ $errors->get($key) ? 'is-invalid' : '' }}">
         </div>
     @else
         <div class="custom-file">
