@@ -46,6 +46,7 @@ class ProjectsController extends Controller
         }
 
         return view('projects.index.'.$request->user()->role, [
+	    'user' => $request->user(),
             'rows' => $projects,
             'contest' => $this->contest,
             'rating_mode_accessible' => $rating_mode_accessible,
