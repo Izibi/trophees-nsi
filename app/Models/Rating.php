@@ -44,14 +44,8 @@ class Rating extends Model
             if($rating->published) {
                 $rating->score_total =
                     $rating->score_idea +
-                    $rating->score_communication +
-                    $rating->score_presentation +
-                    $rating->score_image +
-                    $rating->score_logic +
-                    $rating->score_creativity +
-                    $rating->score_organisation +
                     $rating->score_operationality +
-                    $rating->score_ouverture;
+                    $rating->score_communication;
             } else {
                 $rating->score_total = 0;
             }
