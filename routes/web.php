@@ -14,6 +14,7 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
 
     Route::resource('projects', App\Http\Controllers\ProjectsController::class);
     Route::get('/project', [App\Http\Controllers\ProjectsController::class, 'showPaginated']);
+    Route::get('/projects_export', [App\Http\Controllers\ProjectsController::class, 'export']);
 
     Route::middleware(['attribute:coordinator'])->group(function() {
         Route::get('/statistics', [App\Http\Controllers\StatisticsController::class, 'index']);

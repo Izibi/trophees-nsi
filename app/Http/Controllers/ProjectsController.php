@@ -57,6 +57,57 @@ class ProjectsController extends Controller
         ]);
     }
 
+    public function export(Request $request)
+    {
+        $rating_mode_accessible = $this->accessible($request->user(), null, 'view_projects_rating');
+        if(!$rating_mode_accessible) {
+            abort(403);
+        }
+        $q = $this->getProjectsQuery($request)->orderBy('id');
+
+        $callback = function() use ($q) {
+            $fh = fopen('php://output', 'w');
+            $header = ['Nom', 'Nombre de notes', 'Idée', 'Communication', 'Presentation', 'Image', 'Logique', 'Créativité', 'Organisation', 'Opérationnalité', 'Ouverture', 'Total', 'Mixité', 'Citoyenneté', 'Ingénierie', 'Coup de coeur', 'Originalité'];
+            fputcsv($fh, $header);
+
+            $q->chunk(500, function($rows) use ($fh) {
+                foreach($rows as $project) {
+                    $row = [
+                        $project->name,
+                        $project->ratings_amount,
+                        $project->score_idea,
+                        $project->score_communication,
+                        $project->score_presentation,
+                        $project->score_image,
+                        $project->score_logic,
+                        $project->score_creativity,
+                        $project->score_organisation,
+                        $project->score_operationality,
+                        $project->score_ouverture,
+                        $project->score_total,
+                        $project->award_mixed,
+                        $project->award_citizenship,
+                        $project->award_engineering,
+                        $project->award_heart,
+                        $project->award_originality,
+                    ];
+                    fputcsv($fh, $row);
+                }
+            });
+            fclose($fh);
+        };
+
+        $file_name = 'trophees_nsi_projects.csv';
+        $headers = array(
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename='.$file_name,
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        );
+        return response()->stream($callback, 200, $headers);
+    }
+
 
     private function getSortFields($request) {
         if($request->has('rating_mode')) {

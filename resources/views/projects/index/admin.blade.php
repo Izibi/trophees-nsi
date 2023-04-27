@@ -26,6 +26,9 @@
         @if(count($rows))
             <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET">Modifier le projet sélectionné</button>
             <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">Afficher le projet sélectionné</button>
+            @if($rating_mode)
+                <a class="btn btn-primary active-button" target="_blank" href="/projects_export">Télécharger au format CSV</a>
+            @endif
         @endif
     </div>
 @endsection
