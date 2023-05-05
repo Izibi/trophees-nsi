@@ -180,7 +180,12 @@ class ProjectsController extends Controller
         } else if($user->role == 'jury') {
             $q->select(DB::raw('projects.*, ratings.published as rating_published'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
-            $q->where('schools.region_id', '=', $user->region_id);
+            $q->where(function($sq) use ($user) {
+                $sq->where('schools.region_id', '=', $user->region_id);
+                if($user->charge_prize_id) {
+                    $sq->orWhere('projects.prize_id', '=', $user->charge_prize_id);
+                }
+            });
             $q->where('projects.status', '=', 'validated');
             $q->leftJoin('ratings', function($join) use ($user) {
                 $join->on('projects.id', '=', 'ratings.project_id');

@@ -9,6 +9,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Helpers\SortableTable;
 use App\Models\Country;
 use App\Models\Region;
+use App\Models\Prize;
 
 class UsersController extends Controller
 {
@@ -75,7 +76,8 @@ class UsersController extends Controller
             'refer_page' => $request->get('refer_page', '/users'),
             'user' => $user,
             'countries' => Country::orderBy('name')->get(),
-            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
+            'prizes' => Prize::orderBy('name')->get()
         ]);
     }
 

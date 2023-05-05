@@ -86,9 +86,11 @@ class Project extends Model
         return $this->belongsTo(Grade::class);
     }
 
+
     public function setCbTestedByTeacherAttribute($v) {
         $this->attributes['tested_by_teacher'] = !empty($v);
     }
+
 
     public function setCbReglamentAcceptedAttribute($v) {
         $this->attributes['reglament_accepted'] = !empty($v);
@@ -98,6 +100,12 @@ class Project extends Model
     public function team_members()
     {
         return $this->hasMany(TeamMember::class);
+    }
+
+
+    public function prize()
+    {
+        return $this->belongsTo(Prize::class);
     }
 
 }
