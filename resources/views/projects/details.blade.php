@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12 col-sm-3 mb-3">
         @if(!is_null($project->image_file))
-            <div style="height: 200px; background: center / cover no-repeat url({{ Storage::disk('uploads')->url($project->image_file) }})"></div>
+            <div style="height: 200px; background: center / contain no-repeat url({{ Storage::disk('uploads')->url($project->image_file) }})"></div>
         @else
             <div style="height: 200px;" class="photo-placeholder">
                 <i class="icon-picture"></i>

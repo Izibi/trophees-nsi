@@ -4,6 +4,8 @@
     @include('projects.contest-status.jury')
     @include('projects.index.jury_awards_alert')
 
+    Liste des projets soumis pour : <b>{{ $user->region->name }}</b>
+
     <div class="card mt-3 mb-3">
         <div class="card-header">
             <h2>Projets</h2>

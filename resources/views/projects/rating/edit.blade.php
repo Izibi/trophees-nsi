@@ -1,33 +1,18 @@
 <div id="rating-form">
     {!! Form::open()->route('projects.set_rating', ['project' => $project])->fill($rating)->attrs(['class' => 'form-compact']) !!}
 
-        {!! Form::select('score_idea', 'Idée globale')
+	{!! Form::text('score_idea', 'Présentation du projet = 30 points')
+            ->type('number')->min(0)->max(30)
+	    ->wrapperAttrs(['class' => 'form-group-compact'])
+            ->help('Projet inscrit dans le programme NSI (première ou terminale).<br>Idée globale - originalité et créativité.<br>Organisation du travail : composition de l\'équipe, rôles, et répartition des tâches.<br>Ouverture : idées d\'amélioration, pistes de développement, analyse critique.<br>Respect des consignes.') !!}
+        {!! Form::text('score_operationality', 'Fonctionnement et opérationnalité = 40 points')
+            ->type('number')->min(0)->max(40)
             ->wrapperAttrs(['class' => 'form-group-compact'])
-            ->options(Rating::rangeOptions(5))->help('Inscrite dans le programme NSI') !!}
-        {!! Form::select('score_communication', 'Comunication')
+            ->options(Rating::rangeOptions(40))->help('Qualité et structure du code.<br>Reproductibilité de la démonstration.<br>Test et validation - correction des bugs.') !!}
+        {!! Form::text('score_communication', 'Communication et qualité du dossier = 30 points')
+            ->type('number')->min(0)->max(30)
             ->wrapperAttrs(['class' => 'form-group-compact'])
-            ->options(Rating::rangeOptions(5))->help('Documentation et lisibilité du programme présenté') !!}
-        {!! Form::select('score_presentation', 'Présentation orale')
-            ->wrapperAttrs(['class' => 'form-group-compact'])
-            ->options(Rating::rangeOptions(5))->help('Vidéo') !!}
-        {!! Form::select('score_image', 'Image')
-            ->wrapperAttrs(['class' => 'form-group-compact'])
-            ->options(Rating::rangeOptions(2)) !!}
-        {!! Form::select('score_logic', 'Critère de logique')
-            ->wrapperAttrs(['class' => 'form-group-compact'])
-            ->options(Rating::rangeOptions(5))->help('Présentation des étapes du projet / planification') !!}
-        {!! Form::select('score_creativity', 'Originalité et créativité')
-            ->wrapperAttrs(['class' => 'form-group-compact'])
-            ->options(Rating::rangeOptions(5)) !!}
-        {!! Form::select('score_organisation', 'Organisation')
-            ->wrapperAttrs(['class' => 'form-group-compact'])
-            ->options(Rating::rangeOptions(5))->help('Composition de l\'équipe/tâche/répartition<br>Dont 2 points pour la mixité dans l\'équipe') !!}
-        {!! Form::select('score_operationality', 'Fonctionnement et opérationnalité')
-            ->wrapperAttrs(['class' => 'form-group-compact'])
-            ->options(Rating::rangeOptions(5)) !!}
-        {!! Form::select('score_ouverture', 'Ouverture')
-            ->wrapperAttrs(['class' => 'form-group-compact'])
-            ->options(Rating::rangeOptions(3))->help('Idées d\'améliorations, de diffusion et pistes de développement') !!}
+            ->options(Rating::rangeOptions(30))->help('Présentation écrite.<br>Présentation orale.<br>Démonstration du projet.') !!}
         <div class="mt-3">
             Total : <strong><span id="rating-total">--</span> sur <span id="rating-max">--</span></strong>
         </div>
@@ -69,17 +54,17 @@
 
 <script>
     $(document).ready(function() {
-        var sels = $('#rating-form select');
+        var sels = $('#rating-form input');
         function refreshTotal() {
             var total = 0;
-            var max = 0;
+	    var max = 0;
             sels.each(function() {
-                var el = $(this);
-                max += parseInt(el.find('option:last').val(), 10) || 0;
+		var el = $(this);
+                // max += parseInt(el.find('option:last').val(), 10) || 0;
                 total += parseInt(el.val(), 10) || 0;
             })
             $('#rating-total').text(total);
-            $('#rating-max').text(max);
+            $('#rating-max').text(100);
         }
         sels.on('change', function() {
             refreshTotal();

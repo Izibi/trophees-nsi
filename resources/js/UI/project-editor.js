@@ -76,26 +76,26 @@ window.ProjectEditor = function(options) {
     // submit
 
     function showGroupError(form_group, message) {
-        form_group.find('.form-control,.form-check-input').addClass('is-invalid');
+        form_group.find('.form-control,.form-check-input,.custom-file-input').addClass('is-invalid');
         form_group.find('.invalid-feedback').remove();
         form_group.append('<div class="invalid-feedback">' + message + '</div>');
     }
 
     function hideGroupError(div) {
         div.find('.invalid-feedback').remove();
-        div.find('.form-control,.form-check-input').removeClass('is-invalid');
+        div.find('.form-control,.form-check-input,.custom-file-input').removeClass('is-invalid');
     }
 
-    options.form.find('.form-control,.form-check-input').on('focus', function() {
+    options.form.find('.form-control,.form-check-input,.custom-file-input').on('focus', function() {
         setTimeout(function() {
             hideGroupError($(this).closest('div'));
         }, 100);
     })
 
     function displayErrors(errors) {
-        options.form.find('.form-group,.form-check').each(function() {
+        options.form.find('.form-group,.form-check,.custom-file').each(function() {
             var group = $(this);
-            var control = group.find('.form-control,.form-check-input');
+            var control = group.find('.form-control,.form-check-input,.custom-file-input');
             var name = control.attr('name');
             if(name in errors) {
                 showGroupError(group, errors[name][0])

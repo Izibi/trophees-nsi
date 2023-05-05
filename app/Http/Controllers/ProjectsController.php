@@ -46,6 +46,7 @@ class ProjectsController extends Controller
         }
 
         return view('projects.index.'.$request->user()->role, [
+	    'user' => $request->user(),
             'rows' => $projects,
             'contest' => $this->contest,
             'rating_mode_accessible' => $rating_mode_accessible,
@@ -499,7 +500,7 @@ class ProjectsController extends Controller
                 break;
             }
             if(empty($team_member->first_name) || empty($team_member->last_name)) {
-                $errors[] = 'Team members list is not completed.';
+		$errors[] = 'Il manque des informations dans la liste des membres de l\'équipe.';
                 break;
             }
         }
