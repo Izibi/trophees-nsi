@@ -50,8 +50,6 @@
                 {!! Form::checkbox('cb_coordinator', 'Coordinator')->checked(!!$user->coordinator) !!}
             </div>
 
-            {!! Form::select('charge_prize_id', 'Charge prize', [null => ''] + $prizes->pluck('name', 'id')->toArray()) !!}
-
             {!! Form::select('region_id', 'Territoire', [null => ''] + $regions->pluck('name', 'id')->toArray()) !!}
             {!! Form::select('country_id', 'Pays', [null => ''] + $countries->pluck('name', 'id')->toArray()) !!}
 

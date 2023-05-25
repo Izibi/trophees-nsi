@@ -21,8 +21,7 @@ class User extends Authenticatable
         'region_id',
         'validated',
         'role',
-        'cb_coordinator',
-        'charge_prize_id'
+        'cb_coordinator'
     ];
 
     public function setCbCoordinatorAttribute($v) {
