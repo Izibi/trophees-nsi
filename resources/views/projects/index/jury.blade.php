@@ -4,7 +4,26 @@
     @include('projects.contest-status.jury')
     @include('projects.index.jury_awards_alert')
 
-    Liste des projets soumis pour : <b>{{ $user->region->name }}</b>
+    <p>
+    @if($prize === null)
+        Liste des projets soumis pour : <b>{{ $user->region->name }}</b>
+    @else
+        Liste des projets nominés pour le prix national <b>"{{ $prize->name }}"</b>
+    @endif
+    </p>
+
+    @if(count($user->prizes))
+        <p>
+        @if($prize !== null)
+            <a class="btn btn-primary" href="/projects">Afficher les projets de la région</a>
+        @endif
+        @foreach ($user->prizes as $p)
+            @if($prize !== $p)
+                <a class="btn btn-primary" href="/projects?prize_id={{ $p->id }}">Afficher les projets nominés pour "{{ $p->name }}"</a>
+            @endif
+        @endforeach
+        </p>
+    @endif
 
     <div class="card mt-3 mb-3">
         <div class="card-header">

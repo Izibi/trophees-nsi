@@ -55,4 +55,7 @@ class User extends Authenticatable
         return $this->belongsToMany(School::class);
     }
 
+    public function prizes() {
+        return $this->belongsToMany(Prize::class);
+    }
 }

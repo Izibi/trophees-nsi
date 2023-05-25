@@ -45,8 +45,19 @@ class ProjectsController extends Controller
             $project->view_url = '/project?'.$p['query'].'&refer_page='.urlencode($request->fullUrl());
         }
 
+        $prize_id = $this->getPrizeIdFilter($request);
+        $prize = null;
+        if($prize_id !== null) {
+            foreach($request->user()->prizes as $p) {
+                if($p->id == $prize_id) {
+                    $prize = $p;
+                    break;
+                }
+            }
+        }
+
         return view('projects.index.'.$request->user()->role, [
-	    'user' => $request->user(),
+	        'user' => $request->user(),
             'rows' => $projects,
             'contest' => $this->contest,
             'rating_mode_accessible' => $rating_mode_accessible,
@@ -54,7 +65,8 @@ class ProjectsController extends Controller
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray(),
             'awards_count' => $this->countJuryMemberAwards($request),
             'awards_limit' => config('nsi.awards_limit_per_jury_member'),
-            'coordinator' => $request->get('coordinator') == '1'
+            'coordinator' => $request->get('coordinator') == '1',
+            'prize' => $prize
         ]);
     }
 
@@ -163,6 +175,21 @@ class ProjectsController extends Controller
     }
 
 
+    private function getPrizeIdFilter($request) {
+        if (!$request->has('prize_id')) {
+            return null;
+        }
+        $prize_id = $request->get('prize_id');
+        $user = $request->user();
+        foreach($user->prizes as $prize) {
+            if($prize->id == $prize_id) {
+                return $prize_id;
+            }
+        }
+        return null;
+    }
+
+
     private function getProjectsQuery($request) {
         $user = $request->user();
         $coordinator = $request->get('coordinator') == '1' && !empty($user->region_id);
@@ -181,12 +208,12 @@ class ProjectsController extends Controller
         } else if($user->role == 'jury') {
             $q->select(DB::raw('projects.*, ratings.published as rating_published'));
             $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
-            $q->where(function($sq) use ($user) {
-                $sq->where('schools.region_id', '=', $user->region_id);
-                if($user->charge_prize_id) {
-                    $sq->orWhere('projects.prize_id', '=', $user->charge_prize_id);
-                }
-            });
+            $prize_id = $this->getPrizeIdFilter($request);
+            if($prize_id === null) {
+                $q->where('schools.region_id', '=', $user->region_id);
+            } else {
+                $q->where('projects.prize_id', '=', $prize_id);
+            }
             $q->where('projects.status', '=', 'validated');
             $q->leftJoin('ratings', function($join) use ($user) {
                 $join->on('projects.id', '=', 'ratings.project_id');
@@ -436,7 +463,8 @@ class ProjectsController extends Controller
                     ($user->role == 'teacher' && $user->id == $project->user_id) ||
                     ($user->coordinator && $user->region_id && $user->region_id === $project->school->region_id) ||
                     ($user->role == 'jury' &&
-                        $user->region_id == $project->school->region_id &&
+                        ($user->region_id == $project->school->region_id ||
+                            $user->prizes->contains('id', $project->prize_id)) &&
                         $project->status != 'masked' &&
                         $project->contest_id == $this->contest->id &&
                         ($this->contest->status == 'grading' || $this->contest->status == 'deliberating' || $this->contest->status == 'closed')
