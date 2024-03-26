@@ -80,7 +80,7 @@ class ProjectsController extends Controller
 
         $callback = function() use ($q) {
             $fh = fopen('php://output', 'w');
-            $header = ['Nom', 'Nombre de notes', 'Idée', 'Communication', 'Presentation', 'Image', 'Logique', 'Créativité', 'Organisation', 'Opérationnalité', 'Ouverture', 'Total', 'Mixité', 'Citoyenneté', 'Ingénierie', 'Coup de coeur', 'Originalité'];
+            $header = ['Nom', 'Nombre de notes', 'Démarche', 'Opérationnalité', 'Communication', 'Total', 'Prix thématique', 'Prix spécial', 'Prix originalité'];
             fputcsv($fh, $header);
 
             $q->chunk(500, function($rows) use ($fh) {
@@ -89,17 +89,9 @@ class ProjectsController extends Controller
                         $project->name,
                         $project->ratings_amount,
                         $project->score_idea,
-                        $project->score_communication,
-                        $project->score_presentation,
-                        $project->score_image,
-                        $project->score_logic,
-                        $project->score_creativity,
-                        $project->score_organisation,
                         $project->score_operationality,
-                        $project->score_ouverture,
+                        $project->score_communication,
                         $project->score_total,
-                        $project->award_mixed,
-                        $project->award_citizenship,
                         $project->award_engineering,
                         $project->award_heart,
                         $project->award_originality,

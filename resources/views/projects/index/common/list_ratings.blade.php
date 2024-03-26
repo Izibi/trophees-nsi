@@ -2,19 +2,18 @@
     <thead>
         <tr>
             <th rowspan="2" style="vertical-align: middle;">{!! SortableTable::th('name', 'Nom') !!}</th>
-	        <th rowspan="2" style="vertical-align: middle;">{!! SortableTable::th('ratings_amount', 'Nombre de notes') !!}</th>
+            <th rowspan="2" style="vertical-align: middle;">{!! SortableTable::th('ratings_amount', 'Nombre de notes') !!}</th>
             <th colspan="4">Scores</th>
-            <th colspan="4">Récompenses suggérées</th>
+            <th colspan="3">Récompenses suggérées</th>
         </tr>
         <tr>
-            <th>{!! SortableTable::th('score_idea', 'Idée') !!}</th>
+            <th>{!! SortableTable::th('score_idea', 'Démarche') !!}</th>
             <th>{!! SortableTable::th('score_operationality', 'Opérationnalité') !!}</th>
             <th>{!! SortableTable::th('score_communication', 'Communication') !!}</th>
             <th><strong>{!! SortableTable::th('score_total', 'Total') !!}</strong></th>
+            <th>{!! SortableTable::th('award_engineering', 'Thématique') !!}</th>
             <th>{!! SortableTable::th('award_heart', 'Spécial du jury') !!}</th>
-            <th>{!! SortableTable::th('award_originality', 'Créativité') !!}</th>
-            <th>{!! SortableTable::th('award_engineering', 'Ingénierie') !!}</th>
-            <th>{!! SortableTable::th('award_citizenship', 'Initiative citoyenne') !!}</th>
+            <th>{!! SortableTable::th('award_originality', 'Originalité') !!}</th>
         </tr>
     </thead>
     @foreach ($rows as $project)
@@ -25,10 +24,9 @@
             <td>{{ $project->score_operationality }}</td>
             <td>{{ $project->score_communication }}</td>
             <td><strong>{{ $project->score_total }}</strong></td>
+            <td>{{ $project->award_engineering }}</td>
             <td>{{ $project->award_heart }}</td>
             <td>{{ $project->award_originality }}</td>
-            <td>{{ $project->award_engineering }}</td>
-            <td>{{ $project->award_citizenship }}</td>
         </tr>
     @endforeach
 </table>

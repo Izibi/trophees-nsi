@@ -30,6 +30,7 @@ class StorePojectRequest extends FormRequest
             'school_id' => 'required_if:finalize,1|nullable|exists:schools,id',
             'grade_id' => 'required_if:finalize,1|nullable|exists:grades,id',
             'description' => 'required_if:finalize,1|max:'.config('nsi.project.description_max_length'),
+            'teacher_notes' => 'required_if:finalize,1',
             'video' => 'required_if:finalize,1|nullable|url',
             'url' => 'required_if:finalize,1|nullable|url',
             'cb_tested_by_teacher' => 'accepted_if:finalize,1',
