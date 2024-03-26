@@ -76,7 +76,7 @@
 
             {!! Form::text('video', 'Vidéo')
                 ->placeholder('https://')
-                ->help('La vidéo doit être publiée sur <a href="https://peertube.fr" target="_blank">peertube.fr</a>. Renseignez ici son URL.') !!}
+                ->help('La vidéo doit être publiée sur une instance Peertube. Renseignez ici son URL.') !!}
 
             {!! Form::text('url', 'Dossier technique')
                 ->placeholder('https://')
