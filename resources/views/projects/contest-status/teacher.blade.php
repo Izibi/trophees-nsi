@@ -4,7 +4,7 @@ Le dépôt de projets n'est pas encore ouvert.
 @elseif($contest->status == 'open')
 La période de dépôt de projets est en cours.
 @elseif($contest->status == 'grading')
-Le dépôt de projets est clôturé, les projets sont évalués par le jury national.
+Le dépôt de projets est clôturé, les projets sont évalués par le jury territorial.
 @elseif($contest->status == 'deliberating')
 Le dépôt de projets est clôturé, le jury national délibère.
 @elseif($contest->status == 'closed')
