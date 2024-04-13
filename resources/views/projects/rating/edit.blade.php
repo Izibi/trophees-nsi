@@ -3,16 +3,16 @@
 
 	{!! Form::text('score_idea', 'Démarche projet = 25 points')
             ->type('number')->min(0)->max(25)
-	    ->wrapperAttrs(['class' => 'form-group-compact'])
+	    ->wrapperAttrs(['class' => 'form-group-compact rating-input'])
             ->options(Rating::rangeOptions(25))
 	    ->help('Respect du programme NSI.<br>Idée globale - originalité et créativité.<br>Organisation du travail : composition de l\'équipe, rôles, et répartition des tâches.<br>Ouverture : idées d\'amélioration, analyse critique, nouvelles compétences développées.') !!}
         {!! Form::text('score_operationality', 'Fonctionnement et opérationnalité = 50 points')
             ->type('number')->min(0)->max(50)
-            ->wrapperAttrs(['class' => 'form-group-compact'])
+            ->wrapperAttrs(['class' => 'form-group-compact rating-input'])
             ->options(Rating::rangeOptions(50))->help('Qualité et structure du code.<br>Reproductibilité de la démonstration.<br>Test et validation - correction des bugs.<br>Qualité de la documentation technique.') !!}
         {!! Form::text('score_communication', 'Communication et qualité du dossier = 25 points')
             ->type('number')->min(0)->max(25)
-            ->wrapperAttrs(['class' => 'form-group-compact'])
+            ->wrapperAttrs(['class' => 'form-group-compact rating-input'])
             ->options(Rating::rangeOptions(25))->help('Présentation écrite.<br>Présentation orale.<br>Démonstration du projet.<br>Respect des consignes.') !!}
         <div class="mt-3">
             Total : <strong><span id="rating-total">--</span> sur <span id="rating-max">--</span></strong>
@@ -53,12 +53,12 @@
 
 <script>
     $(document).ready(function() {
-        var sels = $('#rating-form input');
+        var sels = $('#rating-form .rating-input input');
         function refreshTotal() {
             var total = 0;
-	        var max = 0;
+            var max = 0;
             sels.each(function() {
-		        var el = $(this);
+                var el = $(this);
                 // max += parseInt(el.find('option:last').val(), 10) || 0;
                 total += parseInt(el.val(), 10) || 0;
             });
