@@ -546,17 +546,15 @@ class ProjectsController extends Controller
             return false;
         }
 
-        $res = DB::table('projects')
+        $res = DB::table('ratings')
             ->select(DB::raw('
-                SUM(projects.award_mixed) as award_mixed,
-                SUM(projects.award_citizenship) as award_citizenship,
-                SUM(projects.award_engineering) as award_engineering,
-                SUM(projects.award_heart) as award_heart,
-                SUM(projects.award_originality) as award_originality,
+                SUM(ratings.award_mixed) as award_mixed,
+                SUM(ratings.award_citizenship) as award_citizenship,
+                SUM(ratings.award_engineering) as award_engineering,
+                SUM(ratings.award_heart) as award_heart,
+                SUM(ratings.award_originality) as award_originality,
                 COUNT(*) as rows_total
             '))
-            ->leftJoin('ratings', 'ratings.project_id', '=', 'projects.id')
-            ->where('projects.contest_id', '=', $this->contest->id)
             ->where('ratings.user_id', '=', $user->id)
             ->first();
         if(!$res || !$res->rows_total) {
