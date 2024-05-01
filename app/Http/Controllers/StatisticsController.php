@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Region;
 use App\Models\User;
 use App\Models\Project;
+use App\Models\Grade;
 
 class StatisticsController extends Controller
 {
@@ -35,8 +36,8 @@ class StatisticsController extends Controller
                     'name' => $academy->name,
                     'teachers' => $this->countTeachers($academy),
                     'projects_draft' => $this->countProjectsDraft($academy),
-                    'projects_finalized_premier' => $this->countProjectsFinalizedPremier($academy),
-                    'projects_finalized_terminal' => $this->countProjectsFinalizedTerminal($academy),
+                    'projects_finalized_premiere' => $this->countProjectsFinalizedPremiere($academy),
+                    'projects_finalized_terminale' => $this->countProjectsFinalizedTerminale($academy),
                     'projects_finalized' => $this->countProjectsFinalized($academy),
                     'accent_row' => $i % 2 == 0
                 ];
@@ -62,21 +63,23 @@ class StatisticsController extends Controller
         })->where('status', 'draft')->count();
     }
 
-    private function countProjectsFinalizedPremier($academy) {
+    private function countProjectsFinalizedPremiere($academy) {
+	$grade = Grade::where('name', 'Première')->get()->first()->id;
         return Project::whereHas('school', function($q) use ($academy) {
             $q->where('academy_id', $academy->id);
-        })->where('status', 'finalized')->where('award_terminal', 1)->count();
+        })->whereIn('status', ['finalized', 'validated'])->where('grade_id', $grade)->count();
     }
 
-    private function countProjectsFinalizedTerminal($academy) {
+    private function countProjectsFinalizedTerminale($academy) {
+	$grade = Grade::where('name', 'Terminale')->get()->first()->id;
         return Project::whereHas('school', function($q) use ($academy) {
             $q->where('academy_id', $academy->id);
-        })->where('status', 'finalized')->where('award_terminal', 1)->count();
+        })->whereIn('status', ['finalized', 'validated'])->where('grade_id', $grade)->count();
     }
 
     private function countProjectsFinalized($academy) {
         return Project::whereHas('school', function($q) use ($academy) {
             $q->where('academy_id', $academy->id);
-        })->where('status', 'finalized')->count();
+        })->whereIn('status', ['finalized', 'validated'])->count();
     }
 }

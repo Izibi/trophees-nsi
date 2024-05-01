@@ -33,7 +33,7 @@
                     </li>
                     @if(Auth::user()->coordinator)
                         <li class="nav-item">
-                            <a class="nav-link" href="/statistics">Statistics</a>
+                            <a class="nav-link" href="/statistics">Statistiques</a>
                         </li>
 
                     @endif
