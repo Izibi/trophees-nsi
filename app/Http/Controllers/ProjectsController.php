@@ -56,8 +56,9 @@ class ProjectsController extends Controller
             }
         }
 
+	$user = $request->user();
         return view('projects.index.'.$request->user()->role, [
-	        'user' => $request->user(),
+            'user' => $user,
             'rows' => $projects,
             'contest' => $this->contest,
             'rating_mode_accessible' => $rating_mode_accessible,
@@ -65,7 +66,8 @@ class ProjectsController extends Controller
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray(),
             'awards_count' => $this->countJuryMemberAwards($request),
             'awards_limit' => config('nsi.awards_limit_per_jury_member'),
-            'coordinator' => $request->get('coordinator') == '1',
+	    'coordinator' => $request->get('coordinator') == '1',
+	    'user_is_coordinator' => $user->coordinator,
             'prize' => $prize
         ]);
     }
@@ -484,7 +486,7 @@ class ProjectsController extends Controller
             case 'view_projects_rating':
                 return
                     $user->role == 'admin' ||
-                    ($user->role == 'jury' && $this->contest->status == 'deliberating');
+                    ($user->role == 'jury' && ($user->coordinator || $this->contest->status == 'deliberating'));
                 break;
         }
     }

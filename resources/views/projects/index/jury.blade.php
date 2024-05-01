@@ -51,6 +51,9 @@
         @if(count($rows))
             @if($contest->status == 'grading' || $contest->status == 'deliberating' || $contest->status == 'closed')
                 <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">Afficher le projet sélectionné</button>
+            	@if($user_is_coordinator)
+            		<a class="btn btn-primary active-button" data-action="" target="_blank" href="/projects_export">Télécharger les scores au format CSV</a>
+		@endif
             @endif
         @endif
     </div>
