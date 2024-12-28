@@ -72,12 +72,19 @@ class UsersController extends Controller
 
     public function edit(Request $request, User $user)
     {
+	$prize_id = null;
+	foreach($user->prizes as $prize) {
+		$prize_id = $prize->id;
+		break;
+	}
+	$user->prize_id = $prize_id;
         return view('users.edit', [
             'refer_page' => $request->get('refer_page', '/users'),
             'user' => $user,
             'countries' => Country::orderBy('name')->get(),
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
-            'prizes' => Prize::orderBy('name')->get()
+	    'prizes' => Prize::orderBy('name')->get(),
+	    'prize_id' => $prize_id
         ]);
     }
 
@@ -85,7 +92,15 @@ class UsersController extends Controller
     public function update(StoreUserRequest $request, User $user)
     {
         $user->fill($request->all());
-        $user->save();
+	$user->save();
+	$prize_saved = false;
+	$prize_id = $request->input('prize_id');
+	foreach($user->prizes as $prize) {
+		$user->prizes()->detach($prize->id);
+	}
+	if($prize_id !== null) {
+		$user->prizes()->attach($prize_id);
+	}
         $url = $request->get('refer_page', '/users');
         return redirect($url)->withMessage('Utilisateur enregistré');
     }

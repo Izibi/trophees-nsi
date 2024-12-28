@@ -52,6 +52,7 @@
 
             {!! Form::select('region_id', 'Territoire', [null => ''] + $regions->pluck('name', 'id')->toArray()) !!}
             {!! Form::select('country_id', 'Pays', [null => ''] + $countries->pluck('name', 'id')->toArray()) !!}
+            {!! Form::select('prize_id', 'Jury pour le prix', [null => ''] + $prizes->pluck('name', 'id')->toArray()) !!}
 
         {!! Form::close() !!}
 

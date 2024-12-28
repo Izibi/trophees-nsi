@@ -13,7 +13,7 @@
     </p>
 
     @if(count($user->prizes))
-        <p>
+<!--        <p>
         @if($prize !== null)
             <a class="btn btn-primary" href="/projects">Afficher les projets de la région</a>
         @endif
@@ -22,9 +22,12 @@
                 <a class="btn btn-primary" href="/projects?prize_id={{ $p->id }}">Afficher les projets nominés pour "{{ $p->name }}"</a>
             @endif
         @endforeach
-        </p>
+        </p>-->
     @endif
 
+    @if($prize === null)
+    Le jury national est en cours de délibération.
+    @else
     <div class="card mt-3 mb-3">
         <div class="card-header">
             <h2>Projets</h2>
@@ -57,4 +60,5 @@
             @endif
         @endif
     </div>
+    @endif
 @endsection

@@ -25,7 +25,7 @@
     </table>
 
 
-    <table class="table table-striped table-borderless mt-3">
+<!--    <table class="table table-striped table-borderless mt-3">
         <tbody>
             <tr></tr>
             <tr>
@@ -44,5 +44,5 @@
                 <td>{{ $project->award_originality }}</td>
             </tr>
         </tbody>
-    </table>
+    </table>-->
 @endif

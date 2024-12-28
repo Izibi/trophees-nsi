@@ -17,7 +17,7 @@
         <div class="mt-3">
             Total : <strong><span id="rating-total">--</span> sur <span id="rating-max">--</span></strong>
         </div>
-        <div class="mt-3">
+<!--        <div class="mt-3">
             À envisager pour un prix spécial :
             <input type="hidden" name="cb_award_engineering" value="0"/>
             {!! Form::checkbox('cb_award_engineering', 'Prix thématique : Le sport')->checked($rating ? $rating->award_engineering : false) !!}
@@ -25,7 +25,7 @@
             {!! Form::checkbox('cb_award_heart', 'Prix spécial du jury')->checked($rating ? $rating->award_heart : false) !!}
             <input type="hidden" name="cb_award_originality" value="0"/>
             {!! Form::checkbox('cb_award_originality', 'Prix de la créativité')->checked($rating ? $rating->award_originality : false) !!}
-        </div>
+        </div>-->
 
         <div class="mt-3">
             {!! Form::textarea('notes', 'Notes') !!}

@@ -171,13 +171,14 @@ class ProjectsController extends Controller
 
     private function getPrizeIdFilter($request) {
         if (!$request->has('prize_id')) {
-            return null;
+            $prize_id = null;
+        } else {
+            $prize_id = $request->get('prize_id');
         }
-        $prize_id = $request->get('prize_id');
         $user = $request->user();
         foreach($user->prizes as $prize) {
-            if($prize->id == $prize_id) {
-                return $prize_id;
+            if($prize->id == $prize_id || ($user->role == 'jury' && $prize_id === null)) {
+                return $prize->id;
             }
         }
         return null;
@@ -476,9 +477,13 @@ class ProjectsController extends Controller
             case 'change_status':
                 return $user->role == 'admin';
                 break;
-            case 'rate':
+	    case 'rate':
+		$prize_access = false;
+		foreach($user->prizes as $prize) {
+			if($prize->id = $project->prize_id) { $prize_access = true; }
+		}
                 return $user->role == 'jury' &&
-                    $user->region_id == $project->school->region_id &&
+                    ($user->region_id == $project->school->region_id || $prize_access) &&
                     $project->status == 'validated' &&
                     $project->contest_id == $this->contest->id &&
                     ($this->contest->status == 'grading' || $this->contest->status == 'deliberating');
@@ -487,6 +492,7 @@ class ProjectsController extends Controller
                 return
                     $user->role == 'admin' ||
                     ($user->role == 'jury' && ($user->coordinator || $this->contest->status == 'deliberating'));
+                    //($user->role == 'jury' && $user->coordinator);
                 break;
         }
     }
