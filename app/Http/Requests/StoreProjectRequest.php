@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StorePojectRequest extends FormRequest
+class StoreProjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,11 +30,19 @@ class StorePojectRequest extends FormRequest
             'school_id' => 'required_if:finalize,1|nullable|exists:schools,id',
             'grade_id' => 'required_if:finalize,1|nullable|exists:grades,id',
             'description' => 'required_if:finalize,1|max:'.config('nsi.project.description_max_length'),
-            'teacher_notes' => 'required_if:finalize,1',
+            'teacher_notes' => [
+                'required_if:finalize,1',
+                function ($attribute, $value, $fail) {
+                    if ($this->input('finalize') == 1 && strlen($value) < 50) {
+                        $fail(__('validation.min.string', ['attribute' => $attribute, 'min' => 50]));
+                    }
+                },
+            ],
             'video' => 'required_if:finalize,1|nullable|url',
             'url' => 'required_if:finalize,1|nullable|url',
             'cb_tested_by_teacher' => 'accepted_if:finalize,1',
             'cb_reglament_accepted' => 'accepted_if:finalize,1',
+            'cb_authorization' => 'accepted_if:finalize,1',
             'presentation_file' => 'max:'.$conf['presentation_file_size_max'],
             'image_file' => [
                 'max:'.$conf['image_file_size_max'],

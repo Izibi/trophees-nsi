@@ -11,7 +11,7 @@ use App\Models\Rating;
 use App\Models\Country;
 use App\Models\Region;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\StorePojectRequest;
+use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\SetProjectRatingRequest;
 use App\Http\Requests\SetProjectStatusRequest;
 use Illuminate\Support\Facades\Storage;
@@ -266,7 +266,7 @@ class ProjectsController extends Controller
     }
 
 
-    public function store(StorePojectRequest $request)
+    public function store(StoreProjectRequest $request)
     {
         $user = $request->user();
         if(!$this->accessible($user, null, 'create')) {
@@ -360,7 +360,7 @@ class ProjectsController extends Controller
     }
 
 
-    public function update(StorePojectRequest $request, Project $project)
+    public function update(StoreProjectRequest $request, Project $project)
     {
         if(!$this->accessible($request->user(), $project, 'edit')) {
             return $this->accessDeniedResponse();
@@ -514,10 +514,6 @@ class ProjectsController extends Controller
             $errors[] = strtr('La taille totale de l\'équipe doit être entre team_size_min et team_size_max', $config);
         }
 
-        if(empty($project->presentation_file)) {
-//            $errors[] = 'Presentation PDF not uploaded.';
-            $errors[] = 'PDF de présentation manquant.';
-        }
         if(empty($project->image_file)) {
 //            $errors[] = 'Image not uploaded.';
             $errors[] = 'Image manquante.';

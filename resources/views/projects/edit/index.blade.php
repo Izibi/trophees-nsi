@@ -23,7 +23,7 @@
 
             <div class="mt-5 mb-5">
                 <h5>Membres de l'équipe</h5>
-                <p><small class="form-text text-muted">Précisez la composition de l'équipe pour ce projet. La mixité de l'équipe pourra être prise en compte pour certains prix.</small></p>
+                <p><small class="form-text text-muted">Précisez la composition de l'équipe pour ce projet. Vérifiez bien l'orthographe des noms et des prénoms ! Les attestations signées sont à joindre au dossier avant la validation du dépôt.</small></p>
                 <div class="row mt-5 mb-3" id="team-members-header">
                     <div class="col-1"></div>
                     <div class="col-2">Prénom</div>
@@ -31,7 +31,7 @@
                     <div class="col-2">Genre</div>
                     <div class="col-5">
                         Autorisations signées<br>
-                        <small>Autorisations pour l'utilisation de l'image et/ou de la voix et des œuvres. Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.</small>
+                        <small>Ajoutez l'autorisation signée pour chaque élève. Le document à compléter est <a href="https://trophees-nsi.fr/candidature" target="_blank">disponible ici</a>.</small>
                     </div>
                 </div>
                 <div id="team-members">
@@ -52,7 +52,7 @@
 
             <div class="mt-5">
                 <h5>Classe</h5>
-            	<p><small class="form-text text-muted">Précisez la répartition des élèves en NSI pour le niveau renseigné ci-dessus.</small></p>
+            	<p><small class="form-text text-muted">Précisez la répartition totale des élèves en NSI pour le niveau renseigné ci-dessus.</small></p>
 
                 <div class="row">
                     <div class="col-4">
@@ -72,15 +72,15 @@
 
             {!! Form::textarea('description', 'Résumé du projet')
                 ->attrs(['style' => 'height: 200px'])
-                ->help('<div id="description-counter" class="text-right text-muted"></div>') !!}
+                ->help('Ce résumé doit être écrit par les membres de l\'équipe. Ce texte sera utilisé pour les communications officielles du projet (site internet, réseaux sociaux). <div id="description-counter" class="text-right text-muted"></div>') !!}
 
             {!! Form::text('video', 'Vidéo')
                 ->placeholder('https://')
-                ->help('La vidéo doit être publiée sur une instance Peertube. Renseignez ici son URL.') !!}
+                ->help('La vidéo est à publiée sur <a href="https://tube-sciences-technologies.apps.education.fr/" target="_blank">l\'instance Peertube Tube Sciences & Technologies</a>. Renseignez ici son URL.') !!}
 
             {!! Form::text('url', 'Dossier technique')
                 ->placeholder('https://')
-                ->help('Lien vers le dossier technique du projet.') !!}
+                ->help('Le dossier technique est à déposer sur <a href="https://docs.forge.apps.education.fr/#qui-peut-sinscrire-et-participer-a-la-forge-des-communs-numeriques-educatifs" target="_blank">la forge des communs numériques éducatifs</a>. Les éléments du dossier technique et l\'organisation sont <a href="https://trophees-nsi.fr/candidature" target="_blank">précisés ici</a>.') !!}
 
             <div class="row">
                 @include('projects.edit.file-input', [
@@ -91,29 +91,26 @@
                     'file' => $project ? $project->image_file : null,
                     'class' => 'col-6 file-box mb-4'
                 ])
-
-                @include('projects.edit.file-input', [
-                    'title' => 'PDF de présentation',
-                    'description' => 'Taille maximum : 20Mo. Voir <a href="https://trophees-nsi.fr/participation" target="_blank">ici</a> pour le contenu demandé dans ce pdf.',
-                    'extensions' => '.pdf',
-                    'key' => 'presentation_file',
-                    'file' => $project ? $project->presentation_file : null,
-                    'class' => 'col-6 file-box mb-4'
-                ])
             </div>
 
             {!! Form::textarea('teacher_notes', 'Remarques de l\'enseignant')
-                ->attrs(['style' => 'height: 200px']) !!}
+                ->attrs(['style' => 'height: 200px'])
+                ->help("Merci de bien vouloir apporter des précisions utiles à porter à la connaissance des membres du jury (contexte de réalisation du projet, motivation et implication des élèves, progression des élèves durant l'année scolaire) et confirmer la bonne vérification du fonctionnement du projet.") !!}
 
             <div class="mt-5">
-                <input type="hidden" name="cb_reglament_accepted" value="0"/>
-		{!! Form::checkbox('cb_reglament_accepted', 'Je certifie avoir testé moi-même le projet, et confirme que celui-ci fonctionne comme présenté dans la vidéo. Je certifie également que tous les éleves de ce projet ont une autorisation signé pour l\'utilisation de l\'image ou de la voix et de leurs oeuvres.')
-                    ->checked($project && $project->reglament_accepted) !!}
+                <input type="hidden" name="cb_tested_by_teacher" value="0"/>
+        		{!! Form::checkbox('cb_tested_by_teacher', 'Je certifie avoir testé moi-même le projet, et confirme que celui-ci fonctionne comme présenté dans la vidéo. ')
+                    ->checked($project && $project->tested_by_teacher) !!}
             </div>
             <div class="mt-2">
-                <input type="hidden" name="cb_tested_by_teacher" value="0"/>
-		{!! Form::checkbox('cb_tested_by_teacher', 'Je certifie avoir lu et accepté le <a href="https://trophees-nsi.fr/reglement" target="_blank">règlement du concours</a>.')
-                    ->checked($project && $project->tested_by_teacher) !!}
+                <input type="hidden" name="cb_video_authorization" value="0"/>
+        		{!! Form::checkbox('cb_video_authorization', 'Je certifie que tous les éleves de ce projet ont une autorisation signé pour l\'utilisation de l\'image ou de la voix et de leurs oeuvres.')
+                    ->checked($project && $project->video_authorization) !!}
+            </div>
+            <div class="mt-2">
+                <input type="hidden" name="cb_reglament_accepted" value="0"/>
+        		{!! Form::checkbox('cb_reglament_accepted', 'Je certifie avoir lu et accepté le <a href="https://trophees-nsi.fr/reglement" target="_blank">règlement du concours</a>.')
+                    ->checked($project && $project->reglament_accepted) !!}
             </div>
 
             <div class="mt-5" id="controls-bar">

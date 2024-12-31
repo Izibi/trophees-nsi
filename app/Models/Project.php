@@ -24,6 +24,8 @@ class Project extends Model
         'cb_tested_by_teacher',
         'reglament_accepted',
         'cb_reglament_accepted',
+        'video_authorization',
+        'cb_video_authorization',
         'class_girls',
         'class_boys',
         'class_not_provided',
@@ -94,6 +96,10 @@ class Project extends Model
 
     public function setCbReglamentAcceptedAttribute($v) {
         $this->attributes['reglament_accepted'] = !empty($v);
+    }
+
+    public function setCbVideoAuthorizationAttribute($v) {
+        $this->attributes['video_authorization'] = !empty($v);
     }
 
 
