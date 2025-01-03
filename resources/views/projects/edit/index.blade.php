@@ -51,7 +51,7 @@
 
 
             <div class="mt-5">
-                <h5>Classe</h5>
+                <h5>Répartition de la classe</h5>
             	<p><small class="form-text text-muted">Précisez la répartition totale des élèves en NSI pour le niveau renseigné ci-dessus.</small></p>
 
                 <div class="row">
@@ -76,7 +76,7 @@
 
             {!! Form::text('video', 'Vidéo')
                 ->placeholder('https://')
-                ->help('La vidéo est à publiée sur <a href="https://tube-sciences-technologies.apps.education.fr/" target="_blank">l\'instance Peertube Tube Sciences & Technologies</a>. Renseignez ici son URL.') !!}
+                ->help('La vidéo est à publier sur <a href="https://tube-sciences-technologies.apps.education.fr/" target="_blank">l\'instance Peertube Tube Sciences & Technologies</a>. Renseignez ici son URL.') !!}
 
             {!! Form::text('url', 'Dossier technique')
                 ->placeholder('https://')
@@ -85,7 +85,7 @@
             <div class="row">
                 @include('projects.edit.file-input', [
                     'title' => 'Image',
-                    'description' => 'Taille maximum : 20Mo. Veuillez fournir une image carrée, de taille '.config('nsi.project.image_max_width').'px &#10005;'.config('nsi.project.image_max_height').' px.',
+                    'description' => 'Veuillez fournir une image carrée, de taille '.config('nsi.project.image_max_width').'px &#10005;'.config('nsi.project.image_max_height').' px.',
                     'extensions' => '.jpg,.jpeg,.png,.gif',
                     'key' => 'image_file',
                     'file' => $project ? $project->image_file : null,
@@ -96,6 +96,10 @@
             {!! Form::textarea('teacher_notes', 'Remarques de l\'enseignant')
                 ->attrs(['style' => 'height: 200px'])
                 ->help("Merci de bien vouloir apporter des précisions utiles à porter à la connaissance des membres du jury (contexte de réalisation du projet, motivation et implication des élèves, progression des élèves durant l'année scolaire) et confirmer la bonne vérification du fonctionnement du projet.") !!}
+
+            <div class="mt-5">
+                <i>Taille maximum des fichiers : 20Mo</i>
+            </div>
 
             <div class="mt-5">
                 <input type="hidden" name="cb_tested_by_teacher" value="0"/>
