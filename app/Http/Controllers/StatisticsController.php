@@ -9,9 +9,15 @@ use App\Models\User;
 use App\Models\Project;
 use App\Models\Rating;
 use App\Models\Grade;
+use App\Classes\ActiveContest;
+
 
 class StatisticsController extends Controller
 {
+    public function __construct(ActiveContest $active_contest)
+    {
+        $this->contest = $active_contest->get();
+    }
 
     public function index() {
         return view('statistics.index', [
@@ -55,8 +61,7 @@ class StatisticsController extends Controller
 
 
     private function getProjects($academy) {
-        $year = Contest::where('status', 'open')->get()->first();
-        return Project::where('contest_id', $year->id)->whereHas('school', function($q) use ($academy) {
+        return Project::where('contest_id', $this->contest->id)->whereHas('school', function($q) use ($academy) {
             $q->where('academy_id', $academy->id);
         })->get();
     }
