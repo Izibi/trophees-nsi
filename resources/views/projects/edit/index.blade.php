@@ -31,7 +31,7 @@
                     <div class="col-2">Genre</div>
                     <div class="col-5">
                         Autorisations signées<br>
-                        <small>Ajoutez l'autorisation signée pour chaque élève. Le document à compléter est <a href="https://trophees-nsi.fr/candidature" target="_blank">disponible ici</a>.</small>
+                        <small>Ajoutez l'autorisation signée pour chaque élève. Le document à compléter est <a href="https://trophees-nsi.fr/ressources" target="_blank">disponible ici</a>.</small>
                     </div>
                 </div>
                 <div id="team-members">
@@ -80,7 +80,7 @@
 
             {!! Form::text('url', 'Dossier technique')
                 ->placeholder('https://')
-                ->help('Le dossier technique est à déposer sur <a href="https://docs.forge.apps.education.fr/#qui-peut-sinscrire-et-participer-a-la-forge-des-communs-numeriques-educatifs" target="_blank">la forge des communs numériques éducatifs</a>. Les éléments du dossier technique et l\'organisation sont <a href="https://trophees-nsi.fr/candidature" target="_blank">précisés ici</a>.') !!}
+                ->help('Le dossier technique est à déposer sur <a href="https://docs.forge.apps.education.fr/#qui-peut-sinscrire-et-participer-a-la-forge-des-communs-numeriques-educatifs" target="_blank">la forge des communs numériques éducatifs</a>. Les éléments du dossier technique et l\'organisation sont <a href="https://trophees-nsi.fr/ressources" target="_blank">précisés ici</a>.') !!}
 
             <div class="row">
                 @include('projects.edit.file-input', [
