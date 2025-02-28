@@ -120,5 +120,15 @@
 </div>
 
 @if(!is_null($project->teacher_notes))
-    <div class="mt-3">{!! nl2br($project->teacher_notes) !!}</div>
+    <div class="mt-3">
+        <b>Remarques de l'enseignant :</b><br>
+        {!! nl2br($project->teacher_notes) !!}
+    </div>
 @endif
+
+@foreach($awards as $award)
+    <div class="mt-3">
+        <b>Nommé pour le {{ $award->getPrizeTitle() }} par {{ $award->user->name }} :</b><br>
+        {{ $award->comment }}
+    </div>
+@endforeach

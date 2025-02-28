@@ -27,7 +27,7 @@ class StoreContestRequest extends FormRequest
             'name' => 'required|string|max:255',
             'year' => 'required|integer|between:2000,2100',
             'message' => 'required|max:65535',
-            'status' => 'required|in:preparing,open,grading,deliberating,closed'
+            'status' => 'required|in:preparing,open,instruction,grading-territorial,deliberating-territorial,grading-national,deliberating-national,closed'
         ];
     }
 }

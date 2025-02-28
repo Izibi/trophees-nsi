@@ -13,6 +13,10 @@ function init() {
             return;
         }
         if(selection) {
+            if (selection.id === id & selection.double && tr.data('redirect-url')) {
+                window.open(tr.data('redirect-url'), '_blank');
+                return;
+            }
             selection.el.removeClass('active-row');
         }
         selection = {
@@ -20,6 +24,13 @@ function init() {
             el: tr
         }
         tr.addClass('active-row')
+        var timeout = null;
+        timeout = setTimeout(function () {
+            if (selection.double === timeout) {
+                selection.double = null;
+            }
+        }, 500);
+        selection.double = timeout;
 
         refreshButtons();
 

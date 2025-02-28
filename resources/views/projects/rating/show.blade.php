@@ -6,15 +6,11 @@
     <table class="table table-striped table-borderless">
         <tbody>
             <tr>
-                <td class="col-10">Démarche projet</td>
-                <td class="col-2">{{ $project->score_idea }}</td>
+                <td class="col-10">Compétences Techniques</td>
+                <td class="col-2">{{ $project->score_operationality }}</td>
             </tr>
             <tr>
-                <td>Fonctionnement et opérationnalité</td>
-                <td>{{ $project->score_operationality }}</td>
-            </tr>
-            <tr>
-                <td>Communication et qualité du dossier</td>
+                <td>Compétences Non Techniques</td>
                 <td>{{ $project->score_communication }}</td>
             </tr>
             <tr>

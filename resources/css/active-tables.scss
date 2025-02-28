@@ -9,3 +9,11 @@ table.active-table tr[data-row-id]:hover {
 table.active-table .row-alert td {
     background-color: rgba($red, 0.3);
 }
+
+
+a.new-tab {
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: bold;
+    text-decoration: none !important;
+}

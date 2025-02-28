@@ -1,33 +1,35 @@
 @extends('layout')
 
 @section('content')
-    @include('projects.contest-status.jury')
+@if(!$view)
+    La phase actuelle du concours ne vous permet pas d'évaluer des projets.
+@else
     @include('projects.index.jury_awards_alert')
 
-    <p>
-    @if($prize === null)
-        Liste des projets soumis pour : <b>{{ $user->region->name }}</b>
-    @else
-        Liste des projets nominés pour le prix national <b>"{{ $prize->name }}"</b>
+    <h3>
+    @if($view['type'] == 'own')
+        Liste de vos projets
+    @elseif($view['type'] == 'region')
+        Liste des projets de la région {{ $view['name'] }}
+    @elseif($view['type'] == 'prize')
+        Liste des projets nominés pour le prix {{ $view['name'] }}
     @endif
-    </p>
+    </h3>
 
-    @if(count($user->prizes))
-<!--        <p>
-        @if($prize !== null)
-            <a class="btn btn-primary" href="/projects">Afficher les projets de la région</a>
-        @endif
-        @foreach ($user->prizes as $p)
-            @if($prize !== $p)
-                <a class="btn btn-primary" href="/projects?prize_id={{ $p->id }}">Afficher les projets nominés pour "{{ $p->name }}"</a>
+    <p>@include('projects.contest-status')</p>
+
+    @if(count($other_views))
+        @foreach($other_views as $other_view)
+            @if($other_view['type'] == 'own')
+                <a class="btn btn-primary" href="/projects">Voir mes projets</a>
+            @elseif($other_view['type'] == 'region')
+                <a class="btn btn-primary" href="/projects?type=region&id={{ $other_view['target_id'] }}">Voir les projets de la région {{ $other_view['name'] }}</a>
+            @elseif($other_view['type'] == 'prize')
+                <a class="btn btn-primary" href="/projects?type=prize&id={{ $other_view['target_id'] }}">Voir les projets nominés pour le prix {{ $other_view['name'] }}</a>
             @endif
         @endforeach
-        </p>-->
     @endif
 
-    @if($prize === null)
-    Le jury national est en cours de délibération.
-    @else
     <div class="card mt-3 mb-3">
         <div class="card-header">
             <h2>Projets</h2>
@@ -52,13 +54,21 @@
 
     <div class="mt-5 mb-3">
         @if(count($rows))
-            @if($contest->status == 'grading' || $contest->status == 'deliberating' || $contest->status == 'closed')
-                <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">Afficher le projet sélectionné</button>
-            	@if($user_is_coordinator)
-            		<a class="btn btn-primary active-button" data-action="" target="_blank" href="/projects_export">Télécharger les scores au format CSV</a>
-		@endif
+            @if($view['edit'])
+                <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">
+                    Modifier le projet sélectionné
+                </button>
             @endif
+            @if($view['type'] != 'own' || !$view['edit'])
+                <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">Afficher le projet sélectionné</button>
+            @endif
+            @if($view['type'] != 'own' && $coordinator)
+                <a class="btn btn-primary active-button" data-action="" target="_blank" href="/projects_export">Télécharger au format CSV</a>
+		    @endif
+        @endif
+        @if($view['create'])
+            <button class="btn btn-primary active-button" data-action="/projects/create" data-method="GET">Déposer un nouveau projet</button>
         @endif
     </div>
-    @endif
+@endif
 @endsection

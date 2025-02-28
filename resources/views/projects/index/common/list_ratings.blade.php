@@ -7,7 +7,6 @@
 <!--            <th colspan="3">Récompenses suggérées</th>-->
         </tr>
         <tr>
-            <th>{!! SortableTable::th('score_idea', 'Démarche') !!}</th>
             <th>{!! SortableTable::th('score_operationality', 'Opérationnalité') !!}</th>
             <th>{!! SortableTable::th('score_communication', 'Communication') !!}</th>
             <th><strong>{!! SortableTable::th('score_total', 'Total') !!}</strong></th>
@@ -17,10 +16,9 @@
         </tr>
     </thead>
     @foreach ($rows as $project)
-        <tr data-row-id="{{ $project->id }}" @if($project->status != 'draft') data-actions-disabled="edit" @endif data-redirect-url="{{ $project->view_url }}">
+        <tr data-row-id="{{ $project->id }}" data-redirect-url="{{ $project->view_url }}">
             <td>{{ $project->name }}</td>
             <td><strong>{{ $project->ratings_amount }}</strong></td>
-            <td>{{ $project->score_idea }}</td>
             <td>{{ $project->score_operationality }}</td>
             <td>{{ $project->score_communication }}</td>
             <td><strong>{{ $project->score_total }}</strong></td>

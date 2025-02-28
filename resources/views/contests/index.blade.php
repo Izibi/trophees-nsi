@@ -32,7 +32,7 @@
         </div>
 
         <div class="mt-3 mb-3">
-            <button class="btn btn-primary active-button" data-action="/contests/:id/edit" data-method="GET">Modifier le concours sélectionneé</button>
+            <button class="btn btn-primary active-button" data-action="/contests/:id/edit" data-method="GET">Modifier le concours sélectionné</button>
             <button class="btn btn-primary active-button" data-action="/contests/create" data-method="GET">Ajouter un nouveau concours</button>
             <button class="btn btn-secondary active-button"
                 data-action="/contests/:id/activate" data-method="POST"

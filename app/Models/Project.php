@@ -114,4 +114,7 @@ class Project extends Model
         return $this->belongsTo(Prize::class);
     }
 
+    public function getUserRating($user) {
+        return Rating::where('project_id', $this->id)->where('user_id', $user->id)->first();
+    }
 }

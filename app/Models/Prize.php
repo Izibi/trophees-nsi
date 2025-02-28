@@ -10,6 +10,12 @@ class Prize extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name'
+        'name',
+        'grade_id'
     ];
+
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class);
+    }
 }

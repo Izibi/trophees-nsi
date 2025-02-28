@@ -20,13 +20,8 @@ class User extends Authenticatable
         'country_id',
         'region_id',
         'validated',
-        'role',
-        'cb_coordinator'
+        'role'
     ];
-
-    public function setCbCoordinatorAttribute($v) {
-        $this->attributes['coordinator'] = !empty($v);
-    }
 
     public function getScreenNameAttribute()
     {
@@ -40,6 +35,14 @@ class User extends Authenticatable
         return 'User #'.$this->id;
     }
 
+    public function hasRole($role, $target_id = null) {
+        $query = $this->roles()->where('type', $role);
+        if($target_id !== null) {
+            $query->where('target_id', $target_id);
+        }
+        return $query->exists();
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class);
@@ -50,11 +53,16 @@ class User extends Authenticatable
         return $this->belongsTo(Region::class);
     }
 
+    public function roles() {
+        return $this->hasMany(Role::class);
+    }
+
     public function schools() {
         return $this->belongsToMany(School::class);
     }
 
     public function prizes() {
-        return $this->belongsToMany(Prize::class);
+        return $this->belongsToMany(Prize::class, 'roles', 'user_id', 'target_id')
+                    ->wherePivot('type', 'prize');
     }
 }

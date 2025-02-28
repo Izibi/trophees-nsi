@@ -13,10 +13,10 @@
     @foreach ($rows as $project)
         <tr data-row-id="{{ $project->id }}" @if($project->status != 'draft') data-actions-disabled="edit" @endif data-redirect-url="{{ $project->view_url }}">
             <td>{{ $project->id }}</td>
-            <td>{{ $project->name }}</td>
-            <td>{{ $project->school_name }}</td>
-            <td>{{ $project->region_name }}</td>
-            <td>{{ $project->user_name }}</td>
+            <td>{{ $project->name }} <a href="{{ $project->view_url }}" class="new-tab" target="_blank">↗</a></td>
+            <td>{{ $project->school ? $project->school->name : '' }}</td>
+            <td>{{ $project->school ? $project->school->region->name : '' }}</td>
+            <td>{{ $project->user->name }}</td>
             <td>{{ $project->created_at }}</td>
             <td>@lang('project_status.'.$project->status)</td>
         </tr>

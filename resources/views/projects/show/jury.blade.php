@@ -4,6 +4,18 @@
     <div class="row">
         <div class="col-7">
             @include('projects.details')
+            @if($can_award)
+            <br>
+            <p>
+                <a href="{{ route('awards.edit', ['project' => $project->id]) }}" class="btn btn-primary">
+                    @if($can_award == 'done')
+                        Modifier le commentaire
+                    @else
+                        Attribuer un prix
+                    @endif
+                </a>
+            </p>
+            @endif
         </div>
         <div class="col-5">
             <div class="card">
@@ -14,7 +26,7 @@
                                 Mes notes {{ $rating && !$rating->published ? '(draft)' : '' }}
                             </a>
                         </li>
-                        @if($contest->status == 'deliberating')
+                        @if($contest->status == 'deliberating-territorial' || $contest->status == 'deliberating-national')
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#panel-aggregated-ratings" role="tab">Notes aggrégées</a>
                             </li>
@@ -25,7 +37,7 @@
                     <div class="tab-pane fade show active p-3" id="panel-my-ratings" role="tabpanel">
                         @include('projects.rating.edit')
                     </div>
-                    @if($contest->status == 'deliberating')
+                    @if($contest->status == 'deliberating-territorial' || $contest->status == 'deliberating-national')
                         <div class="tab-pane fade p-0" id="panel-aggregated-ratings" role="tabpanel">
                             @include('projects.rating.show')
                         </div>

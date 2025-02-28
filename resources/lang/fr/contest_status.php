@@ -2,7 +2,10 @@
 return [
     'preparing' => 'En préparation',
     'open' => 'Ouvert',
-    'grading' => 'Évaluation',
-    'deliberating' => 'Délibération',
-    'closed' => 'Fermé'
+    'instruction' => 'Instruction',
+    'grading-territorial' => 'Évaluation territoriale',
+    'deliberating-territorial' => 'Délibération territoriale',
+    'grading-national' => 'Évaluation nationale',
+    'deliberating-national' => 'Délibération nationale',
+    'closed' => 'Fermé / fin du concours'
 ];

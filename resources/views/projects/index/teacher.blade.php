@@ -1,38 +1,48 @@
 @extends('layout')
 
 @section('content')
-    @include('projects.contest-status.teacher')
+@if(!$view)
+    La phase actuelle du concours ne vous permet pas d'évaluer des projets.
+@else
+    @include('projects.index.jury_awards_alert')
+
+    <h3>
+    @if($view['type'] == 'own')
+        Liste de vos projets
+    @elseif($view['type'] == 'region')
+        Liste des projets de la région {{ $view['name'] }}
+    @elseif($view['type'] == 'prize')
+        Liste des projets nominés pour le prix {{ $view['name'] }}
+    @endif
+    </h3>
+
+    <p>@include('projects.contest-status')</p>
+
+    @if(count($other_views))
+        @foreach($other_views as $other_view)
+            @if($other_view['type'] == 'own')
+                <a class="btn btn-primary" href="/projects">Voir mes projets</a>
+            @elseif($other_view['type'] == 'region')
+                <a class="btn btn-primary" href="/projects?type=region&id={{ $other_view['target_id'] }}">Voir les projets de la région {{ $other_view['name'] }}</a>
+            @elseif($other_view['type'] == 'prize')
+                <a class="btn btn-primary" href="/projects?type=prize&id={{ $other_view['target_id'] }}">Voir les projets nominés pour le prix {{ $other_view['name'] }}</a>
+            @endif
+        @endforeach
+    @endif
 
     <div class="card mt-3 mb-3">
         <div class="card-header">
             <h2>Projets</h2>
+            @include('projects.index.common.rating_mode_switcher')
             @include('projects.index.common.filter')
         </div>
         @if(count($rows))
             <div class="table-responsive">
-                <table class="table table-striped table-borderless active-table">
-                    <thead>
-                        <tr>
-                            <th class="col-1">{!! SortableTable::th('id', 'ID') !!}</th>
-                            <th class="col-5">{!! SortableTable::th('name', 'Nom') !!}</th>
-                            <th class="col-3">{!! SortableTable::th('school_name', 'Établissement') !!}</th>
-                            <th class="col-2">{!! SortableTable::th('created_at', 'Date de soumission') !!}</th>
-                            <th class="col-1">{!! SortableTable::th('status', 'Statut') !!}</th>
-                        </tr>
-                    </thead>
-                    @foreach ($rows as $project)
-                        <tr data-row-id="{{ $project->id }}"
-                            @if($project->status == 'incomplete') class="row-alert" @endif
-                            @if($project->status != 'draft') data-actions-disabled="edit" @endif
-                            data-redirect-url="{{ $project->view_url }}">
-                            <td>{{ $project->id }}</td>
-                            <td>{{ $project->name }}</td>
-                            <td>{{ $project->school_name }}</td>
-                            <td>{{ $project->created_at }}</td>
-                            <td>@lang('project_status.'.$project->status)</td>
-                        </tr>
-                    @endforeach
-                </table>
+                @if($rating_mode)
+                    @include('projects.index.common.list_ratings')
+                @else
+                    @include('projects.index.teacher_list_details')
+                @endif
             </div>
         @else
             @include('common.empty_list')
@@ -44,13 +54,21 @@
 
     <div class="mt-5 mb-3">
         @if(count($rows))
-            @if($contest->status == 'open' && !$coordinator)
-                <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">Modifier le projet sélectionné</button>
+            @if($view['edit'] || $view['rate'])
+                <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET" data-action-name="edit">
+                    Modifier le projet sélectionné
+                </button>
             @endif
-            <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">Afficher le projet sélectionné</button>
+            @if($contest->status != 'open')
+                <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">Afficher le projet sélectionné</button>
+            @endif
+            @if($coordinator)
+                <a class="btn btn-primary active-button" data-action="" target="_blank" href="/projects_export">Télécharger au format CSV</a>
+		    @endif
         @endif
-        @if($contest->status == 'open' && !$coordinator)
+        @if($view['create'])
             <button class="btn btn-primary active-button" data-action="/projects/create" data-method="GET">Déposer un nouveau projet</button>
         @endif
     </div>
+@endif
 @endsection

@@ -1,19 +1,15 @@
 <div id="rating-form">
     {!! Form::open()->route('projects.set_rating', ['project' => $project])->fill($rating)->attrs(['class' => 'form-compact']) !!}
 
-	{!! Form::text('score_idea', 'Démarche projet = 25 points')
-            ->type('number')->min(0)->max(25)
-	    ->wrapperAttrs(['class' => 'form-group-compact rating-input'])
-            ->options(Rating::rangeOptions(25))
-	    ->help('Respect du programme NSI.<br>Idée globale - originalité et créativité.<br>Organisation du travail : composition de l\'équipe, rôles, et répartition des tâches.<br>Ouverture : idées d\'amélioration, analyse critique, nouvelles compétences développées.') !!}
-        {!! Form::text('score_operationality', 'Fonctionnement et opérationnalité = 50 points')
+    	{!! Form::text('score_operationality', 'Compétences Techniques = 50 points')
+            ->type('number')->min(0)->max(50)
+	        ->wrapperAttrs(['class' => 'form-group-compact rating-input'])
+            ->options(Rating::rangeOptions(50))
+	    ->help('<b>Respect du programme de NSI</b><br><br><b>Programmation et Développement</b><br>Maîtrise des langages de programmation (Python)<br>Utilisation limitée des frameworks et bibliothèques<br>Qualité et lisibilité du code<br>Reproductibilité de la démonstration<br><br><b>Algorithmique et Structures de Données</b><br>Conception et implémentation d’algorithmes efficaces<br>Utilisation appropriée des structures de données<br><br><b>Documentation technique</b><br>Qualité et complétude de la documentation du projet<br>Citation des sources externes, transparence sur l’usage éventuel d’IA<br>Guide d’utilisation<br>Facilité de compréhension et d’utilisation') !!}
+        {!! Form::text('score_communication', 'Compétences Non Techniques = 50 points')
             ->type('number')->min(0)->max(50)
             ->wrapperAttrs(['class' => 'form-group-compact rating-input'])
-            ->options(Rating::rangeOptions(50))->help('Qualité et structure du code.<br>Reproductibilité de la démonstration.<br>Test et validation - correction des bugs.<br>Qualité de la documentation technique.') !!}
-        {!! Form::text('score_communication', 'Communication et qualité du dossier = 25 points')
-            ->type('number')->min(0)->max(25)
-            ->wrapperAttrs(['class' => 'form-group-compact rating-input'])
-            ->options(Rating::rangeOptions(25))->help('Présentation écrite.<br>Présentation orale.<br>Démonstration du projet.<br>Respect des consignes.') !!}
+            ->options(Rating::rangeOptions(50))->help('<b>Travail en Équipe</b><br>Planification et organisation du travail<br>Collaboration et communication avec les membres de l’équipe<br>Gestion des conflits et prise de décisions collectives<br><br><b>Analyse critique du projet</b><br>Savoir identifier et résoudre les difficultés<br><br><b>Créativité et Innovation</b><br>Originalité des idées et des solutions proposées<br>Capacité à innover et à proposer des améliorations<br><br><b>Présentation du projet</b><br>Clarté et efficacité de la présentation<br>Capacité à expliquer les concepts<br>Pertinence de la démonstration vidéo') !!}
         <div class="mt-3">
             Total : <strong><span id="rating-total">--</span> sur <span id="rating-max">--</span></strong>
         </div>
@@ -31,7 +27,7 @@
             {!! Form::textarea('notes', 'Notes') !!}
         </div>
 
-        @if($contest->status == 'grading' || $contest->status == 'deliberating')
+        @if($can_rate)
             <div class="mt-3">
                 @if(!$rating || !$rating->published)
                     <div class="mb-2">

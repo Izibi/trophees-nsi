@@ -16,9 +16,19 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::get('/project', [App\Http\Controllers\ProjectsController::class, 'showPaginated']);
     Route::get('/projects_export', [App\Http\Controllers\ProjectsController::class, 'export']);
 
-    Route::middleware(['attribute:coordinator'])->group(function() {
-        Route::get('/statistics', [App\Http\Controllers\StatisticsController::class, 'index']);
+    Route::get('/statistics', [App\Http\Controllers\StatisticsController::class, 'index']);
+    Route::get('/statistics/export', [App\Http\Controllers\StatisticsController::class, 'export']);
+    Route::get('/statistics/export_detail', [App\Http\Controllers\StatisticsController::class, 'export_detail']);
+
+    Route::middleware(['role:admin,jury'])->group(function() {
+        Route::get('/jury', [App\Http\Controllers\JuryController::class, 'index']);
+        Route::get('/jury/nominate', [App\Http\Controllers\JuryController::class, 'nominate'])->name('jury.nominate');
     });
+
+    Route::get('/awards', [App\Http\Controllers\AwardsController::class, 'index']);
+    Route::get('/awards/{project}/edit', [App\Http\Controllers\AwardsController::class, 'edit'])->name('awards.edit');
+    Route::get('/awards/{award}/delete', [App\Http\Controllers\AwardsController::class, 'delete'])->name('awards.delete');
+    Route::post('/awards/update', [App\Http\Controllers\AwardsController::class, 'update'])->name('awards.update');
 
     Route::middleware(['role:jury'])->group(function() {
         Route::post('projects/{project}/set_rating', [App\Http\Controllers\ProjectsController::class, 'setRating'])->name('projects.set_rating');

@@ -10,6 +10,8 @@ use App\Models\Grade;
 use App\Models\Rating;
 use App\Models\Country;
 use App\Models\Region;
+use App\Models\Prize;
+use App\Models\Award;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\SetProjectRatingRequest;
@@ -30,12 +32,23 @@ class ProjectsController extends Controller
 
     public function index(Request $request)
     {
-        $rating_mode_accessible = $this->accessible($request->user(), null, 'view_projects_rating');
+    	$user = $request->user();
+        $views = $this->getUserViews($request);
+        $view = $this->selectView($request, $views);
+
+        if(!$view) {
+            return view('projects.index.'.$request->user()->role, [
+                'view' => null,
+            ]);
+        }
+
+        $rating_mode_accessible = $view['view_rating'];
         $rating_mode = $request->has('rating_mode');
         if($rating_mode && !$rating_mode_accessible) {
             return redirect('/projects');
         }
-        $q = $this->getProjectsQuery($request);
+
+        $q = $this->getProjectsQuery($request, $view);
         SortableTable::orderBy($q, $this->getSortFields($request));
         $projects = $q->paginate()->appends($request->all());
         $offset = ($projects->currentPage() - 1) * $projects->perPage();
@@ -45,66 +58,175 @@ class ProjectsController extends Controller
             $project->view_url = '/project?'.$p['query'].'&refer_page='.urlencode($request->fullUrl());
         }
 
-        $prize_id = $this->getPrizeIdFilter($request);
-        $prize = null;
-        if($prize_id !== null) {
-            foreach($request->user()->prizes as $p) {
-                if($p->id == $prize_id) {
-                    $prize = $p;
-                    break;
-                }
-            }
-        }
-
-	$user = $request->user();
+        $views = array_filter($views, function($v) use ($view) {
+            return $v['type'] != $view['type'] || (isset($v['target_id']) && isset($view['target_id']) && $v['target_id'] != $view['target_id']);
+        });
         return view('projects.index.'.$request->user()->role, [
             'user' => $user,
             'rows' => $projects,
             'contest' => $this->contest,
+            'view' => $view,
+            'other_views' => $views,
             'rating_mode_accessible' => $rating_mode_accessible,
             'rating_mode' => $rating_mode,
+            'url_rating' => '/projects?'.http_build_query(array_merge($request->all(), ['rating_mode' => 1])),
+            'url_nonrating' => '/projects?'.http_build_query(array_merge($request->all(), ['rating_mode' => null])),
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray(),
             'awards_count' => $this->countJuryMemberAwards($request),
             'awards_limit' => config('nsi.awards_limit_per_jury_member'),
-	    'coordinator' => $request->get('coordinator') == '1',
-	    'user_is_coordinator' => $user->coordinator,
-            'prize' => $prize
+	        'coordinator' => $user->hasRole('coordinator')
         ]);
+    }
+
+    private function getUserViews(Request $request) {
+        $user = $request->user();
+        $user_role = $user->role;
+        $views = [];
+
+        $phase = $this->contest->status;
+        $coordinator = $user->roles()->where('type', 'coordinator')->exists();
+
+        if($user_role == 'teacher') {
+            $views[] = ['type' => 'own', 'create' => $phase == 'open', 'edit' => $phase == 'open' || $phase == 'instruction', 'status' => false, 'rate' => false, 'view_rating' => false];
+            if($coordinator) {
+                $views[] = ['type' => 'region', 'target_id' => $user->region_id, 'name' => Region::find($user->region_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => false, 'view_rating' => $phase == 'deliberating-territorial'];
+            }
+        } elseif($user_role == 'jury' && $user->hasRole('teacher')) {
+            $views[] = ['type' => 'own', 'create' => $phase == 'open', 'edit' => $phase == 'open' || $phase == 'instruction', 'status' => false, 'rate' => false, 'view_rating' => false];
+        } elseif($user_role == 'admin') {
+            return [['type' => 'all', 'create' => false, 'edit' => true, 'status' => true, 'rate' => true, 'view_rating' => true]];
+        }
+
+        foreach($user->roles as $role) {
+            if($role->type == 'territorial' && ($coordinator || $phase == 'grading-territorial' || $phase == 'deliberating-territorial')) {
+                $views[] = ['type' => 'region', 'target_id' => $role->target_id, 'name' => Region::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-territorial', 'view_rating' => $phase == 'deliberating-territorial'];
+            }
+        }
+        foreach($user->roles as $role) {
+            if($role->type == 'prize' && ($coordinator || $phase == 'grading-national' || $phase == 'deliberating-national')) {
+                $views[] = ['type' => 'prize', 'target_id' => $role->target_id, 'name' => Prize::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-national', 'view_rating' => $phase == 'deliberating-national'];
+            }
+        }
+
+        return $views;
+    }
+
+    private function selectView(Request $request, $views) {
+        $view = null;
+        $view_type = $request->get('type');
+        $view_target_id = $request->get('id');
+        foreach($views as $v) {
+            if($v['type'] == $view_type && $v['target_id'] == $view_target_id) {
+                $view = $v;
+                break;
+            }
+        }
+        if(!$view) {
+            if(count($views) > 0) {
+                $view = $views[0];
+            } else {
+                $view = null;
+            }
+        }
+        return $view;
     }
 
     public function export(Request $request)
     {
-        $rating_mode_accessible = $this->accessible($request->user(), null, 'view_projects_rating');
-        if(!$rating_mode_accessible) {
-            abort(403);
-        }
-        $q = $this->getProjectsQuery($request)->orderBy('id');
+        $user = $request->user();
+        $coordinator = $user->roles()->where('type', 'coordinator')->exists();
+        $phase = $this->contest->status;
+        $has_info = false;
 
-        $callback = function() use ($q) {
+        if($user->role == 'admin') {
+            $has_notes = true;
+            $has_info = true;
+            $q = Project::query();
+        } elseif($coordinator) {
+            $has_notes = in_array($phase, ['grading-territorial', 'deliberating-territorial', 'grading-national', 'deliberating-national', 'closed']);
+            $q = null;
+            $views = $this->getUserViews($request);
+            foreach($views as $view) {
+                if($view['type'] == 'region' || $view['type'] == 'prize') {
+                    $q2 = $this->getProjectsQuery($request, $view);
+                    if($q) {
+                        $q = $q->union($q2);
+                    } else {
+                        $q = $q2;
+                    }
+                    continue;
+                }
+            }
+            if(!$q) {
+                return redirect('/projects');
+            }
+        } else {
+            return redirect('/projects');
+        }
+        $q = $q->orderBy('id', 'asc');
+
+        $callback = function() use ($q, $has_notes, $has_info) {
             $fh = fopen('php://output', 'w');
-            $header = ['Nom', 'Nombre de notes', 'Démarche', 'Opérationnalité', 'Communication', 'Total', 'Prix thématique', 'Prix spécial', 'Prix originalité'];
+            $header = ['ID', 'Nom', 'Niveau scolaire', 'Statut', 'Enseignant'];
+            if($has_info) {
+                $header[] = 'Email enseignant';
+            }
+            $header = array_merge($header, ['Etablissement scolaire', 'Académie']);
+            if($has_notes) {
+                $header = array_merge($header, ['Nombre de notes', 'Opérationnalité', 'Communication', 'Total']);
+            }
+            if($has_info) {
+                $header = array_merge($header, ['Filles dans l\'équipe', 'Garçons dans l\'équipe', 'Elèves de genre non renseigné dans l\'équipe', 'Filles dans la classe NSI', 'Garçons dans la classe NSI', 'Elèves de genre non renseigné dans la classe NSI', 'Membres de l\'équipe (prénom, nom, genre sur plusieurs colonnes)']);
+            }
             fputcsv($fh, $header);
 
-            $q->chunk(500, function($rows) use ($fh) {
+            $q->chunk(500, function($rows) use ($fh, $has_notes, $has_info) {
                 foreach($rows as $project) {
                     $row = [
+                        $project->id,
                         $project->name,
-                        $project->ratings_amount,
-                        $project->score_idea,
-                        $project->score_operationality,
-                        $project->score_communication,
-                        $project->score_total,
-                        $project->award_engineering,
-                        $project->award_heart,
-                        $project->award_originality,
-                    ];
+                        $project->grade ? $project->grade->name : '',
+                        $project->status,
+                        $project->user->name];
+                    if($has_info) {
+                        $row[] = $project->user->email;
+                    }
+                    $row = array_merge($row, [
+                        $project->school ? $project->school->name : '',
+                        $project->school ? $project->school->academy->name : '',
+                    ]);
+                    if($has_notes) {
+                        $row = array_merge($row, [
+                            Rating::where('project_id', '=', $project->id)->count(),
+                            $project->score_operationality,
+                            $project->score_communication,
+                            $project->score_total
+                        ]);
+                    }
+                    if($has_info) {
+                        $row = array_merge($row, [
+                            $project->team_girls,
+                            $project->team_boys,
+                            $project->team_not_provided,
+                            $project->class_girls,
+                            $project->class_boys,
+                            $project->class_not_provided
+                        ]);
+                        foreach($project->team_members as $member) {
+                            $row = array_merge($row, [
+                                $member->first_name,
+                                $member->last_name,
+                                $member->gender
+                            ]);
+                        }
+                    }
                     fputcsv($fh, $row);
                 }
             });
             fclose($fh);
         };
 
-        $file_name = 'trophees_nsi_projects.csv';
+        $file_name = 'trophees_nsi_projets.csv';
         $headers = array(
             'Content-type' => 'text/csv',
             'Content-Disposition' => 'attachment; filename='.$file_name,
@@ -169,76 +291,42 @@ class ProjectsController extends Controller
     }
 
 
-    private function getPrizeIdFilter($request) {
-        if (!$request->has('prize_id')) {
-            $prize_id = null;
-        } else {
-            $prize_id = $request->get('prize_id');
-        }
-        $user = $request->user();
-        foreach($user->prizes as $prize) {
-            if($prize->id == $prize_id || ($user->role == 'jury' && $prize_id === null)) {
-                return $prize->id;
-            }
-        }
-        return null;
-    }
-
-
-    private function getProjectsQuery($request) {
+    private function getProjectsQuery($request, $view) {
         $user = $request->user();
         $coordinator = $request->get('coordinator') == '1' && !empty($user->region_id);
 
-        $q = DB::table('projects');
+        $q = Project::select('projects.*');
         $q->where('projects.contest_id', '=', $this->contest->id);
+        
 
-        if($user->role == 'teacher') {
-            $q->select(DB::raw('projects.*, schools.name as school_name'));
-            $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
-            if($coordinator) {
-                $q->where('schools.region_id', $user->region_id);
-            } else {
-                $q->where('projects.user_id', '=', $user->id);
-            }
-        } else if($user->role == 'jury') {
-            $q->select(DB::raw('projects.*, ratings.published as rating_published'));
-            $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
-            $prize_id = $this->getPrizeIdFilter($request);
-            if($prize_id === null) {
-                $q->where('schools.region_id', '=', $user->region_id);
-            } else {
-                $q->where('projects.prize_id', '=', $prize_id);
-            }
-            $q->where('projects.status', '=', 'validated');
-            $q->leftJoin('ratings', function($join) use ($user) {
-                $join->on('projects.id', '=', 'ratings.project_id');
-                $join->on(DB::raw($user->id), '=', 'ratings.user_id');
-            });
-        } else if($user->role == 'admin') {
-            $q->select(DB::raw('projects.*, schools.name as school_name, users.name as user_name, regions.name as region_name'));
-            $q->leftJoin('schools', 'projects.school_id', '=', 'schools.id');
-            $q->leftJoin('users', 'projects.user_id', '=', 'users.id');
-            $q->leftJoin('regions', 'schools.region_id', '=', 'regions.id');
+        if($view['type'] == 'own') {
+            $q->where('projects.user_id', '=', $user->id);
+        } else if($view['type'] == 'region') {
+            $q->join('schools', 'projects.school_id', '=', 'schools.id');
+            $q->where('schools.region_id', '=', $view['target_id']);
+        } else if($view['type'] == 'prize') {
+            $q->join('awards', 'projects.id', '=', 'awards.project_id');
+            $q->where('awards.prize_id', '=', $view['target_id'])->where('region_id', '!=', 0);
         }
 
         if($request->has('filter')) {
-            $filter_id = $request->get('filter_id');
+            $filter_id = trim($request->get('filter_id'));
             if(strlen($filter_id) > 0) {
                 $q->where('projects.id', '=', $filter_id);
             }
-            $filter_name = $request->get('filter_name');
+            $filter_name = trim($request->get('filter_name'));
             if(strlen($filter_name) > 0) {
                 $q->where('projects.name', 'LIKE', '%'.$filter_name.'%');
             }
-            $filter_school = $request->get('filter_school');
+            $filter_school = trim($request->get('filter_school'));
             if(strlen($filter_school) > 0) {
                 $q->where('schools.name', 'LIKE', '%'.$filter_school.'%');
             }
-            $filter_region_id = $request->get('filter_region_id');
+            $filter_region_id = trim($request->get('filter_region_id'));
             if($filter_region_id) {
                 $q->where('schools.region_id', $filter_region_id);
             }
-            $filter_status = $request->get('filter_status');
+            $filter_status = trim($request->get('filter_status'));
             if(strlen($filter_status) > 0) {
                 $q->where('projects.status', '=', $filter_status);
             }
@@ -251,7 +339,7 @@ class ProjectsController extends Controller
     public function create(Request $request)
     {
         $user = $request->user();
-        if(!$this->accessible($user, null, 'create')) {
+        if(!$this->accessible($request, null, 'create')) {
             return $this->accessDeniedResponse();
         }
         return view('projects.edit.index', [
@@ -269,7 +357,7 @@ class ProjectsController extends Controller
     public function store(StoreProjectRequest $request)
     {
         $user = $request->user();
-        if(!$this->accessible($user, null, 'create')) {
+        if(!$this->accessible($request, null, 'create')) {
             return $this->accessDeniedResponse();
         }
         $project = new Project($request->all());
@@ -296,14 +384,42 @@ class ProjectsController extends Controller
     {
         // this method is not used anymore, but saved for future :)
         $user = $request->user();
-        if(!$this->accessible($user, $project, 'view')) {
+        if(!$this->accessible($request, $project)) {
             return $this->accessDeniedResponse();
         }
+        $awards = [];
+        if($user->role == 'jury' || $user->role == 'admin') {
+            $awards = Award::where('project_id', '=', $project->id)->get();
+        }
+        $can_award = false;
+        if($this->contest->status != 'deliberating-territorial' && $this->contest->status != 'deliberating-national') {
+        } elseif($user->hasRole('president-territorial')) {
+            $can_award = 'yes';
+        } elseif($user->hasRole('president-national')) {
+            foreach($user->roles()->where('type', 'president-national')->get() as $role) {
+                $prize = Prize::find($role->target_id);
+                if($prize && $prize->grade_id == $project->grade_id) {
+                    $can_award = 'yes';
+                    break;
+                }
+            }
+        }
+        if($can_award) {
+            $award = Award::where('project_id', $project->id)->where('user_id', $user->id)->first();
+            if($award) {
+                $can_award = 'done';
+            }
+        }
+        $can_rate = $this->accessible($request, $project, 'rate');
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project,
             'projects_paginator' => false,
-            'contest' => $this->contest
+            'contest' => $this->contest,
+            'can_award' => $can_award,
+            'awarded' => $can_award == 'done',
+            'can_rate' => $can_rate,
+            'awards' => $awards
         ];
         if($user->role == 'jury') {
             $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
@@ -314,7 +430,9 @@ class ProjectsController extends Controller
 
     public function showPaginated(Request $request)
     {
-        $q = $this->getProjectsQuery($request);
+        $views = $this->getUserViews($request);
+        $view = $this->selectView($request, $views);
+        $q = $this->getProjectsQuery($request, $view);
         SortableTable::orderBy($q, $this->getSortFields($request));
         $projects = $q->paginate(1)->appends($request->all());
         if(!count($projects)) {
@@ -324,14 +442,44 @@ class ProjectsController extends Controller
         $project = Project::find($projects[0]->id);
 
         $user = $request->user();
-        if(!$this->accessible($user, $project, 'view')) {
+        if(!$this->accessible($request, $project)) {
             return $this->accessDeniedResponse();
         }
+
+        $awards = [];
+        if($user->role == 'jury' || $user->role == 'admin') {
+            $awards = Award::where('project_id', '=', $project->id)->get();
+        }
+        $can_award = false;
+        if($this->contest->status != 'deliberating-territorial' && $this->contest->status != 'deliberating-national') {
+        } elseif($user->hasRole('president-territorial')) {
+            $can_award = 'yes';
+        } elseif($user->hasRole('president-national')) {
+            foreach($user->roles()->where('type', 'president-national')->get() as $role) {
+                $prize = Prize::find($role->target_id);
+                if($prize && $prize->grade_id == $project->grade_id) {
+                    $can_award = 'yes';
+                    break;
+                }
+            }
+        }
+        if($can_award) {
+            $award = Award::where('project_id', $project->id)->where('user_id', $user->id)->first();
+            if($award) {
+                $can_award = 'done';
+            }
+        }
+
+        $can_rate = $this->accessible($request, $project, 'rate');
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project,
             'projects_paginator' => $projects,
-            'contest' => $this->contest
+            'contest' => $this->contest,
+            'can_rate' => $can_rate,
+            'can_award' => $can_award,
+            'awarded' => $can_award == 'done',
+            'awards' => $awards
         ];
         if($user->role == 'jury') {
             $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
@@ -344,8 +492,15 @@ class ProjectsController extends Controller
     public function edit(Request $request, Project $project)
     {
         $user = $request->user();
-        if(!$this->accessible($user, $project, 'edit')) {
+        $phase = $this->contest->status;
+        if(!$this->accessible($request, $project, 'edit')) {
             return $this->accessDeniedResponse();
+        }
+        if($user->role == 'teacher' &&
+            (!in_array($project->status, ['draft', 'incomplete']) ||
+            ($project->status == 'draft' && $phase != 'open')) ||
+            ($project->status == 'incomplete' && !in_array($phase, ['open', 'instruction']))) {
+            return redirect('/projects');
         }
         return view('projects.edit.index', [
             'submit_route' => 'projects.update',
@@ -362,8 +517,12 @@ class ProjectsController extends Controller
 
     public function update(StoreProjectRequest $request, Project $project)
     {
-        if(!$this->accessible($request->user(), $project, 'edit')) {
+        $user = $request->user();
+        if(!$this->accessible($request, $project, 'edit')) {
             return $this->accessDeniedResponse();
+        }
+        if($user->role == 'teacher' && !in_array($project->status, ['draft', 'incomplete'])) {
+            return redirect('/projects');
         }
 
         $this->deleteUploads($project, $request);
@@ -389,7 +548,7 @@ class ProjectsController extends Controller
     public function setRating(SetProjectRatingRequest $request, Project $project)
     {
         $user = $request->user();
-        if(!$this->accessible($user, $project, 'rate')) {
+        if(!$this->accessible($request, $project, 'rate')) {
             return $this->accessDeniedResponse();
         }
         $rating = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
@@ -409,7 +568,7 @@ class ProjectsController extends Controller
     public function setStatus(SetProjectStatusRequest $request, Project $project)
     {
         $user = $request->user();
-        if(!$this->accessible($user, $project, 'change_status')) {
+        if(!$this->accessible($request, $project, 'status')) {
             return $this->accessDeniedResponse();
         }
         $project->status = $request->get('status');
@@ -448,53 +607,17 @@ class ProjectsController extends Controller
     }
 
 
-    private function accessible($user, $project, $action) {
-        switch($action) {
-            case 'create':
-                return $user->role == 'teacher' && $this->contest->status == 'open';
-                break;
-            case 'view':
-                return $user->role == 'admin' ||
-                    ($user->role == 'teacher' && $user->id == $project->user_id) ||
-                    ($user->coordinator && $user->region_id && $user->region_id === $project->school->region_id) ||
-                    ($user->role == 'jury' &&
-                        ($user->region_id == $project->school->region_id ||
-                            $user->prizes->contains('id', $project->prize_id)) &&
-                        $project->status != 'masked' &&
-                        $project->contest_id == $this->contest->id &&
-                        ($this->contest->status == 'grading' || $this->contest->status == 'deliberating' || $this->contest->status == 'closed')
-                    );
-                break;
-            case 'edit':
-                return
-                    $user->role == 'admin' ||
-                    ($user->role == 'teacher' &&
-                    $user->id == $project->user_id &&
-                    $project->status == 'draft' &&
-                    $project->contest_id == $this->contest->id &&
-                    $this->contest->status == 'open');
-                break;
-            case 'change_status':
-                return $user->role == 'admin';
-                break;
-	    case 'rate':
-		$prize_access = false;
-		foreach($user->prizes as $prize) {
-			if($prize->id = $project->prize_id) { $prize_access = true; }
-		}
-                return $user->role == 'jury' &&
-                    ($user->region_id == $project->school->region_id || $prize_access) &&
-                    $project->status == 'validated' &&
-                    $project->contest_id == $this->contest->id &&
-                    ($this->contest->status == 'grading' || $this->contest->status == 'deliberating');
-                break;
-            case 'view_projects_rating':
-                return
-                    $user->role == 'admin' ||
-                    ($user->role == 'jury' && ($user->coordinator || $this->contest->status == 'deliberating'));
-                    //($user->role == 'jury' && $user->coordinator);
-                break;
+    private function accessible($request, $project = null, $action = null) {
+        $views = $this->getUserViews($request);
+        foreach($views as $view) {
+            if($action && !$view[$action]) continue;
+            if(!$project) return true;
+
+            if($this->getProjectsQuery($request, $view)->where('projects.id', '=', $project->id)->count()) {
+                return true;
+            }
         }
+        return false;
     }
 
 
@@ -503,19 +626,16 @@ class ProjectsController extends Controller
     }
 
 
-
     private function finalizeProject(&$project, $request) {
         $errors = [];
         $config = config('nsi.project');
 
         $team_size = $project->team_girls + $project->team_boys + $project->team_not_provided;
         if($team_size < $config['team_size_min'] || $team_size > $config['team_size_max']) {
-//            $errors[] = strtr('Total size of the team must be between team_size_min and team_size_max', $config);
-            $errors[] = strtr('La taille totale de l\'équipe doit être entre team_size_min et team_size_max', $config);
+            $errors[] = strtr('La taille totale de l\'équipe doit être entre team_size_min et team_size_max.', $config);
         }
 
         if(empty($project->image_file)) {
-//            $errors[] = 'Image not uploaded.';
             $errors[] = 'Image manquante.';
         }
         foreach($project->team_members as $team_member) {
@@ -524,7 +644,7 @@ class ProjectsController extends Controller
                 break;
             }
             if(empty($team_member->first_name) || empty($team_member->last_name)) {
-		$errors[] = 'Il manque des informations dans la liste des membres de l\'équipe.';
+    		    $errors[] = 'Il manque des informations dans la liste des membres de l\'équipe.';
                 break;
             }
         }

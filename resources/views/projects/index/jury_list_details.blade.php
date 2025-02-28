@@ -8,13 +8,13 @@
         </tr>
     </thead>
     @foreach ($rows as $project)
-        <tr data-row-id="{{ $project->id }}" @if($project->status != 'draft') data-actions-disabled="edit" @endif data-redirect-url="{{ $project->view_url }}">
+        <tr data-row-id="{{ $project->id }}" data-redirect-url="{{ $project->view_url }}">
             <td>{{ $project->id }}</td>
-            <td>{{ $project->name }}</td>
+            <td>{{ $project->name }} <a href="{{ $project->view_url }}" class="new-tab" target="_blank">↗</a></td>
             <td>{{ $project->created_at }}</td>
             <td>
-                @if(!is_null($project->rating_published))
-                    {{ $project->rating_published ? 'Publiée' : 'Brouillon' }}
+                @if($rating = $project->getUserRating($user))
+                    {{ $rating->published == 1 ? 'Publiée' : 'Brouillon' }}
                 @else
                     Non évalué
                 @endif

@@ -7,7 +7,7 @@
 
             <div class="mt-5">
                 {!! Form::open()->route('projects.set_status', ['project' => $project])->fill($project) !!}
-                    {!! Form::select('status', 'Status')->options(trans('project_status')) !!}
+                    {!! Form::select('status', 'Statut')->options(trans('project_status')) !!}
                     {!! Form::hidden('refer_page', $refer_page) !!}
                     <div class="mt-3">
                         {!! Form::submit('Enregistrer') !!}

@@ -40,9 +40,12 @@ class StoreProjectRequest extends FormRequest
             ],
             'video' => 'required_if:finalize,1|nullable|url',
             'url' => 'required_if:finalize,1|nullable|url',
+            'class_boys' => 'required_if:finalize,1|nullable|integer|min:0',
+            'class_girls' => 'required_if:finalize,1|nullable|integer|min:0',
+            'class_not_provided' => 'required_if:finalize,1|nullable|integer|min:0',
             'cb_tested_by_teacher' => 'accepted_if:finalize,1',
             'cb_reglament_accepted' => 'accepted_if:finalize,1',
-            'cb_authorization' => 'accepted_if:finalize,1',
+            'cb_video_authorization' => 'accepted_if:finalize,1',
             'presentation_file' => 'max:'.$conf['presentation_file_size_max'],
             'image_file' => [
                 'max:'.$conf['image_file_size_max'],

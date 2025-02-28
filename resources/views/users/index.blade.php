@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout', ['containerstyle' => 'max-width: none;'])
 
 @section('content')
     <div class="card mt-3 mb-3">
@@ -9,7 +9,7 @@
 
         @if(count($rows))
             <div class="table-responsive">
-                <table class="table table-striped table-borderless active-table">
+                <table class="table table-striped table-borderless active-table" style="max-width: none;">
                     <thead>
                         <tr>
                             <th>{!! SortableTable::th('name', 'Nom') !!}</th>

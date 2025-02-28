@@ -10,6 +10,7 @@ use App\Helpers\SortableTable;
 use App\Models\Country;
 use App\Models\Region;
 use App\Models\Prize;
+use App\Models\Role;
 
 class UsersController extends Controller
 {
@@ -72,19 +73,14 @@ class UsersController extends Controller
 
     public function edit(Request $request, User $user)
     {
-	$prize_id = null;
-	foreach($user->prizes as $prize) {
-		$prize_id = $prize->id;
-		break;
-	}
-	$user->prize_id = $prize_id;
+        $coordinator = $user->hasRole('coordinator');
         return view('users.edit', [
             'refer_page' => $request->get('refer_page', '/users'),
             'user' => $user,
             'countries' => Country::orderBy('name')->get(),
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
-	    'prizes' => Prize::orderBy('name')->get(),
-	    'prize_id' => $prize_id
+    	    'prizes' => Prize::orderBy('name')->get(),
+            'coordinator' => $coordinator
         ]);
     }
 
@@ -92,15 +88,70 @@ class UsersController extends Controller
     public function update(StoreUserRequest $request, User $user)
     {
         $user->fill($request->all());
-	$user->save();
-	$prize_saved = false;
-	$prize_id = $request->input('prize_id');
-	foreach($user->prizes as $prize) {
-		$user->prizes()->detach($prize->id);
-	}
-	if($prize_id !== null) {
-		$user->prizes()->attach($prize_id);
-	}
+    	$user->save();
+
+        if($request->get('role') == 'jury') {
+            $roles_id = $request->get('roles_id', []);
+            $roles_type = $request->get('roles_type', []);
+            $roles_target = $request->get('roles_target', []);
+            foreach($user->roles as $role) {
+                if(!in_array("".$role->id, $roles_id)) {
+                    $role->delete();
+                }
+            }
+            foreach($roles_id as $i => $role_id) {
+                if($role_id) {
+                    $role = Role::find($role_id);
+                } else {
+                    $role = new Role();
+                    $role->user_id = $user->id;
+                }
+                $role->type = $roles_type[$i];
+                $role->target_id = $roles_target[$i];
+                try {
+                    $role->save();
+                } catch(\Exception $e) {}
+            }
+            foreach($user->roles as $role) {
+                if($role->target_id === null && in_array($role->type, ['territorial', 'prize', 'president-territorial', 'president-prize'])) {
+                    $role->delete();
+                }
+            }
+            foreach($user->roles->where('type', 'president-territorial') as $president_role) {
+                if($user->roles->where('type', 'territorial')->where('target_id', $president_role->target_id)->count() == 0) {
+                    $role = new Role();
+                    $role->user_id = $user->id;
+                    $role->type = 'territorial';
+                    $role->target_id = $president_role->target_id;
+                    $role->save();
+                }
+            }
+            foreach($user->roles->where('type', 'president-prize') as $president_role) {
+                if($user->roles->where('type', 'prize')->where('target_id', $president_role->target_id)->count() == 0) {
+                    $role = new Role();
+                    $role->user_id = $user->id;
+                    $role->type = 'prize';
+                    $role->target_id = $president_role->target_id;
+                    $role->save();
+                }
+            }
+        } elseif($request->get('role') == 'teacher') {
+            $coordinator = $request->get('cb_coordinator');
+            foreach($user->roles as $role) {
+                if($role->type == 'coordinator' && $coordinator) {
+                    $coordinator = false;
+                } else {
+                    $role->delete();
+                }
+            }
+            if($coordinator) {
+                $role = new Role();
+                $role->user_id = $user->id;
+                $role->type = 'coordinator';
+                $role->save();
+            }
+        }
+
         $url = $request->get('refer_page', '/users');
         return redirect($url)->withMessage('Utilisateur enregistré');
     }

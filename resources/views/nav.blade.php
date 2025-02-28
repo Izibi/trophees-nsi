@@ -7,7 +7,6 @@
 
             <a class="navbar-brand" href="https://trophees-nsi.fr" target="_blank">
                 <figure>
-                    <?xml version="1.0" encoding="UTF-8"?>
                     <svg width="19px" height="11px" viewBox="0 0 19 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <title>logo_small</title>
                     <g id="NSI---Mobile" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -31,13 +30,21 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/projects">Projets</a>
                     </li>
-                    @if(Auth::user()->coordinator)
+                    @if(Auth::user()->role == 'admin' || (Auth::user()->role == 'jury' && (Auth::user()->hasRole('president-territorial') || Auth::user()->hasRole('president-prize'))))
+                        <li class="nav-item">
+                            <a class="nav-link" href="/awards">Lauréats</a>
+                        </li>
+                    @endif
+                    @if(Auth::user()->role == 'admin' || (Auth::user()->role == 'jury' && Auth::user()->hasRole('coordinator')))
+                        <li class="nav-item">
+                            <a class="nav-link" href="/jury">Jury</a>
+                        </li>
+                    @endif
+                    @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator'))
                         <li class="nav-item">
                             <a class="nav-link" href="/statistics">Statistiques</a>
                         </li>
-
                     @endif
-
 
                     @if(Auth::user()->role == 'admin')
                         <li class="nav-item">

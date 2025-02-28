@@ -25,9 +25,9 @@ class SetProjectRatingRequest extends FormRequest
     public function rules()
     {
         return [
-            'score_idea' => 'required_if:published,1|nullable|integer|min:0|max:25',
+            //'score_idea' => 'required_if:published,1|nullable|integer|min:0|max:25',
             'score_operationality' => 'required_if:published,1|nullable|integer|min:0|max:50',
-            'score_communication' => 'required_if:published,1|nullable|integer|min:0|max:25',
+            'score_communication' => 'required_if:published,1|nullable|integer|min:0|max:50',
         ];
     }
 }
