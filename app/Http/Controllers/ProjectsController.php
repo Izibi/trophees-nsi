@@ -141,7 +141,7 @@ class ProjectsController extends Controller
         if($user->role == 'admin') {
             $has_notes = true;
             $has_info = true;
-            $q = Project::query();
+            $q = Project::where('contest_id', $this->contest->id);
         } elseif($coordinator) {
             $has_notes = in_array($phase, ['grading-territorial', 'deliberating-territorial', 'grading-national', 'deliberating-national', 'closed']);
             $q = null;
@@ -380,6 +380,26 @@ class ProjectsController extends Controller
     }
 
 
+    private function canAward(Request $request, Project $project) {
+        $user = $request->user();
+        if($this->contest->status != 'deliberating-territorial' && $this->contest->status != 'deliberating-national') {
+            return false;
+        }
+        if($user->hasRole('president-territorial') && $this->contest->status == 'deliberating-territorial') {
+            return true;
+        }
+        if($user->hasRole('president-prize') && $this->contest->status == 'deliberating-national') {
+            foreach($user->roles()->where('type', 'president-prize')->get() as $role) {
+                $prize = Prize::find($role->target_id);
+                if($prize && $prize->grade_id == $project->grade_id) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
     public function show(Request $request, Project $project)
     {
         // this method is not used anymore, but saved for future :)
@@ -391,25 +411,8 @@ class ProjectsController extends Controller
         if($user->role == 'jury' || $user->role == 'admin') {
             $awards = Award::where('project_id', '=', $project->id)->get();
         }
-        $can_award = false;
-        if($this->contest->status != 'deliberating-territorial' && $this->contest->status != 'deliberating-national') {
-        } elseif($user->hasRole('president-territorial')) {
-            $can_award = 'yes';
-        } elseif($user->hasRole('president-national')) {
-            foreach($user->roles()->where('type', 'president-national')->get() as $role) {
-                $prize = Prize::find($role->target_id);
-                if($prize && $prize->grade_id == $project->grade_id) {
-                    $can_award = 'yes';
-                    break;
-                }
-            }
-        }
-        if($can_award) {
-            $award = Award::where('project_id', $project->id)->where('user_id', $user->id)->first();
-            if($award) {
-                $can_award = 'done';
-            }
-        }
+        $can_award = $this->canAward($request, $project);
+        $awarded = $can_award && Award::where('project_id', $project->id)->where('user_id', $user->id)->exists();
         $can_rate = $this->accessible($request, $project, 'rate');
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
@@ -417,7 +420,7 @@ class ProjectsController extends Controller
             'projects_paginator' => false,
             'contest' => $this->contest,
             'can_award' => $can_award,
-            'awarded' => $can_award == 'done',
+            'awarded' => $awarded,
             'can_rate' => $can_rate,
             'awards' => $awards
         ];
@@ -450,25 +453,8 @@ class ProjectsController extends Controller
         if($user->role == 'jury' || $user->role == 'admin') {
             $awards = Award::where('project_id', '=', $project->id)->get();
         }
-        $can_award = false;
-        if($this->contest->status != 'deliberating-territorial' && $this->contest->status != 'deliberating-national') {
-        } elseif($user->hasRole('president-territorial')) {
-            $can_award = 'yes';
-        } elseif($user->hasRole('president-national')) {
-            foreach($user->roles()->where('type', 'president-national')->get() as $role) {
-                $prize = Prize::find($role->target_id);
-                if($prize && $prize->grade_id == $project->grade_id) {
-                    $can_award = 'yes';
-                    break;
-                }
-            }
-        }
-        if($can_award) {
-            $award = Award::where('project_id', $project->id)->where('user_id', $user->id)->first();
-            if($award) {
-                $can_award = 'done';
-            }
-        }
+        $can_award = $this->canAward($request, $project);
+        $awarded = $can_award && Award::where('project_id', $project->id)->where('user_id', $user->id)->exists();
 
         $can_rate = $this->accessible($request, $project, 'rate');
         $data = [
@@ -478,7 +464,7 @@ class ProjectsController extends Controller
             'contest' => $this->contest,
             'can_rate' => $can_rate,
             'can_award' => $can_award,
-            'awarded' => $can_award == 'done',
+            'awarded' => $awarded,
             'awards' => $awards
         ];
         if($user->role == 'jury') {
@@ -580,7 +566,7 @@ class ProjectsController extends Controller
 
     public function destroy(Request $request, Project $project)
     {
-        if(!$this->accessible($request->user(), $project, 'edit')) {
+        if(!$this->accessible($request, $project, 'edit')) {
             return $this->accessDeniedResponse();
         }
         $project->delete();
@@ -631,7 +617,9 @@ class ProjectsController extends Controller
         $config = config('nsi.project');
 
         $team_size = $project->team_girls + $project->team_boys + $project->team_not_provided;
-        if($team_size < $config['team_size_min'] || $team_size > $config['team_size_max']) {
+        if($team_size == 0) {
+            $errors[] = 'Les membres de l\'équipe ne sont pas renseignés.';
+        } elseif($team_size < $config['team_size_min'] || $team_size > $config['team_size_max']) {
             $errors[] = strtr('La taille totale de l\'équipe doit être entre team_size_min et team_size_max.', $config);
         }
 

@@ -17,7 +17,7 @@
             >
             <td>{{ $project->id }}</td>
             <td>{{ $project->name }}</td>
-            <td>{{ $project->school->name }}</td>
+            <td>{{ $project->school ? $project->school->name : '' }}</td>
             <td>{{ $project->created_at }}</td>
             <td>@lang('project_status.'.$project->status)</td>
         </tr>

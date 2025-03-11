@@ -21,7 +21,7 @@
             Académie : {{ $project->school->academy->name }}<br>
         @endif
         @if($project->school_id)
-            Établissement : {{ $project->school->name }}<br>
+            Établissement : {{ $project->school ? $project->school->name : '' }}<br>
         @endif
         @if($project->grade_id)
             Niveau : {{ $project->grade->name }}<br>

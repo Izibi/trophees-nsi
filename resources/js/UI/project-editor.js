@@ -49,7 +49,10 @@ window.ProjectEditor = function(options) {
 
 
     // team members
-    function toggleTeamMembersHeader() {
+    function updateTeamMembersUI() {
+        $('#btn-add-member').toggle(
+            $('#team-members').find('.team-member-row').length < $('#team-members').data('max-members')
+        );
         $('#team-members-header').toggle(
             $('#team-members').children().length > 0
         );
@@ -57,19 +60,26 @@ window.ProjectEditor = function(options) {
 
     $('#btn-add-member').on('click', function(e) {
         e.preventDefault();
+
+        var rows = $('#team-members').find('.team-member-row').length;
+        if (rows >= $('#team-members').data('max-members')) {
+            updateTeamMembersUI();
+            return;
+        }
+
         var row = $('#team-member-template').children(":first").clone(true);
         row.find('.is-valid').removeClass('.is-valid');
         $('#team-members').append(row);
         row.show();
-        toggleTeamMembersHeader();
+        updateTeamMembersUI();
     })
 
     $('.btn-remove-member').on('click', function(e) {
         e.preventDefault();
         $(this).closest('.team-member-row').remove();
-        toggleTeamMembersHeader();
+        updateTeamMembersUI();
     })
-    toggleTeamMembersHeader();
+    updateTeamMembersUI();
 
 
 

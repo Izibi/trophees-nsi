@@ -34,7 +34,7 @@
                         <small>Ajoutez l'autorisation signée pour chaque élève. Le document à compléter est <a href="https://trophees-nsi.fr/ressources" target="_blank">disponible ici</a>.</small>
                     </div>
                 </div>
-                <div id="team-members">
+                <div id="team-members" data-max-members="{{ config('nsi.project.team_size_max') }}">
                     @if($project)
                         @foreach($project->team_members as $member)
                             @include('projects.edit.team-member', [

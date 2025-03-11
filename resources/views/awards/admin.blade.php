@@ -51,4 +51,8 @@
             </table>
         </div>
     </div>
+
+    <div class="mt-5 mb-3">
+        <a class="btn btn-primary active-button" data-action="" target="_blank" href="/awards/export">Télécharger les lauréats au format CSV</a>
+    </div>
 @endsection

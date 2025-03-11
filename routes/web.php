@@ -29,6 +29,7 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::get('/awards/{project}/edit', [App\Http\Controllers\AwardsController::class, 'edit'])->name('awards.edit');
     Route::get('/awards/{award}/delete', [App\Http\Controllers\AwardsController::class, 'delete'])->name('awards.delete');
     Route::post('/awards/update', [App\Http\Controllers\AwardsController::class, 'update'])->name('awards.update');
+    Route::get('/awards/export', [App\Http\Controllers\AwardsController::class, 'export']);
 
     Route::middleware(['role:jury'])->group(function() {
         Route::post('projects/{project}/set_rating', [App\Http\Controllers\ProjectsController::class, 'setRating'])->name('projects.set_rating');

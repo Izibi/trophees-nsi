@@ -176,7 +176,7 @@ class AwardsController extends Controller
             return redirect()->back();
         }
         
-        $award = Award::where('project_id', $project->id)->where('user_id', $user->id)->first();
+        $award = Award::where('project_id', $project->id)->where('user_id', $user->id)->where('region_id', $awarded['region_id'])->first();
         if(!$award) {
             $award = new Award();
             $award->project_id = $project->id;
@@ -210,5 +210,60 @@ class AwardsController extends Controller
 
         $award->delete();
         return redirect('/awards');
+    }
+
+
+    public function export(Request $request)
+    {
+        $user = $request->user();
+        if(!$user->role == 'admin' && !$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
+            return redirect('/projects');
+        }
+
+        if($user->role == 'admin') {
+            $q = Award::orderBy('prize_id', 'asc')->orderBy('region_id', 'asc');
+        } else {
+            $q = Award::where('user_id', $user->id)->orderBy('prize_id', 'asc')->orderBy('region_id', 'asc');
+
+        }
+
+        $callback = function() use ($q) {
+            $fh = fopen('php://output', 'w');
+            $header = ['ID', 'Prix', 'Territoire', 'Nom', 'Enseignant', 'Etablissement scolaire', 'Académie', 'Commentaire', 'Membres de l\'équipe'];
+            fputcsv($fh, $header);
+
+            $q->chunk(500, function($rows) use ($fh) {
+                foreach($rows as $award) {
+                    $project = $award->project;
+                    $team_members = "";
+                    foreach($project->team_members as $member) {
+                        $team_members .= $member->first_name . " " . $member->last_name . " (" . ($member->gender == 'male' ? 'M' : 'F') . "), ";
+                    }
+                    $row = [
+                        $project->id,
+                        $award->prize->name,
+                        $award->region_id != 0 ? Region::find($award->region_id)->name : 'National',
+                        $project->name,
+                        $project->user->name,
+                        $project->school ? $project->school->name : '',
+                        $project->school ? $project->school->academy->name : '',
+                        $award->comment,
+                        $team_members
+                    ];
+                    fputcsv($fh, $row);
+                }
+            });
+            fclose($fh);
+        };
+
+        $file_name = 'trophees_nsi_laureats.csv';
+        $headers = array(
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename='.$file_name,
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        );
+        return response()->stream($callback, 200, $headers);
     }
 }

@@ -123,7 +123,9 @@ class UsersController extends Controller
                     $role->user_id = $user->id;
                     $role->type = 'territorial';
                     $role->target_id = $president_role->target_id;
-                    $role->save();
+                    try {
+                        $role->save();
+                    } catch(\Exception $e) {}
                 }
             }
             foreach($user->roles->where('type', 'president-prize') as $president_role) {
@@ -132,7 +134,9 @@ class UsersController extends Controller
                     $role->user_id = $user->id;
                     $role->type = 'prize';
                     $role->target_id = $president_role->target_id;
-                    $role->save();
+                    try {
+                        $role->save();
+                    } catch(\Exception $e) {}
                 }
             }
         } elseif($request->get('role') == 'teacher') {
