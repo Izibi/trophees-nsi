@@ -7,7 +7,14 @@
         </div>
 
         @if(count($regional_data))
-        <h3 style="margin: 16px 0px;">Statistiques de votre territoire</h3>
+        <h3 style="margin: 16px 0px;">
+            Statistiques de
+            @if(count($regional_data) == 1)
+                votre territoire
+            @else
+                vos territoires
+            @endif
+        </h3>
         <div class="table-responsive">
                 <table class="table table-bordered text-center">
                     <thead>
@@ -61,6 +68,9 @@
         @endif
 
         <h3 style="margin: 16px 0px;">Statistiques nationales</h3>
+        @if($isAdmin)
+        <p>Statistiques publiques affichées à tous ceux qui ont accès aux statistiques.</p>
+        @endif
         @if(count($data))
             <div class="table-responsive">
                 <table class="table table-bordered text-center">

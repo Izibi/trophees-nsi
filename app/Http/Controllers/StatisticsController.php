@@ -24,10 +24,11 @@ class StatisticsController extends Controller
         if(!$isAdmin && !$request->user()->hasRole('coordinator')) { 
             return redirect('/');
         }
-        $data = ['data' => $this->getData(), 'regional_data' => []];
-        if(!$isAdmin) {
-            $data['regional_data'] = $this->getData($request->user());
-        }
+        $data = [
+            'data' => $this->getData(),
+            'regional_data' => $this->getData($request->user()),
+            'isAdmin' => $isAdmin
+        ];
         return view('statistics.index', $data);
     }
 
@@ -62,7 +63,7 @@ class StatisticsController extends Controller
                 'teachers' => 0,
                 'academies' => []
             ];
-            $validatedStatus = $user ? 'validated' : ['finalized', 'validated'];
+            $validatedStatus = $user ? 'finalized' : ['finalized', 'validated'];
             foreach($region->academies as $academy) {
                 $projects = $this->getProjects($academy);
                 $academy_data = [
@@ -102,7 +103,11 @@ class StatisticsController extends Controller
 
     private function countProjects($projects, $status = null, $grade = null) {
         if($status) {
-            $projects = $projects->where('status', $status);
+            if(is_array($status)) {
+                $projects = $projects->whereIn('status', $status);
+            } else {
+                $projects = $projects->where('status', $status);
+            }
         }
         if($grade) {
             $projects = $projects->where('grade_id', $grade);
