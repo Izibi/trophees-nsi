@@ -69,6 +69,8 @@ class StatisticsController extends Controller
                 $academy_data = [
                     'name' => $academy->name,
                     'teachers' => $this->countTeachers($projects),
+                    'projects_draft_premiere' => $this->countProjects($projects, 'draft', $premiere),
+                    'projects_draft_terminale' => $this->countProjects($projects, 'draft', $terminale),
                     'projects_draft' => $this->countProjects($projects, 'draft'),
                     'projects_finalized_premiere' => $this->countProjects($projects, $validatedStatus, $premiere),
                     'projects_finalized_terminale' => $this->countProjects($projects, $validatedStatus, $terminale),

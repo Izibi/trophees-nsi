@@ -20,17 +20,20 @@
                     <thead>
                         <tr>
                             <th colspan="2">Territoire</th>
-                            <th colspan="11">Projets</th>
+                            <th colspan="13">Projets</th>
                         </tr>
                         <tr>
                             <th rowspan="2" class="align-top">Nom</th>
                             <th rowspan="2" class="align-top">Enseignants</th>
-                            <th rowspan="2" class="align-top">Brouillons</th>
+                            <th colspan="3" class="align-top">Brouillons</th>
                             <th colspan="3">Finalisés</th>
                             <th colspan="3">Validés</th>
                             <th colspan="3">Incomplets</th>
                         </tr>
-                        <tr style="font-size: 0.8em;">
+                        <tr style="font-size: 0.7em;">
+                            <th>Première</th>
+                            <th>Terminale</th>
+                            <th>Total</th>
                             <th>Première</th>
                             <th>Terminale</th>
                             <th>Total</th>
@@ -47,6 +50,8 @@
                             <tr {!! $academy['accent_row'] ? 'class="accent"' : '' !!}>
                                 <td>{{ $academy['name'] }}</td>
                                 <td>{{ $academy['teachers'] }}</td>
+                                <td>{{ $academy['projects_draft_premiere'] }}</td>
+                                <td>{{ $academy['projects_draft_terminale'] }}</td>
                                 <td>{{ $academy['projects_draft'] }}</td>
                                 <td>{{ $academy['projects_finalized_premiere'] }}</td>
                                 <td>{{ $academy['projects_finalized_terminale'] }}</td>
@@ -77,15 +82,18 @@
                     <thead>
                         <tr>
                             <th colspan="2">Territoire</th>
-                            <th colspan="4">Projets</th>
+                            <th colspan="6">Projets</th>
                         </tr>
                         <tr>
                             <th rowspan="2" class="align-top">Nom</th>
                             <th rowspan="2" class="align-top">Enseignants</th>
-                            <th rowspan="2" class="align-top">Brouillons</th>
+                            <th colspan="3" class="align-top">Brouillons</th>
                             <th colspan="3">Finalisés</th>
                         </tr>
                         <tr style="font-size: 0.9em;">
+                            <th>Première</th>
+                            <th>Terminale</th>
+                            <th>Total</th>
                             <th>Première</th>
                             <th>Terminale</th>
                             <th>Total</th>
@@ -96,6 +104,8 @@
                             <tr {!! $academy['accent_row'] ? 'class="accent"' : '' !!}>
                                 <td>{{ $academy['name'] }}</td>
                                 <td>{{ $academy['teachers'] }}</td>
+                                <td>{{ $academy['projects_draft_premiere'] }}</td>
+                                <td>{{ $academy['projects_draft_terminale'] }}</td>
                                 <td>{{ $academy['projects_draft'] }}</td>
                                 <td>{{ $academy['projects_finalized_premiere'] }}</td>
                                 <td>{{ $academy['projects_finalized_terminale'] }}</td>
