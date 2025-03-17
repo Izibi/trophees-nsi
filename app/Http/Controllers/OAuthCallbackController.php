@@ -53,7 +53,7 @@ class OAuthCallbackController extends Controller
 
 
     private function validateUserData($user_data) {
-        if($user_data['role'] == 'teacher') {
+        if($user_data['role'] == 'teacher' || $user_data['role'] == 'other') {
             return true;
         }
         return false;
@@ -69,6 +69,9 @@ class OAuthCallbackController extends Controller
             $user->role = $user_data['client_admin'] ? 'admin' : 'teacher';
         } else if($user->role == 'admin' && !$user_data['client_admin']) {
             $user->role = 'teacher';
+        }
+        if(isset($user_data['verification']['role']) && $user_data['role'] == 'other') {
+            $user->role = 'jury';
         }
         $attributes = $this->getUserAttributes($user_data);
         $user->fill($attributes);
