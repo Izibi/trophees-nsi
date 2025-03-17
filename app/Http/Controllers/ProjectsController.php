@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Helpers\SortableTable;
 use App\Classes\ActiveContest;
 use App\Models\Academy;
+use App\Mail\StatusChanged;
 
 class ProjectsController extends Controller
 {
@@ -335,6 +336,17 @@ class ProjectsController extends Controller
     }
 
 
+    private function sendMail($project, $oldStatus) {
+        if($project->status == $oldStatus) {
+            return;
+        }
+        if(!in_array($project->status, ['finalized', 'validated', 'incomplete'])) {
+            return;
+        }
+        $mail = new StatusChanged($project);
+        \Mail::to($project->user->email)->send($mail);
+    }
+
 
     public function create(Request $request)
     {
@@ -511,10 +523,12 @@ class ProjectsController extends Controller
             return redirect('/projects');
         }
 
+        $oldStatus = $project->status;
         $this->deleteUploads($project, $request);
         $project->uploadFiles($request);
         $project->fill($request->all());
         $project->save();
+        $this->sendMail($project, $oldStatus);
         $this->syncTeamMembers($project, $request);
 
         if($request->has('finalize')) {
@@ -557,8 +571,10 @@ class ProjectsController extends Controller
         if(!$this->accessible($request, $project, 'status')) {
             return $this->accessDeniedResponse();
         }
+        $oldStatus = $project->status;
         $project->status = $request->get('status');
         $project->save();
+        $this->sendMail($project, $oldStatus);
         //$url = $request->get('refer_page', '/projects');
         return redirect()->back()->withMessage('Statut enregistré');
     }
