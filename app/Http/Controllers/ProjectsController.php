@@ -305,6 +305,7 @@ class ProjectsController extends Controller
         } else if($view['type'] == 'region') {
             $q->join('schools', 'projects.school_id', '=', 'schools.id');
             $q->where('schools.region_id', '=', $view['target_id']);
+            $needsSchoolJoin = true;
         } else if($view['type'] == 'prize') {
             $q->join('awards', 'projects.id', '=', 'awards.project_id');
             $q->where('awards.prize_id', '=', $view['target_id'])->where('region_id', '!=', 0);
@@ -322,15 +323,20 @@ class ProjectsController extends Controller
             $filter_school = trim($request->get('filter_school'));
             if(strlen($filter_school) > 0) {
                 $q->where('schools.name', 'LIKE', '%'.$filter_school.'%');
+                $needsSchoolJoin = true;
             }
             $filter_region_id = trim($request->get('filter_region_id'));
             if($filter_region_id) {
                 $q->where('schools.region_id', $filter_region_id);
+                $needsSchoolJoin = true;
             }
             $filter_status = trim($request->get('filter_status'));
             if(strlen($filter_status) > 0) {
                 $q->where('projects.status', '=', $filter_status);
             }
+        }
+        if($needsSchoolJoin) {
+            $q->join('schools', 'projects.school_id', '=', 'schools.id');
         }
         return $q;
     }
