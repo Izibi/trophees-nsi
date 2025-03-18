@@ -300,6 +300,7 @@ class ProjectsController extends Controller
         $q->where('projects.contest_id', '=', $this->contest->id);
         
 
+        $needsSchoolJoin = false;
         if($view['type'] == 'own') {
             $q->where('projects.user_id', '=', $user->id);
         } else if($view['type'] == 'region') {
