@@ -304,7 +304,6 @@ class ProjectsController extends Controller
         if($view['type'] == 'own') {
             $q->where('projects.user_id', '=', $user->id);
         } else if($view['type'] == 'region') {
-            $q->join('schools', 'projects.school_id', '=', 'schools.id');
             $q->where('schools.region_id', '=', $view['target_id']);
             $needsSchoolJoin = true;
         } else if($view['type'] == 'prize') {
