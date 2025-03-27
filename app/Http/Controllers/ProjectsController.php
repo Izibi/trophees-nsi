@@ -107,9 +107,9 @@ class ProjectsController extends Controller
         $projects = $q->paginate()->appends($request->all());
         $offset = ($projects->currentPage() - 1) * $projects->perPage();
         // figure out the view_url as above for the selected project, then redirect
-        foreach($projects as $project) {
+        foreach($projects as $listProject) {
             $offset++;
-            if($project->id == $project->id) {
+            if($listProject->id == $project->id) {
                 $p = parse_url($projects->url($offset));
                 // change refer_page in $p['query'] to be $request->get('refer_page')
                 $p['query'] = preg_replace('/refer_page=[^&]+/', 'refer_page='.urlencode($request->get('refer_page')), $p['query']);
