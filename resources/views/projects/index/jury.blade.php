@@ -60,7 +60,7 @@
                 </button>
             @endif
             @if($view['type'] != 'own' || !$view['edit'])
-                <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">Afficher le projet sélectionné</button>
+                <button class="btn btn-primary active-button" data-action="/projects/:id/view" data-method="GET">Afficher le projet sélectionné</button>
             @endif
             @if($view['type'] != 'own' && $coordinator)
                 <a class="btn btn-primary active-button" data-action="" target="_blank" href="/projects_export">Télécharger au format CSV</a>

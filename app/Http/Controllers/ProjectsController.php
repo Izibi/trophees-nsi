@@ -79,6 +79,47 @@ class ProjectsController extends Controller
         ]);
     }
 
+    public function redirectPaginated(Request $request, Project $project)
+    {
+    	$user = $request->user();
+        $views = $this->getUserViews($request);
+        // Take the type= and id= from the refer_page if it exists
+        if($request->has('refer_page')) {
+            $p = parse_url($request->get('refer_page'));
+            if(isset($p['query'])) {
+                $q = [];
+                parse_str($p['query'], $q);
+                if(isset($q['type']) && isset($q['id'])) {
+                    $request->merge($q);
+                }
+            }
+        }
+        $view = $this->selectView($request, $views);
+
+        if(!$view) {
+            return view('projects.index.'.$request->user()->role, [
+                'view' => null,
+            ]);
+        }
+
+        $q = $this->getProjectsQuery($request, $view);
+        SortableTable::orderBy($q, $this->getSortFields($request));
+        $projects = $q->paginate()->appends($request->all());
+        $offset = ($projects->currentPage() - 1) * $projects->perPage();
+        // figure out the view_url as above for the selected project, then redirect
+        foreach($projects as $project) {
+            $offset++;
+            if($project->id == $project->id) {
+                $p = parse_url($projects->url($offset));
+                // change refer_page in $p['query'] to be $request->get('refer_page')
+                $p['query'] = preg_replace('/refer_page=[^&]+/', 'refer_page='.urlencode($request->get('refer_page')), $p['query']);
+                $url = '/project?'.$p['query'];
+                return redirect($url);
+            }
+        }
+        return redirect('/projects');
+    }
+
     private function getUserViews(Request $request) {
         $user = $request->user();
         $user_role = $user->role;
