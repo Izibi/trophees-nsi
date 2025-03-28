@@ -7,8 +7,8 @@
 <!--            <th colspan="3">Récompenses suggérées</th>-->
         </tr>
         <tr>
-            <th>{!! SortableTable::th('score_operationality', 'Opérationnalité') !!}</th>
-            <th>{!! SortableTable::th('score_communication', 'Communication') !!}</th>
+            <th>{!! SortableTable::th('score_operationality', 'C. Techniques') !!}</th>
+            <th>{!! SortableTable::th('score_communication', 'C. Non Techniques') !!}</th>
             <th><strong>{!! SortableTable::th('score_total', 'Total') !!}</strong></th>
 <!--            <th>{!! SortableTable::th('award_engineering', 'Thématique') !!}</th>
             <th>{!! SortableTable::th('award_heart', 'Spécial du jury') !!}</th>
