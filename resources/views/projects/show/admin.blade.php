@@ -8,6 +8,7 @@
             <div class="mt-5">
                 {!! Form::open()->route('projects.set_status', ['project' => $project])->fill($project) !!}
                     {!! Form::select('status', 'Statut')->options(trans('project_status')) !!}
+                    {!! Form::textarea('message', 'Message')->help('Message pour un projet incomplet (le message n\'est envoyé que lors d\'un changement de statut)') !!}
                     {!! Form::hidden('refer_page', $refer_page) !!}
                     <div class="mt-3">
                         {!! Form::submit('Enregistrer') !!}
@@ -26,4 +27,19 @@
 
         </div>
     </div>
+    <script type="text/javascript">
+        function displayMessage() {
+            var status = $('select[name=status]').val();
+            if (status == 'incomplete') {
+                $('textarea[name=message]').parent().show();
+            } else {
+                $('textarea[name=message]').parent().hide();
+            }
+        }
+
+        $(document).ready(function() {
+            $('select[name=status]').change(displayMessage);
+            displayMessage();
+        });
+    </script>
 @endsection

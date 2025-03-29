@@ -383,14 +383,14 @@ class ProjectsController extends Controller
     }
 
 
-    private function sendMail($project, $oldStatus) {
+    private function sendMail($project, $oldStatus, $message = null) {
         if($project->status == $oldStatus) {
             return;
         }
         if(!in_array($project->status, ['finalized', 'validated', 'incomplete'])) {
             return;
         }
-        $mail = new StatusChanged($project);
+        $mail = new StatusChanged($project, $message);
         \Mail::to($project->user->email)->send($mail);
     }
 
@@ -621,7 +621,7 @@ class ProjectsController extends Controller
         $oldStatus = $project->status;
         $project->status = $request->get('status');
         $project->save();
-        $this->sendMail($project, $oldStatus);
+        $this->sendMail($project, $oldStatus, $request->get('message'));
         //$url = $request->get('refer_page', '/projects');
         return redirect()->back()->withMessage('Statut enregistré');
     }
