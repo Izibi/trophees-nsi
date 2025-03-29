@@ -432,6 +432,7 @@ class ProjectsController extends Controller
             }
         }
         session()->flash('message', 'Projet créé');
+        $this->sendMail($project, null);
         $url = $request->get('refer_page', '/projects');
         return response()->json([
             'location' => $url
@@ -575,7 +576,6 @@ class ProjectsController extends Controller
         $project->uploadFiles($request);
         $project->fill($request->all());
         $project->save();
-        $this->sendMail($project, $oldStatus);
         $this->syncTeamMembers($project, $request);
 
         if($request->has('finalize')) {
@@ -584,6 +584,7 @@ class ProjectsController extends Controller
                 return $res;
             }
         }
+        $this->sendMail($project, $oldStatus);
         session()->flash('message', 'Project enregistré');
         $url = $request->get('refer_page', '/projects');
         return response()->json([
