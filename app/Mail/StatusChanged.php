@@ -34,7 +34,6 @@ class StatusChanged extends Mailable
             'validated' => 'validé',
             'incomplete' => 'incomplet, modifications nécessaires'
         ];
-        $msgbr = str_replace("\n", '<br>', $this->msg);
         $subject = 'Trophées NSI 2025 - Projet ' . $statusNames[$this->project->status];
         return $this->view('mails.status_change.'.$this->project->status)
                     ->text('mails.status_change.'.$this->project->status.'_plain')
@@ -42,8 +41,7 @@ class StatusChanged extends Mailable
                     ->with([
                         'id' => $this->project->id,
                         'name' => $this->project->name,
-                        'msg' => $this->msg,
-                        'msgbr' => $msgbr
+                        'msg' => $this->msg
                     ]);
     }
 }
