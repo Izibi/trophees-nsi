@@ -371,6 +371,11 @@ class ProjectsController extends Controller
                 $q->where('schools.region_id', $filter_region_id);
                 $needsSchoolJoin = true;
             }
+            $filter_user_name = trim($request->get('filter_user_name'));
+            if($filter_user_name) {
+                $q->where('users.name', 'LIKE', '%'.$filter_user_name.'%');
+                $q->join('users', 'projects.user_id', '=', 'users.id');
+            }
             $filter_status = trim($request->get('filter_status'));
             if(strlen($filter_status) > 0) {
                 $q->where('projects.status', '=', $filter_status);
