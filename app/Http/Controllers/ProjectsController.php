@@ -331,7 +331,11 @@ class ProjectsController extends Controller
         $projects = Project::where('contest_id', $this->contest->id)->where('status', 'validated')->get();
         $script = '';
         foreach($projects as $project) {
-            $script .= "if [ ! -d Project" . $project->id . " ]; then git clone userpass@" . $project->url . " Project" . $project->id . " ; fi\n";
+            $url = $project->url;
+            $url = str_replace('https://', 'https://userpass@', $url);
+            $url = preg_replace('/\/-\/.*$/', '/', $url);
+            $url = preg_replace('/\/tree\/(main|master)/', '/', $url);
+            $script .= "if [ ! -d Project" . $project->id . " ]; then git clone " . $url . " Project" . $project->id . " ; fi\n";
         }
         $viewsToGenerate = [];
         $regions = Region::all();
