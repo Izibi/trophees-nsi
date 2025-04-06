@@ -10,12 +10,17 @@ Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile']);
 Route::get('/oauth_callback/login', [App\Http\Controllers\OAuthCallbackController::class, 'login']);
 Route::get('/oauth_callback/profile', [App\Http\Controllers\OAuthCallbackController::class, 'profile']);
 
+Route::get('/evaluation_server/user_data', [App\Http\Controllers\EvaluationServerController::class, 'getUserData']);
+Route::post('/evaluation_server/user_log', [App\Http\Controllers\EvaluationServerController::class, 'receiveQueryUser']);
+
 Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
 
     Route::resource('projects', App\Http\Controllers\ProjectsController::class);
     Route::get('/project', [App\Http\Controllers\ProjectsController::class, 'showPaginated']);
     Route::get('/projects/{project}/view', [App\Http\Controllers\ProjectsController::class, 'redirectPaginated']);
     Route::get('/projects_export', [App\Http\Controllers\ProjectsController::class, 'export']);
+    Route::get('/projects_zips_generate', [App\Http\Controllers\ProjectsController::class, 'getGenerateZipScript']);
+    Route::get('/projects/zips/{zipName}', [App\Http\Controllers\ProjectsController::class, 'downloadZip']);
 
     Route::get('/statistics', [App\Http\Controllers\StatisticsController::class, 'index']);
     Route::get('/statistics/export', [App\Http\Controllers\StatisticsController::class, 'export']);
@@ -31,6 +36,9 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::get('/awards/{award}/delete', [App\Http\Controllers\AwardsController::class, 'delete'])->name('awards.delete');
     Route::post('/awards/update', [App\Http\Controllers\AwardsController::class, 'update'])->name('awards.update');
     Route::get('/awards/export', [App\Http\Controllers\AwardsController::class, 'export']);
+
+    Route::get('/evaluation_server', [App\Http\Controllers\EvaluationServerController::class, 'index']);
+    Route::get('/evaluation_server/recreate_mapping', [App\Http\Controllers\EvaluationServerController::class, 'recreateMapping']);
 
     Route::middleware(['role:jury'])->group(function() {
         Route::post('projects/{project}/set_rating', [App\Http\Controllers\ProjectsController::class, 'setRating'])->name('projects.set_rating');

@@ -70,5 +70,13 @@
             <button class="btn btn-primary active-button" data-action="/projects/create" data-method="GET">Déposer un nouveau projet</button>
         @endif
     </div>
+    @if(!$view['create'])
+    <hr>
+    <div class="mt-3 mb-3">
+        Outils d'évaluation :<br>
+        <a class="btn btn-primary" target="_blank" href="/projects/zips/{{ $zip_name }}">Télécharger tous ces projets dans une archive ZIP</a>
+        <a class="btn btn-primary" target="_blank" href="/evaluation_server/">Evaluer ces projets en ligne</a>
+    </div>
+    @endif
 @endif
 @endsection

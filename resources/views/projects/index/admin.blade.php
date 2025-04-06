@@ -26,7 +26,8 @@
         @if(count($rows))
             <button class="btn btn-primary active-button" data-action="/projects/:id/edit" data-method="GET">Modifier le projet sélectionné</button>
             <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="REDIRECT">Afficher le projet sélectionné</button>
-            <a class="btn btn-primary active-button" data-action="" target="_blank" href="/projects_export">Télécharger au format CSV</a>
+            <a class="btn btn-primary" target="_blank" href="/projects_export">Télécharger au format CSV</a>
+            <a class="btn btn-primary" target="_blank" href="/evaluation_server/">Evaluer ces projets en ligne</a>
         @endif
     </div>
 @endsection

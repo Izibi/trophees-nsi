@@ -75,7 +75,8 @@ class ProjectsController extends Controller
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray(),
             'awards_count' => $this->countJuryMemberAwards($request),
             'awards_limit' => config('nsi.awards_limit_per_jury_member'),
-	        'coordinator' => $user->hasRole('coordinator')
+	        'coordinator' => $user->hasRole('coordinator'),
+            'zip_name' => $this->getViewZipName($view)
         ]);
     }
 
@@ -277,6 +278,79 @@ class ProjectsController extends Controller
             'Expires' => '0'
         );
         return response()->stream($callback, 200, $headers);
+    }
+
+
+    private function getViewZipName($view) {
+        if($view['type'] == 'region') {
+            $region = Region::find($view['target_id']);
+            return 'trophees_nsi_projets_region_'.preg_replace('/[^A-Za-z0-9\-]/', '_', $region->name).'.zip';
+        } elseif($view['type'] == 'prize') {
+            $prize = Prize::find($view['target_id']);
+            return 'trophees_nsi_projets_prix_'.preg_replace('/[^A-Za-z0-9\-]/', '_', $prize->name).'.zip';
+        } else {
+            return null;
+        }
+    }
+
+
+    public function downloadZip(Request $request, string $zipName) {
+        $user = $request->user();
+        if($user->role != 'jury' && $user->role != 'admin') {
+            return redirect('/projects');
+        }
+        $views = $this->getUserViews($request);
+        $accessible = $user->role == 'admin';
+        foreach($views as $view) {
+            if($this->getViewZipName($view) == $zipName) {
+                $accessible = true;
+                break;
+            }
+        }
+        if(!$accessible) {
+            return redirect('/projects');
+        }
+        $localPath = base_path('zips/'.$zipName);
+        if(!file_exists($localPath)) {
+            return redirect('/projects')->withMessage("Le fichier zip est encore en cours de génération, veuillez patienter quelques heures.");
+        }
+        $fileName = basename($localPath);
+        $headers = [
+            'Content-Type' => 'application/zip',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
+        ];
+        return response()->download($localPath, $fileName, $headers);
+    }
+
+
+    public function getGenerateZipScript(Request $request) {
+        $user = $request->user();
+        if($user->role != 'admin') {
+            return redirect('/projects');
+        }
+        $projects = Project::where('contest_id', $this->contest->id)->get();
+        $script = '';
+        foreach($projects as $project) {
+            $script .= "if [ ! -d Project" . $project->id . " ]; then git clone userpass@" . $project->url . " Project" . $project->id . " ; fi\n";
+        }
+        $viewsToGenerate = [];
+        $regions = Region::all();
+        foreach($regions as $region) {
+            $zipName = $this->getViewZipName(['type' => 'region', 'target_id' => $region->id]);
+            $script .= "if [ ! -f " . $zipName . " ]; then zip -r " . $zipName . " ";
+            foreach($projects as $project) {
+                if($project->school && $project->school->region_id == $region->id) {
+                    $script .= " Project" . $project->id . " ";
+                }
+            }
+            $script .= "; fi\n";
+        }
+        // Prizes to do once in that phase
+
+        // Text response
+        return response($script, 200)
+            ->header('Content-Type', 'text/plain')
+            ->header('Content-Disposition', 'attachment; filename="zips_generate.sh"');
     }
 
 
