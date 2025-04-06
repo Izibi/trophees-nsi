@@ -47,7 +47,7 @@ class EvaluationServerController extends Controller
         foreach($users as $user) {
             $this->ensureUserHasRemotePassword($user);
             // Local passwords are regenerated each time
-            $user->server_remote_password = $this->generatePassword();
+            $user->server_password_local = $this->generatePassword();
             $user->save();
 
             $usersToMap[] = [
@@ -111,9 +111,15 @@ class EvaluationServerController extends Controller
                 'password' => $user->server_password_remote,
                 'groups' => []
             ];
-            foreach($user->roles as $role) {
-                if($role->type == 'region') {
-                    $userJson['groups'][] = 'jury-region-'.$role->target_id;
+            if($user->role == 'admin') {
+                foreach($regions as $region) {
+                    $userJson['groups'][] = 'jury-region-'.$region->id;
+                }
+            } else {
+                foreach($user->roles as $role) {
+                    if($role->type == 'territorial') {
+                        $userJson['groups'][] = 'jury-region-'.$role->target_id;
+                    }
                 }
             }
             $json['users'][] = $userJson;
