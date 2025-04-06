@@ -328,7 +328,7 @@ class ProjectsController extends Controller
         if($user->role != 'admin') {
             return redirect('/projects');
         }
-        $projects = Project::where('contest_id', $this->contest->id)->get();
+        $projects = Project::where('contest_id', $this->contest->id)->where('status', 'validated')->get();
         $script = '';
         foreach($projects as $project) {
             $script .= "if [ ! -d Project" . $project->id . " ]; then git clone userpass@" . $project->url . " Project" . $project->id . " ; fi\n";

@@ -10,6 +10,7 @@ Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile']);
 Route::get('/oauth_callback/login', [App\Http\Controllers\OAuthCallbackController::class, 'login']);
 Route::get('/oauth_callback/profile', [App\Http\Controllers\OAuthCallbackController::class, 'profile']);
 
+Route::get('/evaluation_server/recreate_mapping', [App\Http\Controllers\EvaluationServerController::class, 'recreateMapping']);
 Route::get('/evaluation_server/user_data', [App\Http\Controllers\EvaluationServerController::class, 'getUserData']);
 Route::post('/evaluation_server/user_log', [App\Http\Controllers\EvaluationServerController::class, 'receiveQueryUser']);
 

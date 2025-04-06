@@ -78,6 +78,10 @@ class EvaluationServerController extends Controller
 
 
     public function recreateMapping(Request $request) {
+        $api_password = config('nsi.evaluation_server.api_password');
+        if($request->get('password') != $api_password) {
+            return response()->json(['error' => 'Invalid API password'], 403);
+        }
         $this->generateUserMapping();
         return response()->json(['success' => true]);
     }
