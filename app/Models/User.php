@@ -20,7 +20,9 @@ class User extends Authenticatable
         'country_id',
         'region_id',
         'validated',
-        'role'
+        'role',
+        'server_password_local',
+        'server_password_remote'
     ];
 
     public function getScreenNameAttribute()
