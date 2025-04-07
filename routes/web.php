@@ -39,7 +39,6 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::get('/awards/export', [App\Http\Controllers\AwardsController::class, 'export']);
 
     Route::get('/evaluation_server', [App\Http\Controllers\EvaluationServerController::class, 'index']);
-    Route::get('/evaluation_server/recreate_mapping', [App\Http\Controllers\EvaluationServerController::class, 'recreateMapping']);
 
     Route::middleware(['role:jury'])->group(function() {
         Route::post('projects/{project}/set_rating', [App\Http\Controllers\ProjectsController::class, 'setRating'])->name('projects.set_rating');
