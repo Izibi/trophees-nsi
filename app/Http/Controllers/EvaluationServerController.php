@@ -19,7 +19,10 @@ class EvaluationServerController extends Controller
         if($user->role != 'jury' && $user->role != 'admin') {
             return redirect('/');
         }
-        $url = '/guacamole/?username=jury-' . $user->id . '&password=' . $user->server_password_local;
+        $url = null;
+        if($user->server_password_local) {
+            $url = '/guacamole/?username=jury-' . $user->id . '&password=' . $user->server_password_local;
+        }
         return view('evaluation_server.index', [
             'user' => $user,
             'nb' => 0,

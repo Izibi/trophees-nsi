@@ -28,8 +28,12 @@
             <label for="agreement">Lu et approuvé, {{ $user->name }}</label>
         </div>
         <div>
-            <a class="btn btn-primary" id="link" target="_blank" href="{{ $url }}">Accéder au serveur d'évaluation</a><br>
-            <i>{{ $nb }} utilisateurs actuellement connectés</i>
+            @if($url)
+                <a class="btn btn-primary" id="link" target="_blank" href="{{ $url }}">Accéder au serveur d'évaluation</a><br>
+                <i>{{ $nb }} utilisateurs actuellement connectés</i>
+            @else
+                <b>Désolé, vous n'avez pas encore accès au serveur d'évaluation car votre compte a été créé récemment. Veuillez patienter quelques heures et votre accès sera créé sur le serveur.</b>
+            @endif
         </div>
         <hr>
         <div>
