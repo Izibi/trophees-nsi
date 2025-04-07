@@ -130,24 +130,24 @@ class ProjectsController extends Controller
         $coordinator = $user->roles()->where('type', 'coordinator')->exists();
 
         if($user_role == 'teacher') {
-            $views[] = ['type' => 'own', 'create' => $phase == 'open', 'edit' => $phase == 'open' || $phase == 'instruction', 'status' => false, 'rate' => false, 'view_rating' => false];
+            $views[] = ['type' => 'own', 'create' => $phase == 'open', 'edit' => $phase == 'open' || $phase == 'instruction', 'status' => false, 'rate' => false, 'view_rating' => false, 'view_all' => true];
             if($coordinator) {
-                $views[] = ['type' => 'region', 'target_id' => $user->region_id, 'name' => Region::find($user->region_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => false, 'view_rating' => $phase == 'deliberating-territorial'];
+                $views[] = ['type' => 'region', 'target_id' => $user->region_id, 'name' => Region::find($user->region_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => false, 'view_rating' => $phase == 'deliberating-territorial', 'view_all' => true];
             }
         } elseif($user_role == 'jury' && $user->hasRole('teacher')) {
-            $views[] = ['type' => 'own', 'create' => $phase == 'open', 'edit' => $phase == 'open' || $phase == 'instruction', 'status' => false, 'rate' => false, 'view_rating' => false];
+            $views[] = ['type' => 'own', 'create' => $phase == 'open', 'edit' => $phase == 'open' || $phase == 'instruction', 'status' => false, 'rate' => false, 'view_rating' => false, 'view_all' => true];
         } elseif($user_role == 'admin') {
-            return [['type' => 'all', 'create' => false, 'edit' => true, 'status' => true, 'rate' => true, 'view_rating' => true]];
+            return [['type' => 'all', 'create' => false, 'edit' => true, 'status' => true, 'rate' => true, 'view_rating' => true, 'view_all' => true]];
         }
 
         foreach($user->roles as $role) {
             if($role->type == 'territorial' && ($coordinator || $phase == 'grading-territorial' || $phase == 'deliberating-territorial')) {
-                $views[] = ['type' => 'region', 'target_id' => $role->target_id, 'name' => Region::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-territorial', 'view_rating' => $phase == 'deliberating-territorial'];
+                $views[] = ['type' => 'region', 'target_id' => $role->target_id, 'name' => Region::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-territorial', 'view_rating' => $phase == 'deliberating-territorial', 'view_all' => false];
             }
         }
         foreach($user->roles as $role) {
             if($role->type == 'prize' && ($coordinator || $phase == 'grading-national' || $phase == 'deliberating-national')) {
-                $views[] = ['type' => 'prize', 'target_id' => $role->target_id, 'name' => Prize::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-national', 'view_rating' => $phase == 'deliberating-national'];
+                $views[] = ['type' => 'prize', 'target_id' => $role->target_id, 'name' => Prize::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-national', 'view_rating' => $phase == 'deliberating-national', 'view_all' => false];
             }
         }
 
@@ -420,6 +420,9 @@ class ProjectsController extends Controller
         $q = Project::select('projects.*');
         $q->where('projects.contest_id', '=', $this->contest->id);
         
+        if(!$view['view_all']) {
+            $q->where('projects.status', 'validated');
+        }
 
         $needsSchoolJoin = false;
         if($view['type'] == 'own') {
@@ -464,6 +467,7 @@ class ProjectsController extends Controller
         if($needsSchoolJoin) {
             $q->join('schools', 'projects.school_id', '=', 'schools.id');
         }
+        $q->orderBy('id');
         return $q;
     }
 
