@@ -32,7 +32,7 @@
                 <a class="btn btn-primary" id="link" target="_blank" href="{{ $url }}">Accéder au serveur d'évaluation</a><br>
                 <i>{{ $nb }} utilisateurs actuellement connectés</i>
             @else
-                <b>Désolé, vous n'avez pas encore accès au serveur d'évaluation car vous vous êtes connecté pour la première fois (en tant que membre du jury) ces dernières heures. Veuillez patienter quelques heures puis réessayer.</b>
+                <b>Désolé, vous n'avez pas encore accès au serveur d'évaluation car vous vous êtes connecté pour la première fois (en tant que membre du jury) ces dernières heures. Veuillez patienter quelques heures pendant que votre accès est créé.</b>
             @endif
         </div>
         <hr>
