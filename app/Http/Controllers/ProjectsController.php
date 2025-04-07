@@ -206,7 +206,6 @@ class ProjectsController extends Controller
         } else {
             return redirect('/projects');
         }
-        $q = $q->orderBy('id', 'asc');
 
         $callback = function() use ($q, $has_notes, $has_info) {
             $fh = fopen('php://output', 'w');
