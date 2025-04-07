@@ -13,11 +13,12 @@ class CreateEvaluationServerLogTable extends Migration
      */
     public function up()
     {
-        Schema::create('evaluation_server_log', function (Blueprint $table) {
+        Schema::create('evaluation_server_logs', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
             $table->string('username');
             $table->timestamp('login_date');
             $table->timestamp('logout_date')->nullable();
-            $table->timestamps();
             $table->index('username');
             $table->index('logout_date');
         });

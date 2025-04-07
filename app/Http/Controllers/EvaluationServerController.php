@@ -142,11 +142,10 @@ class EvaluationServerController extends Controller
         array_shift($lines);
         $onlineUsers = [];
         foreach($lines as $line) {
-            $onlineUsers[] = explode(' ', $line)[0];
+            $onlineUsers[] = str_replace('>', '', explode(' ', trim($line))[0]);
         }
         foreach($onlineUsers as $user) {
-            $log = EvaluationServerLog::where('username', $user)->where('logout_date', null);
-            if(!$log) {
+            if(!EvaluationServerLog::where('username', $user)->where('logout_date', null)->exists()) {
                 $log = new EvaluationServerLog();
                 $log->username = $user;
                 $log->login_date = now();
