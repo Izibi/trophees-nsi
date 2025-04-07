@@ -25,7 +25,7 @@ class EvaluationServerController extends Controller
         }
         return view('evaluation_server.index', [
             'user' => $user,
-            'nb' => 0,
+            'nb' => EvaluationServerLog::where('logout_date', null)->count(),
             'url' => $url
         ]);
     }
