@@ -332,10 +332,12 @@ class ProjectsController extends Controller
         $script = '';
         foreach($projects as $project) {
             $url = $project->url;
+            // remove hashtag from URL
             $url = str_replace('https://', 'https://userpass@', $url);
             $url = preg_replace('/\/-\/.*$/', '/', $url);
+            $url = preg_replace('/#.*$/', '', $url);
             $url = preg_replace('/\/tree\/(main|master)/', '/', $url);
-            $script .= "if [ ! -d Project" . $project->id . " ]; then git clone " . $url . " Project" . $project->id . " ; fi\n";
+            $script .= "if [ ! -d Projet" . $project->id . " ]; then git clone " . $url . " Projet" . $project->id . " ; fi\n";
         }
         $viewsToGenerate = [];
         $regions = Region::all();
@@ -344,7 +346,7 @@ class ProjectsController extends Controller
             $script .= "if [ ! -f " . $zipName . " ]; then zip -r " . $zipName . " ";
             foreach($projects as $project) {
                 if($project->school && $project->school->region_id == $region->id) {
-                    $script .= " Project" . $project->id . " ";
+                    $script .= " Projet" . $project->id . " ";
                 }
             }
             $script .= "; fi\n";
