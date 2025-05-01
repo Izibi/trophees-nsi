@@ -7,12 +7,8 @@
             @if($can_award)
             <br>
             <p>
-                <a href="{{ route('awards.edit', ['project' => $project->id]) }}" class="btn btn-primary">
-                    @if($awarded)
-                        Modifier le commentaire
-                    @else
-                        Attribuer un prix
-                    @endif
+                <a href="{{ route('awards.create', ['project' => $project->id]) }}" class="btn btn-primary">
+                    Attribuer un prix
                 </a>
             </p>
             @endif

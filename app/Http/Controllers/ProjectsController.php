@@ -560,7 +560,6 @@ class ProjectsController extends Controller
             $awards = Award::where('project_id', '=', $project->id)->get();
         }
         $can_award = $this->canAward($request, $project);
-        $awarded = $can_award && Award::where('project_id', $project->id)->where('user_id', $user->id)->exists();
         $can_rate = $this->accessible($request, $project, 'rate');
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
@@ -568,7 +567,6 @@ class ProjectsController extends Controller
             'projects_paginator' => false,
             'contest' => $this->contest,
             'can_award' => $can_award,
-            'awarded' => $awarded,
             'can_rate' => $can_rate,
             'awards' => $awards
         ];
@@ -602,7 +600,6 @@ class ProjectsController extends Controller
             $awards = Award::where('project_id', '=', $project->id)->get();
         }
         $can_award = $this->canAward($request, $project);
-        $awarded = $can_award && Award::where('project_id', $project->id)->where('user_id', $user->id)->exists();
 
         $can_rate = $this->accessible($request, $project, 'rate');
         $data = [
@@ -612,7 +609,6 @@ class ProjectsController extends Controller
             'contest' => $this->contest,
             'can_rate' => $can_rate,
             'can_award' => $can_award,
-            'awarded' => $awarded,
             'awards' => $awards
         ];
         if($user->role == 'jury') {

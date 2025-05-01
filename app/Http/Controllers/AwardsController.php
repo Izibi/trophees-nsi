@@ -121,10 +121,14 @@ class AwardsController extends Controller
                 }
             }
         }
+        foreach($awardable as &$aw) {
+            $awarded = Award::where('user_id', $user->id)->where('prize_id', $aw['prize_id'])->where('region_id', $aw['region_id'])->first();
+            $aw['name'] .= $awarded ? ' (actuellement attribué au projet ' . $awarded->project->name . ')' : '';
+        }
         return $awardable;
     }
 
-    public function edit(Request $request, Project $project) {
+    public function create(Request $request, Project $project) {
         $user = $request->user();
         if(!$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
             return redirect('/projects');
@@ -137,7 +141,7 @@ class AwardsController extends Controller
         }
 
         $awardable = $this->getAwardablePrizes($user, $project);
-        $award = Award::where('project_id', $project->id)->where('user_id', $user->id)->first();
+        $abc = json_encode($awardable);
 
         // Make $awardable a list for the form select
         $awardable = array_map(function($a) {
@@ -145,7 +149,34 @@ class AwardsController extends Controller
         }, $awardable);
 
         return view('awards.edit', [
-            'abc' => json_encode($awardable),
+            'awardable' => $awardable,
+            'award' => null,
+            'project' => $project
+        ]);
+    }
+
+    public function edit(Request $request, Award $award) {
+        $user = $request->user();
+        if(!$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
+            return redirect('/projects');
+        }
+        $phase = $this->contest->status;
+        if(($phase != 'deliberating-territorial' && $phase != 'deliberating-national')
+            || ($phase == 'deliberating-territorial' && !$user->hasRole('president-territorial'))
+            || ($phase == 'deliberating-national' && !$user->hasRole('president-prize'))) {
+            return redirect('/awards');
+        }
+
+        $project = $award->project;
+
+        $awardable = $this->getAwardablePrizes($user, $project);
+
+        // Make $awardable a list for the form select
+        $awardable = array_map(function($a) {
+            return $a['name'];
+        }, $awardable);
+
+        return view('awards.edit', [
             'awardable' => $awardable,
             'award' => $award,
             'project' => $project
@@ -176,7 +207,7 @@ class AwardsController extends Controller
             return redirect()->back();
         }
         
-        $award = Award::where('project_id', $project->id)->where('user_id', $user->id)->where('region_id', $awarded['region_id'])->first();
+        $award = Award::where('project_id', $project->id)->where('user_id', $user->id)->where('region_id', $awarded['region_id'])->where('prize_id', $awarded['prize_id'])->first();
         if(!$award) {
             $award = new Award();
             $award->project_id = $project->id;
