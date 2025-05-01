@@ -21,7 +21,7 @@
                             <th>{!! SortableTable::th('region', 'Territoire') !!}</th>
                             <th>{!! SortableTable::th('uai', 'UAI') !!}</th>
                             <th>{!! SortableTable::th('hidden', 'Hidden') !!}</th>
-                            <th>{!! SortableTable::th('projects_amount', 'Projects amount') !!}</th>
+                            <th>{!! SortableTable::th('projects_amount', 'Nombre de projets') !!}</th>
 
                         </tr>
                     </thead>

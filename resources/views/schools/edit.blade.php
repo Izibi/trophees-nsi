@@ -2,7 +2,7 @@
 
 @section('content')
 
-<h1>Edit school</h1>
+<h1>Modifier l'établissement</h1>
 
     <div id="edit-form">
         {!! Form::open()
@@ -15,9 +15,9 @@
 
             {!! Form::text('address', 'Adresse') !!}
             {!! Form::text('city', 'Ville') !!}
-            {!! Form::text('zip', 'Fichier zip') !!}
+            {!! Form::text('zip', 'Code postal') !!}
 
-            {!! Form::select('region_id', 'Rétion', $regions) !!}
+            {!! Form::select('region_id', 'Région', $regions) !!}
             {!! Form::select('country_id', 'Pays', [null => ''] + $countries->pluck('name', 'id')->toArray()) !!}
             {!! Form::text('uai', 'UAI') !!}
 
