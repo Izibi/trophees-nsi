@@ -16,7 +16,7 @@
             {!! Form::text('filter_zip', 'Code postal') !!}
             {!! Form::select('filter_region_id', 'Territoire', ['' => ''] + $regions) !!}
             {!! Form::text('filter_uai', 'UAI') !!}
-            {!! Form::select('filter_hidden', 'Hidden', [
+            {!! Form::select('filter_hidden', 'Caché', [
                 '' => '',
                 '1' => 'Oui',
                 '0' => 'Non'
