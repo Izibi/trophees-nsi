@@ -549,6 +549,9 @@ class ProjectsController extends Controller
 
     private function canEditAward(Request $request, Award $award) {
         $user = $request->user();
+        if($user->role == 'admin') {
+            return true;
+        }
         if($this->contest->status != 'deliberating-territorial' && $this->contest->status != 'deliberating-national') {
             return false;
         }

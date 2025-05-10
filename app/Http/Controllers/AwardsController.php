@@ -94,6 +94,20 @@ class AwardsController extends Controller
     }
 
     private function getAwardablePrizes($user, $project) {
+        if($user->role == 'admin') {
+            $prizes = Prize::where('grade_id', $project->grade_id)->get();
+            $national = $this->contest->status == 'deliberating-national';
+            foreach($prize as $prize) {
+                $awardable[] = [
+                    'type' => $national ? 'national' : 'territorial',
+                    'region_id' => $national ? 0 : $project->region_id,
+                    'prize_id' => $prize->id,
+                    'name' => Award::getRegionPrizeTitle($prize, $user->roles()->where('type', 'president-territorial')->first()->target_id)
+                ];
+            }
+            return $awardable;
+        }
+
         $awardable = [];
         if($this->contest->status == 'deliberating-territorial') {
             foreach($user->roles()->where('type', 'president-territorial')->get() as $role) {
