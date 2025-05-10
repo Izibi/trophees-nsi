@@ -547,6 +547,22 @@ class ProjectsController extends Controller
         return false;
     }
 
+    private function canEditAward(Request $request, Award $award) {
+        $user = $request->user();
+        if($this->contest->status != 'deliberating-territorial' && $this->contest->status != 'deliberating-national') {
+            return false;
+        }
+        if($award->user_id != $user->id) {
+            return false;
+        }
+        if($this->contest->status == 'deliberating-territorial' && $user->hasRole('president-territorial', $award->region_id) && $award->region_id != 0) {
+            return true;
+        }
+        if($this->contest->status == 'deliberating-national' && $user->hasRole('president-prize', $award->prize_id) && $award->region_id == 0) {
+            return true;
+        }
+        return false;
+    }
 
     public function show(Request $request, Project $project)
     {
@@ -561,6 +577,9 @@ class ProjectsController extends Controller
         }
         $can_award = $this->canAward($request, $project);
         $can_rate = $this->accessible($request, $project, 'rate');
+        foreach($awards as &$award) {
+            $award->can_edit = $this->canEditAward($request, $award);
+        }
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project,
@@ -600,8 +619,10 @@ class ProjectsController extends Controller
             $awards = Award::where('project_id', '=', $project->id)->get();
         }
         $can_award = $this->canAward($request, $project);
-
         $can_rate = $this->accessible($request, $project, 'rate');
+        foreach($awards as &$award) {
+            $award->can_edit = $this->canEditAward($request, $award);
+        }
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project,

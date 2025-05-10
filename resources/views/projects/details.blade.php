@@ -131,10 +131,12 @@
         <b>Nommé pour le {{ $award->getPrizeTitle() }} par {{ $award->user->name }} :</b><br>
         {{ $award->comment }}
     </div>
+    @if($award->can_edit)
     <p>
         <a href="{{ route('awards.edit', ['award' => $award->id]) }}" class="btn btn-primary">
             Modifier le commentaire
         </a>
     </p>
+    @endif
 
 @endforeach
