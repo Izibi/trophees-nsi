@@ -34,7 +34,8 @@ class Rating extends Model
         'cb_award_heart',
         'cb_award_originality',
         'notes',
-        'published'
+        'published',
+        'ignored'
     ];
 
 
@@ -86,6 +87,7 @@ class Rating extends Model
             ->groupBy('project_id')
             ->where('project_id', '=', $project_id)
             ->where('published', '=', 1)
+            ->where('ignored', '=', 0)
             ->first();
         if(!$res) {
             return;
