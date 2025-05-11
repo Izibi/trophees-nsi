@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\EvaluationServerLog;
 use App\Models\Region;
 use App\Models\User;
+use App\Models\Prize;
 
 
 class EvaluationServerController extends Controller
