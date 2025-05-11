@@ -106,6 +106,13 @@ class EvaluationServerController extends Controller
                 'foldername' => ['ProjetsTerritoires\\'.str_replace('/', '-', $region->name)]
             ];
         }
+        $prizes = Prize::all();
+        foreach($prizes as $prize) {
+            $json['groups'][] = [
+                'name' => 'jury-prize-'.$prize->id,
+                'foldername' => ['ProjetsLaureats\\'.str_replace('/', '-', $prize->name)]
+            ];
+        }
         $users = User::whereIn('role', ['jury', 'admin'])->get();
         foreach($users as $user) {
             $this->ensureUserHasRemotePassword($user);
@@ -118,10 +125,15 @@ class EvaluationServerController extends Controller
                 foreach($regions as $region) {
                     $userJson['groups'][] = 'jury-region-'.$region->id;
                 }
+                foreach($prizes as $prize) {
+                    $userJson['groups'][] = 'jury-prize-'.$prize->id;
+                }
             } else {
                 foreach($user->roles as $role) {
                     if($role->type == 'territorial') {
                         $userJson['groups'][] = 'jury-region-'.$role->target_id;
+                    } elseif($role->type == 'prize') {
+                        $userJson['groups'][] = 'jury-prize-'.$role->target_id;
                     }
                 }
             }

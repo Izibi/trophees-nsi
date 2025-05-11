@@ -351,6 +351,17 @@ class ProjectsController extends Controller
             $script .= "; fi\n";
         }
         // Prizes to do once in that phase
+        $prizes = Prize::all();
+        foreach($prizes as $prize) {
+            $zipName = $this->getViewZipName(['type' => 'prize', 'target_id' => $prize->id]);
+            $script .= "if [ ! -f " . $zipName . " ]; then zip -r " . $zipName . " ";
+            foreach($projects as $project) {
+                if(Award::where('project_id', $project->id)->where('prize_id', $prize->id)->exists()) {
+                    $script .= " Projet" . $project->id . " ";
+                }
+            }
+            $script .= "; fi\n";
+        }
 
         // Text response
         return response($script, 200)
@@ -603,6 +614,9 @@ class ProjectsController extends Controller
     {
         $views = $this->getUserViews($request);
         $view = $this->selectView($request, $views);
+        if(!$view) {
+            return redirect('/projects');
+        }
         $q = $this->getProjectsQuery($request, $view);
         SortableTable::orderBy($q, $this->getSortFields($request));
         $projects = $q->paginate(1)->appends($request->all());

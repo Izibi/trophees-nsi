@@ -109,9 +109,9 @@ class Project extends Model
     }
 
 
-    public function prize()
+    public function awards()
     {
-        return $this->belongsTo(Prize::class);
+        return $this->hasMany(Award::class);
     }
 
     public function getUserRating($user) {
