@@ -35,6 +35,8 @@ class SortableTable {
             if($sort_field != 'id' && isset($sort_fields['id'])) {
                 $query->orderBy($sort_fields['id'], 'asc');
             }
+        } else {
+            $query->orderBy('id', 'asc');
         }
     }
 

@@ -435,6 +435,11 @@ class ProjectsController extends Controller
         }
 
         $needsSchoolJoin = false;
+        $needsUsersJoin = false;
+        if($user->role == 'admin') {
+            $needsSchoolJoin = true;
+            $needsUsersJoin = true;
+        }
         if($view['type'] == 'own') {
             $q->where('projects.user_id', '=', $user->id);
         } else if($view['type'] == 'region') {
@@ -467,7 +472,8 @@ class ProjectsController extends Controller
             $filter_user_name = trim($request->get('filter_user_name'));
             if($filter_user_name) {
                 $q->where('users.name', 'LIKE', '%'.$filter_user_name.'%');
-                $q->join('users', 'projects.user_id', '=', 'users.id');
+                $needsUsersJoin = true;
+                
             }
             $filter_status = trim($request->get('filter_status'));
             if(strlen($filter_status) > 0) {
@@ -476,8 +482,11 @@ class ProjectsController extends Controller
         }
         if($needsSchoolJoin) {
             $q->join('schools', 'projects.school_id', '=', 'schools.id');
+            $q->join('regions', 'schools.region_id', '=', 'regions.id');
         }
-        $q->orderBy('id');
+        if($needsUsersJoin) {
+            $q->join('users', 'projects.user_id', '=', 'users.id');
+        }
         return $q;
     }
 
