@@ -239,7 +239,7 @@ class ProjectsController extends Controller
                     ]);
                     if($has_notes) {
                         $row = array_merge($row, [
-                            Rating::where('project_id', '=', $project->id)->where('ignored', '=', 0)->count(),
+                            $project->ratings_amount,
                             $project->score_operationality,
                             $project->score_communication,
                             $project->score_total
