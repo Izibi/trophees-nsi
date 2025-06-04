@@ -415,7 +415,7 @@ class ProjectsController extends Controller
             $res['user_name'] = 'users.name';
         }
         if($user_role == 'jury') {
-            $res['rating_published'] = 'ratings.published';
+            //$res['rating_published'] = 'ratings.published';
         }
         $res['created_at'] = 'projects.created_at';
         $res['status'] = 'projects.status';
