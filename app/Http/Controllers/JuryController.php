@@ -144,47 +144,59 @@ class JuryController extends Controller
 
         $callback = function() use ($type, $target_id) {
             $fh = fopen('php://output', 'w');
-            $columns = ['ID', 'Date de création', 'Nom', 'Login', 'Email', 'Email secondaire', 'Rôle', 'Validé', 'Région', 'Pays', 'Dernière connexion'];
+            $columns = ['ID', 'Nom', 'Email', 'Email secondaire', 'Région', 'Pays', 'Dernière connexion', 'Estimation du nombre de projets', 'Date de mise à jour de l\'estimation', 'Etablissements scolaires'];
             fputcsv($fh, $columns);
 
             $loginCutoff = now()->subMonths(5);
 
             if($type == 'territorial') {
-                // Export users who registered a school from that territory
-                User::with('country', 'region')
-                    ->whereHas('schools', function($query) use ($target_id) {
-                        $query->where('region_id', $target_id);
+                // Export users from that territory (either with schools in region or with region_id but no schools)
+                User::with('country', 'region', 'schools')
+                    ->where(function($query) use ($target_id) {
+                        $query->whereHas('schools', function($q) use ($target_id) {
+                            $q->where('region_id', $target_id);
+                        })
+                        ->orWhere(function($q) use ($target_id) {
+                            $q->where('region_id', $target_id)
+                              ->whereDoesntHave('schools');
+                        });
                     })
-                    ->where(function($query) use ($loginCutoff) {
-                        $query->where('last_login_at', '>=', $loginCutoff)
-                              ->orWhereNull('last_login_at');
+                    ->where(function($query) {
+                        $query->where('role', 'teacher')
+                              ->orWhere(function($q) {
+                                  $q->where('role', 'jury')
+                                    ->whereHas('roles', function($r) {
+                                        $r->where('type', 'teacher');
+                                    });
+                              });
                     })
-                    ->chunk(100, function($users) use ($fh, $loginCutoff) {
+                    ->where('last_login_at', '>=', $loginCutoff)
+                    ->chunk(100, function($users) use ($fh) {
                         foreach($users as $user) {
-                            // Double-check last login date
-                            if(is_null($user->last_login_at) || $user->last_login_at >= $loginCutoff) {
-                                $this->writeUserRow($fh, $user);
-                            }
+                            $this->writeUserRow($fh, $user);
                         }
                     });
             } elseif($type == 'prize') {
                 // Export users who submitted a project considered for that prize
-                User::with('country', 'region')
+                User::with('country', 'region', 'schools')
                     ->whereHas('projects', function($query) use ($target_id) {
                         $query->whereHas('awards', function($q) use ($target_id) {
                             $q->where('prize_id', $target_id);
                         });
                     })
-                    ->where(function($query) use ($loginCutoff) {
-                        $query->where('last_login_at', '>=', $loginCutoff)
-                              ->orWhereNull('last_login_at');
+                    ->where(function($query) {
+                        $query->where('role', 'teacher')
+                              ->orWhere(function($q) {
+                                  $q->where('role', 'jury')
+                                    ->whereHas('roles', function($r) {
+                                        $r->where('type', 'teacher');
+                                    });
+                              });
                     })
-                    ->chunk(100, function($users) use ($fh, $loginCutoff) {
+                    ->where('last_login_at', '>=', $loginCutoff)
+                    ->chunk(100, function($users) use ($fh) {
                         foreach($users as $user) {
-                            // Double-check last login date
-                            if(is_null($user->last_login_at) || $user->last_login_at >= $loginCutoff) {
-                                $this->writeUserRow($fh, $user);
-                            }
+                            $this->writeUserRow($fh, $user);
                         }
                     });
             }
@@ -197,18 +209,32 @@ class JuryController extends Controller
     }
 
     private function writeUserRow($fh, $user) {
+        // Get schools information
+        $schools = $user->schools;
+        $schoolNames = [];
+        foreach($schools as $school) {
+            $schoolInfo = $school->name;
+            if($school->address) {
+                $schoolInfo .= ', ' . $school->address;
+            }
+            if($school->zip || $school->city) {
+                $schoolInfo .= ', ' . ($school->zip ? $school->zip . ' ' : '') . ($school->city ?? '');
+            }
+            $schoolNames[] = $schoolInfo;
+        }
+        $schoolsText = implode(' | ', $schoolNames);
+
         $row = [
             $user->id,
-            $user->created_at,
             $user->name,
-            $user->login,
             $user->email,
             $user->secondary_email,
-            $user->role,
-            $user->validated,
             !is_null($user->region_id) ? $user->region->name : '',
             !is_null($user->country_id) ? $user->country->name : '',
-            $user->last_login_at
+            $user->last_login_at,
+            $user->estimated ?? '',
+            $user->estimated_update ?? '',
+            $schoolsText
         ];
         fputcsv($fh, $row);
     }

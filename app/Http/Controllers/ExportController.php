@@ -11,11 +11,26 @@ class ExportController extends Controller
     public function users() {
         $callback = function() {
             $fh = fopen('php://output', 'w');
-            $columns = ['ID', 'Date de création', 'Nom', 'Login', 'Email', 'Email secondaire', 'Rôle', 'Validé', 'Région', 'Pays', 'Dernière connexion'];
+            $columns = ['ID', 'Date de création', 'Nom', 'Login', 'Email', 'Email secondaire', 'Rôle', 'Validé', 'Région', 'Pays', 'Dernière connexion', 'Estimation du nombre de projets', 'Date de mise à jour de l\'estimation', 'Etablissements scolaires'];
             fputcsv($fh, $columns);
 
-            User::with('country', 'region')->chunk(100, function($users) use ($fh) {
+            User::with('country', 'region', 'schools')->chunk(100, function($users) use ($fh) {
                 foreach($users as $user) {
+                    // Get schools information
+                    $schools = $user->schools;
+                    $schoolNames = [];
+                    foreach($schools as $school) {
+                        $schoolInfo = $school->name;
+                        if($school->address) {
+                            $schoolInfo .= ', ' . $school->address;
+                        }
+                        if($school->zip || $school->city) {
+                            $schoolInfo .= ', ' . ($school->zip ? $school->zip . ' ' : '') . ($school->city ?? '');
+                        }
+                        $schoolNames[] = $schoolInfo;
+                    }
+                    $schoolsText = implode(' | ', $schoolNames);
+
                     $row = [
                         $user->id,
                         $user->created_at,
@@ -27,7 +42,10 @@ class ExportController extends Controller
                         $user->validated,
                         !is_null($user->region_id) ? $user->region->name : '',
                         !is_null($user->country_id) ? $user->country->name : '',
-                        $user->last_login_at
+                        $user->last_login_at,
+                        $user->estimated ?? '',
+                        $user->estimated_update ?? '',
+                        $schoolsText
                     ];
                     fputcsv($fh, $row);
                 }
