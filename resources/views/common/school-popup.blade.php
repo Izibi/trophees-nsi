@@ -21,7 +21,7 @@
                     <div class="col-6">
                         <h2>Autres établissements</h2>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="School name, city or zipcode" id="inp-school-search-q">
+                            <input type="text" class="form-control" placeholder="Nom de l'école, ville, code postal ou UAI" id="inp-school-search-q">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button" id="btn-school-search">Recherche</button>
                             </div>

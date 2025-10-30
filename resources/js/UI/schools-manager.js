@@ -36,6 +36,8 @@ function UserSchools() {
             var id = $(this).data('school-id');
             select(id);
         })
+        $('#teacher-schools-banner').toggle(window.user_schools.length === 0);
+        $('#teacher-schools-success').toggle(window.user_schools.length > 0);
     }
 
     function select(id) {

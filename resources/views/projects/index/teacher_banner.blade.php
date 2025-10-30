@@ -1,9 +1,13 @@
 @include('common.school-popup')
 
 @if($user->schools()->count() == 0)
-<div class="alert alert-warning">
+<div id="teacher-schools-banner" class="alert alert-warning">
     <p>Vous n'avez pas encore renseigné votre établissement scolaire.</p>
     <p><a href="#" id="btn-open-schools-manager" class="btn btn-primary">Renseigner mon établissement scolaire</a></p>
+</div>
+<div id="teacher-schools-success" class="alert alert-success" style="display: none;">
+    <p>Merci d'avoir renseigné votre établissement scolaire !</p>
+    <p>Vous pouvez modifier cette information de nouveau sur la page de dépôt de projets.</p>
 </div>
 @endif
 

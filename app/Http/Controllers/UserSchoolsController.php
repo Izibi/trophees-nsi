@@ -59,7 +59,8 @@ class UserSchoolsController extends Controller
                 ->where(function($q) use($like_q) {
                     $q->where('name', 'LIKE', $like_q)
                         ->orWhere('city', 'LIKE', $like_q)
-                        ->orWhere('zip', 'LIKE', $like_q);
+                        ->orWhere('zip', 'LIKE', $like_q)
+                        ->orWhere('uai', 'LIKE', $like_q);
                 })
                 ->get();
         }
