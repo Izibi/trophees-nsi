@@ -3,7 +3,7 @@
 @section('content')
     <div class="card mt-3 mb-3">
         <div class="card-header">
-            <h2>Gestion du jury</h2>
+            <h2>Gestion du jury et coordination</h2>
         </div>
 
         @foreach($data as $target)
@@ -15,6 +15,11 @@
                 @endif
                 {{ $target['name'] }}
             </h3>
+            <div class="mb-2">
+                <a href="{{ route('jury.export', ['target' => $target['id'], 'type' => $target['type']]) }}" class="btn btn-sm btn-primary">
+                    Exporter les enseignants
+                </a>
+            </div>
             @if($target['president'])
                 <div>Président du jury : {{ $target['president']->name }}</div>
             @else

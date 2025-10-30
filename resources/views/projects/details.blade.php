@@ -60,6 +60,13 @@
             URL : <a href="{{ $project->url }}" target="_blank">{{ $project->url }}</a>
             <br>
         @endif
+
+        @if(!is_null($project->code_notes))
+            <div class="mt-3">
+                <b>Nature du code et usage de l'IA :</b><br>
+                {!! nl2br($project->code_notes) !!}
+            </div>
+        @endif
     </div>
 </div>
 

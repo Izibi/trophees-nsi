@@ -31,6 +31,16 @@ class ProjectsController extends Controller
     }
 
 
+    private function getSchoolPopupData($user, $data) {
+        return array_merge($data, [
+            'schools' => $this->getUserSchools($user),
+            'countries' => Country::orderBy('name')->get(),
+            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
+            'academies' => Academy::orderBy('name')->get(),
+        ]);
+    }
+
+
     public function index(Request $request)
     {
     	$user = $request->user();
@@ -42,6 +52,8 @@ class ProjectsController extends Controller
                 'view' => null,
             ]);
         }
+
+        $needs_estimated = !is_null($user->estimated) && \Carbon\Carbon::parse($user->estimated_update)->diffInDays(now()) > 30;
 
         $rating_mode_accessible = $view['view_rating'];
         $rating_mode = $request->has('rating_mode');
@@ -62,7 +74,7 @@ class ProjectsController extends Controller
         $views = array_filter($views, function($v) use ($view) {
             return $v['type'] != $view['type'] || (isset($v['target_id']) && isset($view['target_id']) && $v['target_id'] != $view['target_id']);
         });
-        return view('projects.index.'.$request->user()->role, [
+        $data = [
             'user' => $user,
             'rows' => $projects,
             'contest' => $this->contest,
@@ -76,8 +88,15 @@ class ProjectsController extends Controller
             'awards_count' => $this->countJuryMemberAwards($request),
             'awards_limit' => config('nsi.awards_limit_per_jury_member'),
 	        'coordinator' => $user->hasRole('coordinator'),
-            'zip_name' => $this->getViewZipName($view)
-        ]);
+            'zip_name' => $this->getViewZipName($view),
+            'needs_estimated' => $needs_estimated
+        ];
+
+        if($request->user()->role == 'teacher') {
+            $data = $this->getSchoolPopupData($user, $data);
+        }
+
+        return view('projects.index.'.$request->user()->role, $data);
     }
 
     public function redirectPaginated(Request $request, Project $project)
@@ -509,15 +528,13 @@ class ProjectsController extends Controller
         if(!$this->accessible($request, null, 'create')) {
             return $this->accessDeniedResponse();
         }
-        return view('projects.edit.index', [
+        $data = [
             'project' => null,
-            'schools' => $this->getUserSchools($user),
             'grades' => Grade::orderBy('name')->get(),
-            'countries' => Country::orderBy('name')->get(),
-            'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get(),
-            'academies' => Academy::orderBy('name')->get(),
             'refer_page' => $request->get('refer_page', '/projects')
-        ]);
+        ];
+        $data = $this->getSchoolPopupData($user, $data);
+        return view('projects.edit.index', $data);
     }
 
 
@@ -770,6 +787,76 @@ class ProjectsController extends Controller
     }
 
 
+    public function showFinalize(Request $request, Project $project)
+    {
+        $user = $request->user();
+        if(!$this->accessible($request, $project, 'edit')) {
+            return $this->accessDeniedResponse();
+        }
+        
+        // Verify project can be finalized
+        $errors = [];
+        $config = config('nsi.project');
+
+        $team_size = $project->team_girls + $project->team_boys + $project->team_not_provided;
+        if($team_size == 0) {
+            $errors[] = 'Les membres de l\'équipe ne sont pas renseignés.';
+        } elseif($team_size < $config['team_size_min'] || $team_size > $config['team_size_max']) {
+            $errors[] = strtr('La taille totale de l\'équipe doit être entre team_size_min et team_size_max.', $config);
+        }
+
+        if(empty($project->image_file)) {
+            $errors[] = 'Image manquante.';
+        }
+        foreach($project->team_members as $team_member) {
+            if(empty($team_member->parental_permissions_file)) {
+                $errors[] = 'Autorisations parentales manquantes.';
+                break;
+            }
+            if(empty($team_member->first_name) || empty($team_member->last_name)) {
+                $errors[] = 'Il manque des informations dans la liste des membres de l\'équipe.';
+                break;
+            }
+        }
+        if(empty($project->url)) {
+            $errors[] = 'URL du projet manquant.';
+        }
+        
+        if(count($errors)) {
+            return redirect()->route('projects.edit', ['project' => $project])
+                ->withErrors($errors)
+                ->withInput();
+        }
+
+        return view('projects.edit.finalize', [
+            'project' => $project,
+            'refer_page' => $request->get('refer_page', '/projects')
+        ]);
+    }
+
+
+    public function confirmFinalize(Request $request, Project $project)
+    {
+        $user = $request->user();
+        if(!$this->accessible($request, $project, 'edit')) {
+            return $this->accessDeniedResponse();
+        }
+        
+        // Actually finalize the project
+        $res = $this->finalizeProject($project, $request, true);
+        if($res !== true) {
+            return redirect()->route('projects.edit', ['project' => $project])
+                ->withErrors(['Une erreur s\'est produite lors de la finalisation.'])
+                ->withInput();
+        }
+        
+        $this->sendMail($project, 'draft'); // Send notification email
+        session()->flash('message', 'Projet finalisé avec succès');
+        $url = $request->get('refer_page', '/projects');
+        return redirect($url);
+    }
+
+
     private function getUserSchools($user) {
         $data = $user->schools()->with('country', 'region')->get();
         $options = [];
@@ -807,7 +894,7 @@ class ProjectsController extends Controller
     }
 
 
-    private function finalizeProject(&$project, $request) {
+    private function finalizeProject(&$project, $request, $actually_finalize = false) {
         $errors = [];
         $config = config('nsi.project');
 
@@ -840,9 +927,17 @@ class ProjectsController extends Controller
             ]);
         }
 
-        $project->status = 'finalized';
-        $project->save();
-        return true;
+        if($actually_finalize) {
+            $project->status = 'finalized';
+            $project->save();
+            return true;
+        }
+        
+        // Redirect to finalization confirmation page
+        $refer_page = $request->get('refer_page', '/projects');
+        return response()->json([
+            'location' => route('projects.finalize', ['project' => $project->id, 'refer_page' => $refer_page])
+        ]);
     }
 
 

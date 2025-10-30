@@ -18,6 +18,8 @@
 
     <p>@include('projects.contest-status')</p>
 
+    @include('projects.index.teacher_banner')
+
     @if(count($other_views))
         @foreach($other_views as $other_view)
             @if($other_view['type'] == 'own')

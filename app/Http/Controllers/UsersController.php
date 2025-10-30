@@ -167,4 +167,19 @@ class UsersController extends Controller
         $url = $request->get('refer_page', '/users');
         return redirect($url)->withMessage('Utilisateur supprimé');
     }
+
+
+    public function updateEstimate(Request $request)
+    {
+        $validated = $request->validate([
+            'estimated' => 'required|integer|min:0|max:100'
+        ]);
+
+        $user = $request->user();
+        $user->estimated = $validated['estimated'];
+        $user->estimated_update = now();
+        $user->save();
+
+        return response()->json(['success' => true]);
+    }
 }

@@ -15,6 +15,7 @@
                         <div class="mt-3">
                             <button class="btn btn-primary" id="btn-school-use">Utiliser cet établissement</button>
                             <button class="btn btn-primary" id="btn-school-delete">Retirer de ma liste</button>
+                            <button class="btn btn-default" id="btn-school-close">Fermer</button>
                         </div>
                     </div>
                     <div class="col-6">

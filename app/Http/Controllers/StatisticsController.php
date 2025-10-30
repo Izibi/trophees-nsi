@@ -69,6 +69,7 @@ class StatisticsController extends Controller
                 $academy_data = [
                     'name' => $academy->name,
                     'teachers' => $this->countTeachers($projects),
+                    'estimated' => $this->getEstimated($academy),
                     'projects_draft_premiere' => $this->countProjects($projects, 'draft', $premiere),
                     'projects_draft_terminale' => $this->countProjects($projects, 'draft', $terminale),
                     'projects_draft' => $this->countProjects($projects, 'draft'),
@@ -103,6 +104,26 @@ class StatisticsController extends Controller
         return $projects->groupBy('user_id')->count();
     }
 
+    private function getEstimated($academy) {
+        $total = 0;
+        
+        $users = User::whereNotNull('estimated')->get();
+        
+        foreach ($users as $user) {
+            $estimated = $user->estimated;
+            $userSchools = $user->schools;
+            
+            if ($userSchools->count() > 0) {
+                $total += ceil($estimated * $userSchools->where('academy_id', $academy->id)->count() / $userSchools->count());
+            } elseif ($user->region_id) {
+                $academiesInRegion = $academy->region->academies->count();
+                $total += ceil($estimated / $academiesInRegion);
+            }
+        }
+
+        return $total;
+    }
+
     private function countProjects($projects, $status = null, $grade = null) {
         if($status) {
             if(is_array($status)) {
@@ -131,7 +152,7 @@ class StatisticsController extends Controller
 
         $callback = function() use ($data, $detail) {
             $fh = fopen('php://output', 'w');
-            $header = ['Région', 'Enseignants régionaux', 'Académie', 'Enseignants académiques', 'Projets en cours', 'Projets finalisés', 'Projets finalisés 1ère', 'Projets finalisés Tle'];
+            $header = ['Région', 'Enseignants régionaux', 'Académie', 'Enseignants académiques', 'Estimation', 'Projets en cours', 'Projets finalisés', 'Projets finalisés 1ère', 'Projets finalisés Tle'];
             if($detail) {
                 $header = array_merge($header, ['Projets validés 1ère', 'Projets validés Tle', 'Projets validés', 'Projets incomplets 1ère', 'Projets incomplets Tle', 'Projets incomplets']);
             }
@@ -144,6 +165,7 @@ class StatisticsController extends Controller
                         $region_data['teachers'],
                         $academy_data['name'],
                         $academy_data['teachers'],
+                        $academy_data['estimated'] ?? 0,
                         $academy_data['projects_draft'],
                         $academy_data['projects_finalized'],
                         $academy_data['projects_finalized_premiere'],

@@ -17,7 +17,8 @@ class School extends Model
         'country_id',
         'region_id',
         'uai',
-        'academy_id'
+        'academy_id',
+        'verified'
     ];
 
     protected $hidden = [

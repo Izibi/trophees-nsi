@@ -38,6 +38,14 @@ class StoreProjectRequest extends FormRequest
                     }
                 },
             ],
+            'code_notes' => [
+                'required_if:finalize,1',
+                function ($attribute, $value, $fail) {
+                    if ($this->input('finalize') == 1 && strlen($value) < 50) {
+                        $fail(__('validation.min.string', ['attribute' => $attribute, 'min' => 50]));
+                    }
+                },
+            ],
             'video' => 'required_if:finalize,1|nullable|url',
             'url' => 'required_if:finalize,1|nullable|url',
             'class_boys' => 'required_if:finalize,1|nullable|integer|min:0',

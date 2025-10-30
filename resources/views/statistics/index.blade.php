@@ -20,28 +20,32 @@
                     <thead>
                         <tr>
                             <th colspan="2">Territoire</th>
-                            <th colspan="13">Projets</th>
+                            <th colspan="14">Projets</th>
                         </tr>
                         <tr>
                             <th rowspan="2" class="align-top">Nom</th>
                             <th rowspan="2" class="align-top">Enseignants</th>
+                            <th rowspan="2" class="align-top">
+                                Estimation<br>
+                                <span style="font-size: 0.7em;">fournie par les enseignants</span>
+                            </th>
                             <th colspan="3" class="align-top">Brouillons</th>
                             <th colspan="3">Finalisés</th>
                             <th colspan="3">Validés</th>
                             <th colspan="3">Incomplets</th>
                         </tr>
                         <tr style="font-size: 0.7em;">
-                            <th>Première</th>
-                            <th>Terminale</th>
+                            <th>1<sup>ère</sup></th>
+                            <th>T<sup>ale</sup></th>
                             <th>Total</th>
-                            <th>Première</th>
-                            <th>Terminale</th>
+                            <th>1<sup>ère</sup></th>
+                            <th>T<sup>ale</sup></th>
                             <th>Total</th>
-                            <th>Première</th>
-                            <th>Terminale</th>
+                            <th>1<sup>ère</sup></th>
+                            <th>T<sup>ale</sup></th>
                             <th>Total</th>
-                            <th>Première</th>
-                            <th>Terminale</th>
+                            <th>1<sup>ère</sup></th>
+                            <th>T<sup>ale</sup></th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -50,6 +54,7 @@
                             <tr {!! $academy['accent_row'] ? 'class="accent"' : '' !!}>
                                 <td>{{ $academy['name'] }}</td>
                                 <td>{{ $academy['teachers'] }}</td>
+                                <td>{{ $academy['estimated'] ?? 0 }}</td>
                                 <td>{{ $academy['projects_draft_premiere'] }}</td>
                                 <td>{{ $academy['projects_draft_terminale'] }}</td>
                                 <td>{{ $academy['projects_draft'] }}</td>
@@ -82,20 +87,24 @@
                     <thead>
                         <tr>
                             <th colspan="2">Territoire</th>
-                            <th colspan="6">Projets</th>
+                            <th colspan="7">Projets</th>
                         </tr>
                         <tr>
                             <th rowspan="2" class="align-top">Nom</th>
                             <th rowspan="2" class="align-top">Enseignants</th>
+                            <th rowspan="2" class="align-top">
+                                Estimation<br>
+                                <span style="font-size: 0.7em;">fournie par les enseignants</span>
+                            </th>
                             <th colspan="3" class="align-top">Brouillons</th>
                             <th colspan="3">Finalisés</th>
                         </tr>
                         <tr style="font-size: 0.9em;">
-                            <th>Première</th>
-                            <th>Terminale</th>
+                            <th>1<sup>ère</sup></th>
+                            <th>T<sup>ale</sup></th>
                             <th>Total</th>
-                            <th>Première</th>
-                            <th>Terminale</th>
+                            <th>1<sup>ère</sup></th>
+                            <th>T<sup>ale</sup></th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -104,6 +113,7 @@
                             <tr {!! $academy['accent_row'] ? 'class="accent"' : '' !!}>
                                 <td>{{ $academy['name'] }}</td>
                                 <td>{{ $academy['teachers'] }}</td>
+                                <td>{{ $academy['estimated'] ?? 0 }}</td>
                                 <td>{{ $academy['projects_draft_premiere'] }}</td>
                                 <td>{{ $academy['projects_draft_terminale'] }}</td>
                                 <td>{{ $academy['projects_draft'] }}</td>

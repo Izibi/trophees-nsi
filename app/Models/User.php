@@ -22,7 +22,9 @@ class User extends Authenticatable
         'validated',
         'role',
         'server_password_local',
-        'server_password_remote'
+        'server_password_remote',
+        'estimated',
+        'estimated_update'
     ];
 
     public function getScreenNameAttribute()
@@ -61,6 +63,10 @@ class User extends Authenticatable
 
     public function schools() {
         return $this->belongsToMany(School::class);
+    }
+
+    public function projects() {
+        return $this->hasMany(Project::class);
     }
 
     public function prizes() {

@@ -325,6 +325,13 @@ window.SchoolsManager = function() {
         user_schools.refreshParentSelect();
         modal_el.modal('hide');
     })
+    if (!$('#edit-form select[name=school_id]').length) {
+        $('#btn-school-use').hide();
+    }
+
+    $('#btn-school-close').on('click', function () {
+        modal_el.modal('hide');
+    });
 
     $('#btn-school-search').on('click', function() {
         var q = $('#inp-school-search-q').val().trim();

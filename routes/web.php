@@ -19,6 +19,8 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::resource('projects', App\Http\Controllers\ProjectsController::class);
     Route::get('/project', [App\Http\Controllers\ProjectsController::class, 'showPaginated']);
     Route::get('/projects/{project}/view', [App\Http\Controllers\ProjectsController::class, 'redirectPaginated']);
+    Route::get('/projects/{project}/finalize', [App\Http\Controllers\ProjectsController::class, 'showFinalize'])->name('projects.finalize');
+    Route::post('/projects/{project}/confirm-finalize', [App\Http\Controllers\ProjectsController::class, 'confirmFinalize'])->name('projects.confirm_finalize');
     Route::get('/projects_export', [App\Http\Controllers\ProjectsController::class, 'export']);
     Route::get('/projects_zips_generate', [App\Http\Controllers\ProjectsController::class, 'getGenerateZipScript']);
     Route::get('/projects/zips/{zipName}', [App\Http\Controllers\ProjectsController::class, 'downloadZip']);
@@ -30,6 +32,7 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::middleware(['role:admin,jury'])->group(function() {
         Route::get('/jury', [App\Http\Controllers\JuryController::class, 'index']);
         Route::get('/jury/nominate', [App\Http\Controllers\JuryController::class, 'nominate'])->name('jury.nominate');
+        Route::get('/jury/export', [App\Http\Controllers\JuryController::class, 'export'])->name('jury.export');
     });
 
     Route::get('/awards', [App\Http\Controllers\AwardsController::class, 'index']);
@@ -48,6 +51,7 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::middleware(['role:admin'])->group(function() {
         Route::resource('schools', App\Http\Controllers\SchoolsController::class)->only(['index', 'edit', 'update', 'destroy']);
         Route::post('schools/{school}/hide', [App\Http\Controllers\SchoolsController::class, 'hide'])->name('schools.hide');
+        Route::post('schools/{school}/merge', [App\Http\Controllers\SchoolsController::class, 'merge'])->name('schools.merge');
         Route::resource('users', App\Http\Controllers\UsersController::class)->only(['index', 'edit', 'update', 'destroy']);
         Route::post('projects/{project}/set_status', [App\Http\Controllers\ProjectsController::class, 'setStatus'])->name('projects.set_status');
         Route::resource('contests', App\Http\Controllers\ContestsController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
@@ -68,4 +72,6 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::post('user_schools/add', [App\Http\Controllers\UserSchoolsController::class, 'add']);
     Route::post('user_schools/create', [App\Http\Controllers\UserSchoolsController::class, 'create']);
     Route::post('user_schools/remove', [App\Http\Controllers\UserSchoolsController::class, 'remove']);
+
+    Route::post('user/update-estimate', [App\Http\Controllers\UsersController::class, 'updateEstimate']);
 });

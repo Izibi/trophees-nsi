@@ -4,6 +4,8 @@
 
 <h1>Modifier l'établissement</h1>
 
+<p>ID : {{ $school->id }}</p>
+
     <div id="edit-form">
         {!! Form::open()
             ->route('schools.update', ['school' => $school])
@@ -24,9 +26,26 @@
             {!! Form::select('academy_id', 'Choisir une académie', [null => ''] + $academies->pluck('name', 'id')->toArray()) !!}
         {!! Form::close() !!}
         <div class="mt-5">
-            <a class="btn btn-primary" id="btn-ok" href="#">Ok</a>
+            <a class="btn btn-primary" id="btn-ok" href="#">
+                Sauvegarder
+                @if($school->verified == 0)
+                    et marquer vérifié
+                @endif
+            </a>
             <a class="btn btn-primary" href="{{ $refer_page }}">Annuler</a>
             <a class="btn btn-primary" id="btn-delete" href="#">Supprimer</a>
+        </div>
+        <hr>
+        <div>
+            <h3>Fusionner avec un autre établissement</h3>
+            <p>L'établissemment courant sera supprimé, et toutes les données associées seront transférées vers l'établissement sélectionné ci-dessous.</p>
+            {!! Form::open()
+                ->route('schools.merge', ['school' => $school])
+                ->fill([]) !!}
+                {!! Form::select('merge_school_id', 'Choisir un établissement', ['' => ''] + $other_schools) !!}
+                {!! Form::hidden('refer_page', $refer_page) !!}
+                {!! Form::submit('Fusionner les établissements') !!}
+            {!! Form::close() !!}
         </div>
     </div>
 

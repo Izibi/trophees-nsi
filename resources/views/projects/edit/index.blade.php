@@ -19,11 +19,14 @@
             {!! Form::hidden('refer_page', $refer_page) !!}
 
             {!! Form::text('name', 'Nom du projet') !!}
-            {!! Form::select('school_id', 'Établissement', [null => ''] + $schools['options'])->help(Auth::user()->role == 'teacher' ? '<a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>' : false) !!}
+            {!! Form::select('school_id', 'Établissement', [null => ''] + $schools['options'])->help(
+                "Sélectionnez l'établissement scolaire de vos élèves parmi la liste proposée. Le territoire de rattachement sera automatiquement attribué.<br>Vérifiez bien l'adresse complète avant de valider !" . (
+                Auth::user()->role == 'teacher' ? '<br><a id="btn-open-schools-manager" href="#">Modifier ma liste d\'établissements</a>' : false))
+            !!}
 
             <div class="mt-5 mb-5">
                 <h5>Membres de l'équipe</h5>
-                <p><small class="form-text text-muted">Précisez la composition de l'équipe pour ce projet. Vérifiez bien l'orthographe des noms et des prénoms ! Les attestations signées sont à joindre au dossier avant la validation du dépôt.</small></p>
+                <p><small class="form-text text-muted">Précisez la composition de l'équipe pour ce projet. Vérifiez bien l'orthographe des prénoms et des noms. Ces données seront réutilisées pour l'édition des attestations de participation et les diplômes ! Les autorisations signées sont obligatoirement à joindre au dossier avant de soumettre le projet.</small></p>
                 <div class="row mt-5 mb-3" id="team-members-header">
                     <div class="col-1"></div>
                     <div class="col-2">Prénom</div>
@@ -47,12 +50,12 @@
             </div>
 
 
-            {!! Form::select('grade_id', 'Niveau scolaire', [null => ''] + $grades->pluck('name', 'id')->toArray()) !!}
+            {!! Form::select('grade_id', 'Niveau scolaire', [null => ''] + $grades->pluck('name', 'id')->toArray())->help("Tous les membres de l'équipe doivent être dans la même classe au moment du dépôt du dossier.") !!}
 
 
             <div class="mt-5">
                 <h5>Répartition de la classe</h5>
-            	<p><small class="form-text text-muted">Précisez la répartition totale des élèves en NSI pour le niveau renseigné ci-dessus.</small></p>
+            	<p><small class="form-text text-muted">Précisez la répartition totale des élèves dans votre classe de NSI pour le niveau renseigné ci-dessus.</small></p>
 
                 <div class="row">
                     <div class="col-4">
@@ -80,12 +83,16 @@
 
             {!! Form::text('url', 'Dossier technique')
                 ->placeholder('https://')
-                ->help('Le dossier technique est à déposer sur <a href="https://docs.forge.apps.education.fr/#qui-peut-sinscrire-et-participer-a-la-forge-des-communs-numeriques-educatifs" target="_blank">la forge des communs numériques éducatifs</a>. Les éléments du dossier technique et l\'organisation sont <a href="https://trophees-nsi.fr/ressources" target="_blank">précisés ici</a>.') !!}
+                ->help('Les livrables à fournir sont précisés dans le règlement du concours. Le dossier technique est à déposer sur <a href="https://docs.forge.apps.education.fr/#qui-peut-sinscrire-et-participer-a-la-forge-des-communs-numeriques-educatifs" target="_blank">la forge des communs numériques éducatifs</a>, selon <a href="https://forge.apps.education.fr/trophees-nsi-2026/modele" target="_blank">la nomenclature suivante</a>. Renseignez ici l\'URL du projet (choisissez le niveau de visibilité "publique" dans les paramètres du projet).') !!}
+
+            {!! Form::textarea('code_notes', 'Nature du code et usage de l\'IA')
+                ->attrs(['style' => 'height: 200px'])
+                ->help('Le concours s\'engage dans une démarche de lutte contre le plagiat. Les élèves doivent impérativement détailler la nature du code et préciser les éléments suivants : est-ce que le projet est une création originale ? Si non, l\'exploitation de codes existants est clairement énoncée, les autrices ou les auteurs sont identifiés et mentionnés. Avez-vous eu recours à l\'Intelligence Artificielle ? Si oui, quelles ont été les modalités d\'utilisation de l\'IA dans ce projet (par exemple : fonctions utilisées, proportion de l\'IA dans le projet global) ?') !!}
 
             <div class="row">
                 @include('projects.edit.file-input', [
                     'title' => 'Image',
-                    'description' => 'Veuillez fournir une image carrée, de taille '.config('nsi.project.image_max_width').'px &#10005;'.config('nsi.project.image_max_height').' px.',
+                    'description' => 'Veuillez fournir une image carrée, de taille '.config('nsi.project.image_max_width').'px &#10005; '.config('nsi.project.image_max_height').' px.',
                     'extensions' => '.jpg,.jpeg,.png,.gif',
                     'key' => 'image_file',
                     'file' => $project ? $project->image_file : null,
@@ -95,7 +102,7 @@
 
             {!! Form::textarea('teacher_notes', 'Remarques de l\'enseignant')
                 ->attrs(['style' => 'height: 200px'])
-                ->help("Merci de bien vouloir apporter des précisions utiles à porter à la connaissance des membres du jury (contexte de réalisation du projet, motivation et implication des élèves, progression des élèves durant l'année scolaire) et confirmer la bonne vérification du fonctionnement du projet.") !!}
+                ->help("Merci de bien vouloir apporter des précisions utiles à porter à la connaissance des membres du jury (contexte de réalisation du projet, motivation et implication des élèves, progression des élèves durant l'année scolaire).") !!}
 
             <div class="mt-5">
                 <i>Taille maximum des fichiers : 20Mo</i>
@@ -108,7 +115,7 @@
             </div>
             <div class="mt-2">
                 <input type="hidden" name="cb_video_authorization" value="0"/>
-        		{!! Form::checkbox('cb_video_authorization', 'Je certifie que tous les éleves de ce projet ont une autorisation signé pour l\'utilisation de l\'image ou de la voix et de leurs oeuvres.')
+        		{!! Form::checkbox('cb_video_authorization', 'Je certifie que tous les éleves de ce projet ont une autorisation signée pour l\'utilisation de l\'image ou de la voix et de leurs oeuvres.')
                     ->checked($project && $project->video_authorization) !!}
             </div>
             <div class="mt-2">
@@ -128,7 +135,7 @@
         {!! Form::close() !!}
     </div>
 
-    @include('projects.edit.school-popup')
+    @include('common.school-popup')
 
 
     @if($project)
@@ -158,13 +165,10 @@
             })
 
             $('#btn-submit-finalized').click(function(e) {
-                var text = 'Vous êtes sur le point de soumettre le projet, il ne sera plus possible de le modifier. Continuer ?';
-                if(confirm(text)) {
-                    $('#controls-bar').hide();
-                    project_editor.submit({
-                        finalize: '1'
-                    });
-                }
+                $('#controls-bar').hide();
+                project_editor.submit({
+                    finalize: '1'
+                });
             });
 
             $('#btn-delete').click(function(e) {
@@ -184,18 +188,6 @@
             $('#btn-open-schools-manager').on('click', function() {
                 schools_manager.show();
             });
-
-
-
-
-
-
-
-
-            // debug
-            //schools_manager.show();
-            //$('#section-schools-manager').hide();
-            //$('#section-schools-editor').show();
         });
     </script>
 @endsection

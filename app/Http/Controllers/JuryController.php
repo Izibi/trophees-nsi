@@ -115,4 +115,112 @@ class JuryController extends Controller
         }
         return null;
     }
+
+    public function export(Request $request) {
+        $isAdmin = $request->user()->role == 'admin';
+        if(!$isAdmin && !$request->user()->hasRole('coordinator')) { 
+            return redirect('/');
+        }
+
+        $type = $request->get('type');
+        $target_id = $request->get('target');
+
+        if($type == 'territorial') {
+            $target = Region::find($target_id);
+        } elseif($type == 'prize') {
+            $target = Prize::find($target_id);
+        } else {
+            return redirect('/jury');
+        }
+
+        if(!$target) {
+            return redirect('/jury');
+        }
+
+        // Check if user has rights to access this target
+        if(!$isAdmin && !$request->user()->hasRole('coordinator') && !$request->user()->hasRole($type, $target->id)) {
+            return redirect('/jury');
+        }
+
+        $callback = function() use ($type, $target_id) {
+            $fh = fopen('php://output', 'w');
+            $columns = ['ID', 'Date de création', 'Nom', 'Login', 'Email', 'Email secondaire', 'Rôle', 'Validé', 'Région', 'Pays', 'Dernière connexion'];
+            fputcsv($fh, $columns);
+
+            $loginCutoff = now()->subMonths(5);
+
+            if($type == 'territorial') {
+                // Export users who registered a school from that territory
+                User::with('country', 'region')
+                    ->whereHas('schools', function($query) use ($target_id) {
+                        $query->where('region_id', $target_id);
+                    })
+                    ->where(function($query) use ($loginCutoff) {
+                        $query->where('last_login_at', '>=', $loginCutoff)
+                              ->orWhereNull('last_login_at');
+                    })
+                    ->chunk(100, function($users) use ($fh, $loginCutoff) {
+                        foreach($users as $user) {
+                            // Double-check last login date
+                            if(is_null($user->last_login_at) || $user->last_login_at >= $loginCutoff) {
+                                $this->writeUserRow($fh, $user);
+                            }
+                        }
+                    });
+            } elseif($type == 'prize') {
+                // Export users who submitted a project considered for that prize
+                User::with('country', 'region')
+                    ->whereHas('projects', function($query) use ($target_id) {
+                        $query->whereHas('awards', function($q) use ($target_id) {
+                            $q->where('prize_id', $target_id);
+                        });
+                    })
+                    ->where(function($query) use ($loginCutoff) {
+                        $query->where('last_login_at', '>=', $loginCutoff)
+                              ->orWhereNull('last_login_at');
+                    })
+                    ->chunk(100, function($users) use ($fh, $loginCutoff) {
+                        foreach($users as $user) {
+                            // Double-check last login date
+                            if(is_null($user->last_login_at) || $user->last_login_at >= $loginCutoff) {
+                                $this->writeUserRow($fh, $user);
+                            }
+                        }
+                    });
+            }
+
+            fclose($fh);
+        };
+
+        $filename = 'trophees_nsi_users_' . $type . '_' . $target_id . '.csv';
+        return $this->outputFile($filename, $callback);
+    }
+
+    private function writeUserRow($fh, $user) {
+        $row = [
+            $user->id,
+            $user->created_at,
+            $user->name,
+            $user->login,
+            $user->email,
+            $user->secondary_email,
+            $user->role,
+            $user->validated,
+            !is_null($user->region_id) ? $user->region->name : '',
+            !is_null($user->country_id) ? $user->country->name : '',
+            $user->last_login_at
+        ];
+        fputcsv($fh, $row);
+    }
+
+    private function outputFile($file_name, $callback) {
+        $headers = array(
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename='.$file_name,
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0'
+        );
+        return response()->stream($callback, 200, $headers);
+    }
 }

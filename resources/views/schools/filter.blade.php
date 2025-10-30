@@ -1,6 +1,6 @@
 <a href="#" class="right-link" data-toggle="collapse" data-target="#schools-filter">Filtre</a>
 
-<div class="border-top collapse {{ Request::has('filter') ? 'show' : '' }}" id="schools-filter">
+<div class="border-top collapse {{ $filter ? 'show' : '' }}" id="schools-filter">
     <div class="mt-3">
         {!! Form::open()->method('GET')->fill(Request::all()) !!}
             @if(Request::has('sort_field'))
@@ -17,6 +17,11 @@
             {!! Form::select('filter_region_id', 'Territoire', ['' => ''] + $regions) !!}
             {!! Form::text('filter_uai', 'UAI') !!}
             {!! Form::select('filter_hidden', 'Caché', [
+                '' => '',
+                '1' => 'Oui',
+                '0' => 'Non'
+            ]) !!}
+            {!! Form::select('filter_verified', 'Vérifié', [
                 '' => '',
                 '1' => 'Oui',
                 '0' => 'Non'

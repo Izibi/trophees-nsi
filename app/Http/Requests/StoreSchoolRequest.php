@@ -31,15 +31,27 @@ class StoreSchoolRequest extends FormRequest
             'zip' => 'required|max:255',
             'country_id' => 'required_with:region_id|exists:countries,id',
             'region_id' => 'required|exists:regions,id',
-            'uai' => 'max:255',
+            'uai' => 'nullable|max:255|unique:schools,uai',
             'academy_id' => 'required|nullable|exists:academies,id'
         ];
         if($this->has('region_id')) {
             $region = Region::find($this->get('region_id'));
             if($region && !is_null($region->country_id)) {
-                $res['uai'] = 'required|'.$res['uai'];
+                $res['uai'] = 'required|max:255|unique:schools,uai';
             }
         }
         return $res;
+    }
+    
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'uai.unique' => 'Un établissement avec ce code UAI existe déjà, veuillez le sélectionner plutôt que de le recréer.',
+        ];
     }
 }
