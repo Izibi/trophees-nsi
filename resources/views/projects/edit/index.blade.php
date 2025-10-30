@@ -100,7 +100,7 @@
                 ])
             </div>
 
-            {!! Form::textarea('teacher_notes', 'Remarques de l\'enseignant')
+            {!! Form::textarea('teacher_notes', 'Informations complémentaires (commentaire de l\'enseignant sur le projet et l\'équipe)')
                 ->attrs(['style' => 'height: 200px'])
                 ->help("Merci de bien vouloir apporter des précisions utiles à porter à la connaissance des membres du jury (contexte de réalisation du projet, motivation et implication des élèves, progression des élèves durant l'année scolaire).") !!}
 

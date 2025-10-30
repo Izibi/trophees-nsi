@@ -12,7 +12,7 @@
         </div>
     @else
         <div class="custom-file">
-            <span class="custom-file-clear" title="Clear">&times;</span>
+            <span class="custom-file-clear" title="Supprimer">&times;</span>
             <input name="{{ $key }}" type="file"
                 accept="{{ $extensions }}"
                 class="custom-file-input {{ $errors->get($key) ? 'is-invalid' : '' }}">

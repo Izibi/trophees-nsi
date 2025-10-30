@@ -4,7 +4,7 @@
     <div class="container mt-4">
         <h2>Soumission du projet</h2>
         <p class="alert alert-info">
-            Vous êtes sur le point de soumettre ce projet finalisé. Veuillez vérifier attentivement toutes les informations ci-dessous avant de confirmer. Ces informations seront utilisées telles quelles si le projet est récompensé.
+            Vous êtes sur le point de soumettre ce projet. Veuillez vérifier attentivement toutes les informations ci-dessous avant de confirmer. Si le dossier est validé, il sera remis en l'état aux membres du jury. Les informations transmises sur le projet seront également utilisées pour toutes les communications officielles. Le commentaire de l'enseignant est accessible uniquement pour les membres du jury.
         </p>
 
         <div id="finalize-form">
@@ -130,7 +130,7 @@
                     <p>{{ $project->code_notes }}</p>
                 </div>
                 <div class="mb-3">
-                    <strong>Remarques de l'enseignant :</strong>
+                    <strong>Informations complémentaires (commentaire de l'enseignant sur le projet et l'équipe) :</strong>
                     <p>{{ $project->teacher_notes }}</p>
                 </div>
                 <hr>

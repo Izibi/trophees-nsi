@@ -128,7 +128,7 @@
 
 @if(!is_null($project->teacher_notes))
     <div class="mt-3">
-        <b>Remarques de l'enseignant :</b><br>
+        <b>Informations complémentaires (commentaire de l'enseignant sur le projet et l'équipe) :</b><br>
         {!! nl2br($project->teacher_notes) !!}
     </div>
 @endif
