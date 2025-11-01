@@ -35,9 +35,9 @@
                             <a class="nav-link" href="/awards">Lauréats</a>
                         </li>
                     @endif
-                    @if(Auth::user()->role == 'admin' || (Auth::user()->role == 'jury' && Auth::user()->hasRole('coordinator')))
+                    @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator'))
                         <li class="nav-item">
-                            <a class="nav-link" href="/jury">Jury</a>
+                            <a class="nav-link" href="/jury">Coordination</a>
                         </li>
                     @endif
                     @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator'))

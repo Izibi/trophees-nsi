@@ -28,6 +28,9 @@ class JuryController extends Controller
         if($isAdmin) {
             $regions = Region::get();
             $prizes = Prize::get();
+        } elseif($request->user()->role == 'teacher') {
+            $regions = [Region::find($request->user()->region_id)];
+            $prizes = [];
         } else {
             $roles = $request->user()->roles()->where('type', 'territorial')->get();
             $regions = [];

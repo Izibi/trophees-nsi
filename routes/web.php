@@ -29,11 +29,9 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::get('/statistics/export', [App\Http\Controllers\StatisticsController::class, 'export']);
     Route::get('/statistics/export_detail', [App\Http\Controllers\StatisticsController::class, 'export_detail']);
 
-    Route::middleware(['role:admin,jury'])->group(function() {
-        Route::get('/jury', [App\Http\Controllers\JuryController::class, 'index']);
-        Route::get('/jury/nominate', [App\Http\Controllers\JuryController::class, 'nominate'])->name('jury.nominate');
-        Route::get('/jury/export', [App\Http\Controllers\JuryController::class, 'export'])->name('jury.export');
-    });
+    Route::get('/jury', [App\Http\Controllers\JuryController::class, 'index']);
+    Route::get('/jury/nominate', [App\Http\Controllers\JuryController::class, 'nominate'])->name('jury.nominate');
+    Route::get('/jury/export', [App\Http\Controllers\JuryController::class, 'export'])->name('jury.export');
 
     Route::get('/awards', [App\Http\Controllers\AwardsController::class, 'index']);
     Route::get('/awards/{project}/create', [App\Http\Controllers\AwardsController::class, 'create'])->name('awards.create');
