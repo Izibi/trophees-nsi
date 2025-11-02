@@ -375,7 +375,7 @@ class ProjectsController extends Controller
             $zipName = $this->getViewZipName(['type' => 'prize', 'target_id' => $prize->id]);
             $script .= "if [ ! -f " . $zipName . " ]; then zip -r " . $zipName . " ";
             foreach($projects as $project) {
-                if(Award::where('project_id', $project->id)->where('prize_id', $prize->id)->exists()) {
+                if(Award::where('contest_id', $this->contest->id)->where('project_id', $project->id)->where('prize_id', $prize->id)->exists()) {
                     $script .= " Projet" . $project->id . " ";
                 }
             }
@@ -465,7 +465,10 @@ class ProjectsController extends Controller
             $q->where('schools.region_id', '=', $view['target_id']);
             $needsSchoolJoin = true;
         } else if($view['type'] == 'prize') {
-            $q->join('awards', 'projects.id', '=', 'awards.project_id');
+            $q->join('awards', function($join) use ($view) {
+                $join->on('projects.id', '=', 'awards.project_id')
+                     ->where('awards.contest_id', '=', $this->contest->id);
+            });
             $q->where('awards.prize_id', '=', $view['target_id'])->where('region_id', '!=', 0);
         }
 
@@ -613,7 +616,7 @@ class ProjectsController extends Controller
         }
         $awards = [];
         if($user->role == 'jury' || $user->role == 'admin') {
-            $awards = Award::where('project_id', '=', $project->id)->get();
+            $awards = Award::where('contest_id', $this->contest->id)->where('project_id', '=', $project->id)->get();
         }
         $can_award = $this->canAward($request, $project);
         $can_rate = $this->accessible($request, $project, 'rate');
@@ -665,7 +668,7 @@ class ProjectsController extends Controller
 
         $awards = [];
         if($user->role == 'jury' || $user->role == 'admin') {
-            $awards = Award::where('project_id', '=', $project->id)->get();
+            $awards = Award::where('contest_id', $this->contest->id)->where('project_id', '=', $project->id)->get();
         }
         $can_award = $this->canAward($request, $project);
         $can_rate = $this->accessible($request, $project, 'rate');

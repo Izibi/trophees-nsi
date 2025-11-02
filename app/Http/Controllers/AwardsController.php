@@ -42,7 +42,7 @@ class AwardsController extends Controller
     }
 
     private function getRegionPrize($prize, $region_id) {
-        return Award::where('prize_id', $prize->id)->where('region_id', $region_id)->first();
+        return Award::where('contest_id', $this->contest->id)->where('prize_id', $prize->id)->where('region_id', $region_id)->first();
     }
 
     private function getPresidentTerritorialData($request, $isAdmin) {
@@ -136,7 +136,7 @@ class AwardsController extends Controller
             }
         }
         foreach($awardable as &$aw) {
-            $awarded = Award::where('user_id', $user->id)->where('prize_id', $aw['prize_id'])->where('region_id', $aw['region_id'])->first();
+            $awarded = Award::where('contest_id', $this->contest->id)->where('user_id', $user->id)->where('prize_id', $aw['prize_id'])->where('region_id', $aw['region_id'])->first();
             $aw['name'] .= $awarded ? ' (actuellement attribué au projet ' . $awarded->project->name . ')' : '';
         }
         return $awardable;
@@ -221,9 +221,10 @@ class AwardsController extends Controller
             return redirect()->back();
         }
         
-        $award = Award::where('project_id', $project->id)->where('user_id', $user->id)->where('region_id', $awarded['region_id'])->where('prize_id', $awarded['prize_id'])->first();
+        $award = Award::where('contest_id', $this->contest->id)->where('project_id', $project->id)->where('user_id', $user->id)->where('region_id', $awarded['region_id'])->where('prize_id', $awarded['prize_id'])->first();
         if(!$award) {
             $award = new Award();
+            $award->contest_id = $this->contest->id;
             $award->project_id = $project->id;
             $award->user_id = $user->id;
         }
@@ -232,7 +233,7 @@ class AwardsController extends Controller
         $award->comment = $comment;
         $award->save();
 
-        $other_awarded = Award::where('user_id', $user->id)->where('prize_id', $awarded['prize_id'])->where('region_id', $awarded['region_id'])->where('id', '!=', $award->id)->get();
+        $other_awarded = Award::where('contest_id', $this->contest->id)->where('user_id', $user->id)->where('prize_id', $awarded['prize_id'])->where('region_id', $awarded['region_id'])->where('id', '!=', $award->id)->get();
         foreach($other_awarded as $other) {
             $other->delete();
         }
@@ -266,9 +267,9 @@ class AwardsController extends Controller
         }
 
         if($user->role == 'admin') {
-            $q = Award::orderBy('prize_id', 'asc')->orderBy('region_id', 'asc');
+            $q = Award::where('contest_id', $this->contest->id)->orderBy('prize_id', 'asc')->orderBy('region_id', 'asc');
         } else {
-            $q = Award::where('user_id', $user->id)->orderBy('prize_id', 'asc')->orderBy('region_id', 'asc');
+            $q = Award::where('contest_id', $this->contest->id)->where('user_id', $user->id)->orderBy('prize_id', 'asc')->orderBy('region_id', 'asc');
 
         }
 

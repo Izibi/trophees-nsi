@@ -10,12 +10,18 @@ class Award extends Model
     use HasFactory;
 
     protected $fillable = [
+        'contest_id',
         'project_id',
         'prize_id',
         'region_id',
         'user_id',
         'comment'
     ];
+
+    public function contest()
+    {
+        return $this->belongsTo(Contest::class);
+    }
 
     public function project()
     {
