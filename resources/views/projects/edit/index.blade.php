@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+    <p>Pour vous aider à compléter ce formulaire, n'hésitez pas à consulter <a href="/projects/exemple" target="_blank">cet exemple de projet complété</a>.</p>
+
     <div style="display: none" id="team-member-template">
         @include(
             'projects.edit.team-member',

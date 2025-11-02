@@ -18,6 +18,7 @@ Route::post('/evaluation_server/user_log', [App\Http\Controllers\EvaluationServe
 
 Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
 
+    Route::get('/projects/exemple', [App\Http\Controllers\ProjectsController::class, 'exemple']);
     Route::resource('projects', App\Http\Controllers\ProjectsController::class);
     Route::get('/project', [App\Http\Controllers\ProjectsController::class, 'showPaginated']);
     Route::get('/projects/{project}/view', [App\Http\Controllers\ProjectsController::class, 'redirectPaginated']);

@@ -636,6 +636,12 @@ class ProjectsController extends Controller
     }
 
 
+    public function exemple()
+    {
+        return view('projects.sample');
+    }
+
+
     public function showPaginated(Request $request)
     {
         $views = $this->getUserViews($request);
