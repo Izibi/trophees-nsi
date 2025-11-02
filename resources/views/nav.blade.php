@@ -57,6 +57,9 @@
                             <a class="nav-link" href="/contests">Concours</a>
                         </li>
                     @endif
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ressources">Ressources</a>
+                    </li>
                 </ul>
 
                 <ul class="navbar-nav ml-auto">

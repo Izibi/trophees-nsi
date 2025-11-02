@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 
+Route::get('/ressources', [App\Http\Controllers\RessourcesController::class, 'index']);
+
 Route::get('/login', [App\Http\Controllers\AuthController::class, 'login']);
 Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile']);
