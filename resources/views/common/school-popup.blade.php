@@ -46,7 +46,7 @@
                             <div class="col-6">
                                 {!! Form::text('address', 'Addresse') !!}
                                 {!! Form::text('city', 'Ville') !!}
-                                {!! Form::text('zip', 'ZIP') !!}
+                                {!! Form::text('zip', 'Code postal') !!}
                                 {!! Form::select('region_id', 'Territoire', $regions) !!}
                                 {!! Form::select('country_id', 'Pays', $countries) !!}
                                 {!! Form::select('academy_id', 'Académie', $academies) !!}

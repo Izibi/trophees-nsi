@@ -24,8 +24,6 @@ class StoreSchoolRequest extends FormRequest
      */
     public function rules()
     {
-        $schoolId = $this->route('school') ? $this->route('school')->id : null;
-        
         $res = [
             'name' => 'required|max:255',
             'address' => 'required|max:255',
@@ -33,15 +31,31 @@ class StoreSchoolRequest extends FormRequest
             'zip' => 'required|max:255',
             'country_id' => 'required_with:region_id|exists:countries,id',
             'region_id' => 'required|exists:regions,id',
-            'uai' => 'nullable|max:255|unique:schools,uai' . ($schoolId ? ',' . $schoolId : ''),
             'academy_id' => 'required|nullable|exists:academies,id'
         ];
+        $uaiRequired = false;
         if($this->has('region_id')) {
             $region = Region::find($this->get('region_id'));
             if($region && !is_null($region->country_id)) {
-                $res['uai'] = 'required|max:255|unique:schools,uai' . ($schoolId ? ',' . $schoolId : '');
+                $uaiRequired = true;
             }
         }
+
+        if($this->route('school') === null) {
+            // Adding a new school
+            $res['uai'] = [
+                $uaiRequired ? 'required' : 'nullable',
+                'max:255',
+                'unique:schools,uai'
+            ];
+        } else {
+            $res['uai'] = [
+                'nullable', // only admins can edit, so they can empty it if needed
+                'max:255',
+                'unique:schools,uai,' . $this->route('school')->id
+            ];
+        }
+
         return $res;
     }
     
