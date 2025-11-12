@@ -24,7 +24,7 @@
                     <a href="https://forge.apps.education.fr/trophees-nsi-2026/modele" target="_blank">Modèle du dossier technique</a>
                 </li>
                 <li class="list-group-item">
-                    <i>Webinaire d'utilisation de la forge - à venir en fin de semaine</i>
+                    <a href="https://tube-numerique-educatif.apps.education.fr/w/eVnrNoyruT7rbMFxJ49M6S" target="_blank">Webinaire d'utilisation de la forge - à venir en fin de semaine</a>
                 </li>
             </ul>
         </div>
