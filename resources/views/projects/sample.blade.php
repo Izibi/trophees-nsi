@@ -162,15 +162,15 @@ Ce texte sera notamment exploité pour la promotion du projet sur le site intern
 
     <div class="form-group">
         <label for="inp-code_notes">Nature du code et usage de l'IA</label>
-        <textarea class="form-control" id="inp-code_notes" style="height: 200px" readonly>Le concours s'engage dans une démarche de lutte contre le plagiat. Les élèves doivent impérativement détailler la nature du code et détailler, avec transparence et clarté, l'usage éventuel de l'Intelligence Artificielle. L'utilisation de l'IA doit être limitée, réfléchie et justifiée !
+        <textarea class="form-control" id="inp-code_notes" style="height: 200px" readonly>Le concours s'engage dans une démarche de lutte contre le plagiat. Les élèves doivent impérativement détailler la nature du code et préciser, avec transparence et clarté, l'usage éventuel de l'Intelligence Artificielle. L'utilisation de l'IA doit être limitée, réfléchie et justifiée !
 
-Pour cette section, les élèves devront apporter des informations détaillées sur les points suivants : 
-- Est-ce que le projet est une création originale ? Si non, l'exploitation de codes existants est clairement énoncée, les autrices ou les auteurs sont identifiés et mentionnés. 
-- Avez-vous eu recours à l'Intelligence Artificielle ? Si oui, quelles ont été les modalités d'utilisation de l'IA dans ce projet  (par exemple : fonctions utilisées, proportion de l'IA dans le projet global).
+Pour cette section, les élèves devront apporter des informations détaillées sur les points suivants :
+- Est-ce que le projet est une création originale ? Si non, l'exploitation de codes existants est clairement énoncée, les autrices ou les auteurs sont identifiés et mentionnés.
+- Avez-vous eu recours à l'Intelligence Artificielle ? Si oui, quelles ont été les modalités d'utilisation de l'IA dans ce projet (par exemple : fonctions utilisées, proportion de l'IA dans le projet global).
 - Et toute information utile à porter à la connaissance des membres du jury.
 
 Cette section est rédigée par les élèves. Elle est obligatoire pour soumettre le projet.</textarea>
-        <small class="form-text text-muted">Le concours s'engage dans une démarche de lutte contre le plagiat. Les élèves doivent impérativement détailler la nature du code et préciser, avec transparence et clarté, l'usage éventuel de l'Intelligence Artificielle. L'utilisation de l'IA doit être limitée, réfléchie et justifiée !<br>Pour cette section, les élèves devront apporter des informations détaillées sur les points suivants :<br>- Est-ce que le projet est une création originale ? Si non, l'exploitation de codes existants est clairement énoncée, les autrices ou les auteurs sont identifiés et mentionnés.<br>- Avez-vous eu recours à l'Intelligence Artificielle ? Si oui, quelles ont été les modalités d'utilisation de l'IA dans ce projet  (par exemple : fonctions utilisées, proportion de l'IA dans le projet global).<br>- Et toute information utile à porter à la connaissance des membres du jury.<br>Cette section est rédigée par les élèves. Elle est obligatoire pour soumettre le projet.</small>
+        <small class="form-text text-muted">Le concours s'engage dans une démarche de lutte contre le plagiat. Les élèves doivent impérativement détailler la nature du code et préciser les éléments suivants : est-ce que le projet est une création originale ? Si non, l'exploitation de codes existants est clairement énoncée, les autrices ou les auteurs sont identifiés et mentionnés. Avez-vous eu recours à l'Intelligence Artificielle ? Si oui, quelles ont été les modalités d'utilisation de l'IA dans ce projet (par exemple : fonctions utilisées, proportion de l'IA dans le projet global) ?</small>
     </div>
 
     <div class="row">
