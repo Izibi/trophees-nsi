@@ -6,6 +6,14 @@
             <h2>Gestion du jury et coordination</h2>
         </div>
 
+        @if(Auth::user()->role == 'admin')
+            <div class="mb-2 mt-2 ml-3">
+                <a href="{{ route('jury.exportAll') }}" class="btn btn-primary">
+                    Exporter tous les enseignants
+                </a>
+            </div>
+        @endif
+
         @foreach($data as $target)
             <h3>
                 @if($target['type'] == 'prize')

@@ -174,9 +174,9 @@ class JuryController extends Controller
                               });
                     })
                     ->where('last_login_at', '>=', $loginCutoff)
-                    ->chunk(100, function($users) use ($fh) {
+                    ->chunk(100, function($users) use ($fh, $target_id) {
                         foreach($users as $user) {
-                            $this->writeUserRow($fh, $user);
+                            $this->writeUserRow($fh, $user, $target_id);
                         }
                     });
             } elseif($type == 'prize') {
@@ -211,10 +211,30 @@ class JuryController extends Controller
         return $this->outputFile($filename, $callback);
     }
 
-    private function writeUserRow($fh, $user) {
+    private function writeUserRow($fh, $user, $region_id = null) {
+        // Don't write if estimated is falsy
+        if(!$user->estimated) {
+            return;
+        }
+
         // Get schools information
         $schools = $user->schools;
-        $schoolNames = [];
+        
+        // Filter by region_id if provided
+        if($region_id !== null) {
+            $schools = $schools->filter(function($school) use ($region_id) {
+                return $school->region_id == $region_id;
+            });
+        }
+        
+        // If no schools, don't write any row
+        if($schools->isEmpty()) {
+            return;
+        }
+        
+        // Split estimated count between schools (round up)
+        $estimatedPerSchool = ceil($user->estimated / count($schools));
+        
         foreach($schools as $school) {
             $schoolInfo = $school->name;
             if($school->address) {
@@ -223,23 +243,58 @@ class JuryController extends Controller
             if($school->zip || $school->city) {
                 $schoolInfo .= ', ' . ($school->zip ? $school->zip . ' ' : '') . ($school->city ?? '');
             }
-            $schoolNames[] = $schoolInfo;
-        }
-        $schoolsText = implode(' | ', $schoolNames);
 
-        $row = [
-            $user->id,
-            $user->name,
-            $user->email,
-            $user->secondary_email,
-            !is_null($user->region_id) ? $user->region->name : '',
-            !is_null($user->country_id) ? $user->country->name : '',
-            $user->last_login_at,
-            $user->estimated ?? '',
-            $user->estimated_update ?? '',
-            $schoolsText
-        ];
-        fputcsv($fh, $row);
+            $row = [
+                $user->id,
+                $user->name,
+                $user->email,
+                $user->secondary_email,
+                !is_null($school->region_id) ? $school->region->name : '',
+                !is_null($user->country_id) ? $user->country->name : '',
+                $user->last_login_at,
+                $estimatedPerSchool,
+                $user->estimated_update ?? '',
+                $schoolInfo
+            ];
+            fputcsv($fh, $row);
+        }
+    }
+
+    public function exportAll(Request $request) {
+        $isAdmin = $request->user()->role == 'admin';
+        if(!$isAdmin) { 
+            return redirect('/');
+        }
+
+        $callback = function() {
+            $fh = fopen('php://output', 'w');
+            $columns = ['ID', 'Nom', 'Email', 'Email secondaire', 'Région', 'Pays', 'Dernière connexion', 'Estimation du nombre de projets', 'Date de mise à jour de l\'estimation', 'Etablissements scolaires'];
+            fputcsv($fh, $columns);
+
+            $loginCutoff = now()->subMonths(5);
+
+            User::with('country', 'region', 'schools')
+                ->where(function($query) {
+                    $query->where('role', 'teacher')
+                          ->orWhere(function($q) {
+                              $q->where('role', 'jury')
+                                ->whereHas('roles', function($r) {
+                                    $r->where('type', 'teacher');
+                                });
+                          });
+                })
+                ->where('last_login_at', '>=', $loginCutoff)
+                ->chunk(100, function($users) use ($fh) {
+                    foreach($users as $user) {
+                        $this->writeUserRow($fh, $user);
+                    }
+                });
+
+            fclose($fh);
+        };
+
+        $filename = 'trophees_nsi_users_all.csv';
+        return $this->outputFile($filename, $callback);
     }
 
     private function outputFile($file_name, $callback) {
