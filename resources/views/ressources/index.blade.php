@@ -9,13 +9,13 @@
         <div class="mt-4">
             <ul class="list-group">
                 <li class="list-group-item">
-                    <a href="https://trophees-nsi.fr/media/pages/ressources/50e1b135bd-1762177827/2025.11.03_trophees-nsi-2026_reglement.pdf" target="_blank">Règlement 2026</a>
+                    <a href="https://trophees-nsi.fr/media/pages/ressources/288310e086-1770298038/trophees_nsi_reglement_2026-v2.pdf" target="_blank">Règlement 2026</a>
                 </li>
                 <li class="list-group-item">
-                    <a href="https://trophees-nsi.fr/media/pages/ressources/26fc5375b6-1762178657/2026_autorisation-droits-d-auteur-et-droit-a-l-image-eleve-mineur.pdf" target="_blank">Autorisation à compléter et à signer pour un élève mineur</a>
+                    <a href="https://trophees-nsi.fr/media/pages/ressources/4147383457-1770298388/autorisation-droits-d-auteur-et-droit-a-l-image-2026_eleve-mineur.pdf" target="_blank">Autorisation à compléter et à signer pour un élève mineur</a>
                 </li>
                 <li class="list-group-item">
-                    <a href="https://trophees-nsi.fr/media/pages/ressources/72d9ac731d-1762178657/2026_autorisation-droits-d-auteur-et-droit-a-l-image-eleve-majeur.pdf" target="_blank">Autorisation à compléter et à signer pour un élève majeur</a>
+                    <a href="https://trophees-nsi.fr/media/pages/ressources/d58cc109de-1770298388/autorisation-droits-d-auteur-et-droit-a-l-image-2026_eleve-majeur.pdf" target="_blank">Autorisation à compléter et à signer pour un élève majeur</a>
                 </li>
                 <li class="list-group-item">
                     <a href="/projects/exemple" target="_blank">Modèle du dossier de candidature</a>
