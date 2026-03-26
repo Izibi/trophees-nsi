@@ -4,7 +4,7 @@ Nous vous remercions - vous et vos élèves - de votre participation aux Trophé
 
 Le dossier n°{{ $id }} - {{ $name }} a bien été enregistré. Malheureusement, le dossier comporte des anomalies, et ne peut être transmis en l'état au jury.
 
-Voici les anomalies à corriger :
+Voici la liste des corrections à effectuer :
 {{ $msg }}
 
 Attention ! Vous disposez d’un délai de 72h maximum à compter de cette notification pour effectuer les corrections demandées. Passé ce délai, le dossier sera automatiquement refusé.

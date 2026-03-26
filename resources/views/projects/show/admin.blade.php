@@ -4,6 +4,14 @@
     <div class="row">
         <div class="col-7">
             @include('projects.details')
+            @if($can_award)
+            <br>
+            <p>
+                <a href="{{ route('awards.edit', ['project' => $project->id]) }}" class="btn btn-primary">
+                    {{ count($awards) > 0 ? 'Modifier l\'attribution de prix' : 'Attribuer un prix' }}
+                </a>
+            </p>
+            @endif
 
             <div class="mt-5">
                 {!! Form::open()->route('projects.set_status', ['project' => $project])->fill($project) !!}

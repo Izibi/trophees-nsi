@@ -9,7 +9,7 @@
         <div class="mt-4">
             <ul class="list-group">
                 <li class="list-group-item">
-                    <a href="https://trophees-nsi.fr/media/pages/ressources/288310e086-1770298038/trophees_nsi_reglement_2026-v2.pdf" target="_blank">Règlement 2026</a>
+		            <a href="https://trophees-nsi.fr/media/pages/ressources/cf8c835af4-1771927618/trophees-nsi_reglement_2026.pdf" target="_blank">Règlement 2026</a>
                 </li>
                 <li class="list-group-item">
                     <a href="https://trophees-nsi.fr/media/pages/ressources/4147383457-1770298388/autorisation-droits-d-auteur-et-droit-a-l-image-2026_eleve-mineur.pdf" target="_blank">Autorisation à compléter et à signer pour un élève mineur</a>
@@ -24,7 +24,7 @@
                     <a href="https://forge.apps.education.fr/trophees-nsi-2026/modele" target="_blank">Modèle du dossier technique</a>
                 </li>
                 <li class="list-group-item">
-                    <a href="https://tube-numerique-educatif.apps.education.fr/w/eVnrNoyruT7rbMFxJ49M6S" target="_blank">Webinaire d'utilisation de la forge</a>
+                    <a href="https://tube.futuretic.fr/w/5jgdjwUHUAUbtodQBZdotr" target="_blank">Tutoriel : dépôt du dossier technique sur la forge des communs numériques éducatifs</a>
                 </li>
             </ul>
         </div>

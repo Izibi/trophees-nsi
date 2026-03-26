@@ -29,7 +29,7 @@
         </div>
         <div>
             @if($url)
-                <a class="btn btn-primary" id="link" target="_blank" href="{{ $url }}">Accéder au serveur d'évaluation</a><br>
+                <a class="btn btn-primary" id="link" target="_blank" href="{{ $url }}">Accéder à l'environnement virtuel</a><br>
                 <i>{{ $nb }} utilisateurs actuellement connectés</i>
             @else
                 <b>Désolé, vous n'avez pas encore accès au serveur d'évaluation car vous vous êtes connecté pour la première fois (en tant que membre du jury) ces dernières heures. Veuillez patienter quelques heures pendant que votre accès est créé.</b>
@@ -37,7 +37,7 @@
         </div>
         <hr>
         <div>
-            <p><b>Informations pratiques supplémentaires (dernière mise à jour le 29 mars) :</b></p>
+            <p><b>Informations pratiques supplémentaires :</b></p>
             <ul>
                 <li>Session :<ul>
                     <li>Votre session est individuelle, les fichiers hors du dossier TropheesNSI sont donc privés à votre compte.</li>
@@ -52,7 +52,7 @@
                 <li>Modules Python : <ul>
                     <li>Les versions courantes des modules les plus utilisés ont été installées sur le serveur, mais certains projets nécessitent peut-être des versions spécifiques.</li>
                     <li>Vous pouvez installer vous-mêmes des versions différentes avec pip comme vous le feriez normalement.</li>
-                    <li>En cas de problème lors de l'installation des requirements via requirements.txt, essayez de vérifier le contenu du fichier, et de supprimer les modules incorrects, car pip n'installera aucun module si jamais au moins module n'est pas installable.</li>
+                    <li>En cas de problème lors de l'installation des requirements via requirements.txt, essayez de vérifier le contenu du fichier, et de supprimer les modules incorrects, car pip n'installera aucun module si jamais au moins un module n'est pas installable.</li>
                     <li>Il peut être nécessaire de modifier la version demandée des dépendances pour les faire fonctionner sur la version de Python du serveur.</li>
                     <li>Certains projets déclarent des modules de base dans requirements.txt, ce qui est incorrect et empêche l'installation via pip.</li>
                 </ul></li>

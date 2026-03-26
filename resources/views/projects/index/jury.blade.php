@@ -62,7 +62,7 @@
             @if($view['type'] != 'own' || !$view['edit'])
                 <button class="btn btn-primary active-button" data-action="/projects/:id/view" data-method="GET">Afficher le projet sélectionné</button>
             @endif
-            @if($view['type'] != 'own' && $coordinator)
+            @if($view['type'] != 'own' && ($coordinator || $view['type'] == 'region' && Auth::user()->hasRole('president-territorial', $view['target_id']) || $view['type'] == 'prize' && Auth::user()->hasRole('president-prize', $view['target_id'])))
                 <a class="btn btn-primary active-button" data-action="" target="_blank" href="/projects_export">Télécharger au format CSV</a>
 		    @endif
         @endif
@@ -75,7 +75,7 @@
     <div class="mt-3 mb-3">
         Outils d'évaluation :<br>
         <a class="btn btn-primary" target="_blank" href="/projects/zips/{{ $zip_name }}">Télécharger tous ces projets dans une archive ZIP</a>
-        <a class="btn btn-primary" target="_blank" href="/evaluation_server/">Evaluer ces projets en ligne</a>
+        <a class="btn btn-primary" target="_blank" href="/evaluation_server/">Tester les projets</a>
     </div>
     @endif
 @endif

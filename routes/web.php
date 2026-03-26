@@ -38,9 +38,7 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::get('/jury/exportAll', [App\Http\Controllers\JuryController::class, 'exportAll'])->name('jury.exportAll');
 
     Route::get('/awards', [App\Http\Controllers\AwardsController::class, 'index']);
-    Route::get('/awards/{project}/create', [App\Http\Controllers\AwardsController::class, 'create'])->name('awards.create');
-    Route::get('/awards/{award}/edit', [App\Http\Controllers\AwardsController::class, 'edit'])->name('awards.edit');
-    Route::get('/awards/{award}/delete', [App\Http\Controllers\AwardsController::class, 'delete'])->name('awards.delete');
+    Route::get('/awards/{project}', [App\Http\Controllers\AwardsController::class, 'edit'])->name('awards.edit');
     Route::post('/awards/update', [App\Http\Controllers\AwardsController::class, 'update'])->name('awards.update');
     Route::get('/awards/export', [App\Http\Controllers\AwardsController::class, 'export']);
 

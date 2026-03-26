@@ -7,8 +7,8 @@
             @if($can_award)
             <br>
             <p>
-                <a href="{{ route('awards.create', ['project' => $project->id]) }}" class="btn btn-primary">
-                    Attribuer un prix
+                <a href="{{ route('awards.edit', ['project' => $project->id]) }}" class="btn btn-primary">
+                    {{ count($awards) > 0 ? 'Modifier l\'attribution de prix' : 'Attribuer un prix' }}
                 </a>
             </p>
             @endif
@@ -22,7 +22,7 @@
                                 Mes notes {{ $rating && !$rating->published ? '(draft)' : '' }}
                             </a>
                         </li>
-                        @if($contest->status == 'deliberating-territorial' || $contest->status == 'deliberating-national')
+                        @if(($contest->status == 'deliberating-territorial' || $contest->status == 'deliberating-national') || (($user->hasRole('coordinator') || $user->hasRole('president-territorial') || $user->hasRole('president-prize')) && ($contest->status == 'grading-territorial' || $contest->status == 'grading-national')))
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#panel-aggregated-ratings" role="tab">Notes aggrégées</a>
                             </li>
@@ -33,7 +33,7 @@
                     <div class="tab-pane fade show active p-3" id="panel-my-ratings" role="tabpanel">
                         @include('projects.rating.edit')
                     </div>
-                    @if($contest->status == 'deliberating-territorial' || $contest->status == 'deliberating-national')
+                    @if(($contest->status == 'deliberating-territorial' || $contest->status == 'deliberating-national') || (($user->hasRole('coordinator') || $user->hasRole('president-territorial') || $user->hasRole('president-prize')) && ($contest->status == 'grading-territorial' || $contest->status == 'grading-national')))
                         <div class="tab-pane fade p-0" id="panel-aggregated-ratings" role="tabpanel">
                             @include('projects.rating.show')
                         </div>

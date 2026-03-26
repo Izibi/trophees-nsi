@@ -11,7 +11,8 @@ class Prize extends Model
 
     protected $fillable = [
         'name',
-        'grade_id'
+        'grade_id',
+        'special'
     ];
 
     public function grade()

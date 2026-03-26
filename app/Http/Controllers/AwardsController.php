@@ -7,7 +7,6 @@ use App\Models\Contest;
 use App\Models\Region;
 use App\Models\User;
 use App\Models\Project;
-use App\Models\Rating;
 use App\Models\Grade;
 use App\Models\Prize;
 use App\Models\Award;
@@ -95,23 +94,32 @@ class AwardsController extends Controller
 
     private function getAwardablePrizes($user, $project) {
         if($user->role == 'admin') {
-            $prizes = Prize::where('grade_id', $project->grade_id)->get();
+            $prizes = Prize::where('grade_id', $project->grade_id)
+                ->orWhereNull('grade_id')
+                ->get();
+            
+            $awardable = [];
             $national = $this->contest->status == 'deliberating-national';
-            foreach($prize as $prize) {
+            $region_id = $national ? 0 : ($project->school ? $project->school->region_id : null);
+            
+            foreach($prizes as $prize) {
                 $awardable[] = [
                     'type' => $national ? 'national' : 'territorial',
-                    'region_id' => $national ? 0 : $project->region_id,
+                    'region_id' => $region_id,
                     'prize_id' => $prize->id,
-                    'name' => Award::getRegionPrizeTitle($prize, $user->roles()->where('type', 'president-territorial')->first()->target_id)
+                    'name' => Award::getRegionPrizeTitle($prize, $region_id)
                 ];
             }
             return $awardable;
         }
-
+        
         $awardable = [];
         if($this->contest->status == 'deliberating-territorial') {
             foreach($user->roles()->where('type', 'president-territorial')->get() as $role) {
-                $prizes = Prize::where('grade_id', $project->grade_id)->get();
+                $prizes = Prize::where('grade_id', $project->grade_id)
+                    ->orWhereNull('grade_id')
+                    ->get();
+                
                 foreach($prizes as $prize) {
                     $awardable[] = [
                         'type' => 'territorial',
@@ -124,7 +132,13 @@ class AwardsController extends Controller
         }
         if($this->contest->status == 'deliberating-national') {
             foreach($user->roles()->where('type', 'president-prize')->get() as $role) {
-                $prizes = Prize::where('id', $role->target_id)->where('grade_id', $project->grade_id)->get();
+                $prizes = Prize::where('id', $role->target_id)
+                    ->where(function($query) use ($project) {
+                        $query->where('grade_id', $project->grade_id)
+                              ->orWhereNull('grade_id');
+                    })
+                    ->get();
+                
                 foreach($prizes as $prize) {
                     $awardable[] = [
                         'type' => 'national',
@@ -142,70 +156,84 @@ class AwardsController extends Controller
         return $awardable;
     }
 
-    public function create(Request $request, Project $project) {
+    public function edit(Request $request, Project $project) {
         $user = $request->user();
-        if(!$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
+        if($user->role != 'admin' && !$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
             return redirect('/projects');
         }
         $phase = $this->contest->status;
-        if(($phase != 'deliberating-territorial' && $phase != 'deliberating-national')
+        if($user->role != 'admin' && (($phase != 'deliberating-territorial' && $phase != 'deliberating-national')
             || ($phase == 'deliberating-territorial' && !$user->hasRole('president-territorial'))
-            || ($phase == 'deliberating-national' && !$user->hasRole('president-prize'))) {
+            || ($phase == 'deliberating-national' && !$user->hasRole('president-prize')))) {
             return redirect('/awards');
         }
 
         $awardable = $this->getAwardablePrizes($user, $project);
-        $abc = json_encode($awardable);
 
-        // Make $awardable a list for the form select
-        $awardable = array_map(function($a) {
+        // Get currently attributed awards for this project
+        $currentAwards = Award::where('project_id', $project->id)
+            ->get();
+        
+        // Find which awardable indices match current awards
+        $currentRegularAwardIndex = null;
+        $currentSpecialAwardIndices = [];
+        $currentRegularAward = null;
+        $currentComment = '';
+        
+        foreach($currentAwards as $currentAward) {
+            foreach($awardable as $idx => $aw) {
+                if($aw['prize_id'] == $currentAward->prize_id && $aw['region_id'] == $currentAward->region_id) {
+                    $prize = Prize::find($aw['prize_id']);
+                    if ($prize && $prize->special) {
+                        $currentSpecialAwardIndices[] = $idx;
+                    } else {
+                        $currentRegularAwardIndex = $idx;
+                        $currentRegularAward = $currentAward;
+                        $currentComment = $currentAward->comment;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Separate regular and special prizes
+        $regularPrizes = [];
+        $specialPrizes = [];
+        foreach($awardable as $idx => $aw) {
+            $prize = Prize::find($aw['prize_id']);
+            if ($prize && $prize->special) {
+                $specialPrizes[$idx] = ['name' => $aw['name'], 'prize' => $prize];
+            } else {
+                $regularPrizes[$idx] = $aw;
+            }
+        }
+
+        // Make prize arrays into lists for the form
+        $regularPrizesList = array_map(function($a) {
             return $a['name'];
-        }, $awardable);
+        }, $regularPrizes);
 
         return view('awards.edit', [
             'awardable' => $awardable,
-            'award' => null,
-            'project' => $project
-        ]);
-    }
-
-    public function edit(Request $request, Award $award) {
-        $user = $request->user();
-        if(!$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
-            return redirect('/projects');
-        }
-        $phase = $this->contest->status;
-        if(($phase != 'deliberating-territorial' && $phase != 'deliberating-national')
-            || ($phase == 'deliberating-territorial' && !$user->hasRole('president-territorial'))
-            || ($phase == 'deliberating-national' && !$user->hasRole('president-prize'))) {
-            return redirect('/awards');
-        }
-
-        $project = $award->project;
-
-        $awardable = $this->getAwardablePrizes($user, $project);
-
-        // Make $awardable a list for the form select
-        $awardable = array_map(function($a) {
-            return $a['name'];
-        }, $awardable);
-
-        return view('awards.edit', [
-            'awardable' => $awardable,
-            'award' => $award,
-            'project' => $project
+            'regularPrizes' => $regularPrizesList,
+            'specialPrizes' => $specialPrizes,
+            'project' => $project,
+            'currentRegularAwardIndex' => $currentRegularAwardIndex,
+            'currentSpecialAwardIndices' => $currentSpecialAwardIndices,
+            'currentRegularAward' => $currentRegularAward,
+            'currentComment' => $currentComment
         ]);
     }
 
     public function update(Request $request) {
         $user = $request->user();
-        if(!$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
+        if($user->role != 'admin' && !$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
             return redirect('/projects');
         }
         $phase = $this->contest->status;
-        if(($phase != 'deliberating-territorial' && $phase != 'deliberating-national')
+        if($user->role != 'admin' && (($phase != 'deliberating-territorial' && $phase != 'deliberating-national')
             || ($phase == 'deliberating-territorial' && !$user->hasRole('president-territorial'))
-            || ($phase == 'deliberating-national' && !$user->hasRole('president-prize'))) {
+            || ($phase == 'deliberating-national' && !$user->hasRole('president-prize')))) {
             return redirect('/awards');
         }
 
@@ -214,50 +242,142 @@ class AwardsController extends Controller
             return redirect('/awards');
         }
         $awardable = $this->getAwardablePrizes($user, $project);
+        
+        // Handle regular prize from dropdown
         $awardable_id = $request->get('awardable_id');
-        $awarded = isset($awardable[$awardable_id]) ? $awardable[$awardable_id] : null;
         $comment = $request->get('comment');
-        if(!$awarded || !trim($comment)) {
-            return redirect()->back();
+        
+        // Handle special prizes from checkboxes
+        $special_prize_ids = $request->get('special_prize_ids', []);
+        
+        // Check if awardable_id is set (including 0 which is valid)
+        $hasRegularPrize = $awardable_id !== null && $awardable_id !== '' && $awardable_id !== 'Aucun prix';
+        
+        // Comment is required if regular prize is selected
+        if($hasRegularPrize && !trim($comment)) {
+            return redirect()->back()->withErrors(['Le commentaire est requis pour attribuer un prix.']);
         }
         
-        $award = Award::where('contest_id', $this->contest->id)->where('project_id', $project->id)->where('user_id', $user->id)->where('region_id', $awarded['region_id'])->where('prize_id', $awarded['prize_id'])->first();
-        if(!$award) {
+        // Remove existing regular award for this user if "Aucun prix" is selected or nothing selected
+        if(!$hasRegularPrize) {
+            $existingRegularAward = Award::where('contest_id', $this->contest->id)
+                ->where('project_id', $project->id)
+                ->whereHas('prize', function($q) {
+                    $q->whereNull('special');
+                })
+                ->first();
+            
+            if($existingRegularAward) {
+                $existingRegularAward->delete();
+            }
+        }
+        
+        // Process regular prize if selected (check for !== null to allow 0)
+        if($hasRegularPrize) {
+            $awarded = isset($awardable[$awardable_id]) ? $awardable[$awardable_id] : null;
+            if(!$awarded) {
+                return redirect()->back()->withErrors(['Prix invalide sélectionné.']);
+            }
+            
+            // Get the prize to check if it's special
+            $prize = Prize::find($awarded['prize_id']);
+            if (!$prize) {
+                return redirect()->back()->withErrors(['Prix invalide sélectionné.']);
+            }
+            
+            // Validation for special prizes (shouldn't happen in regular dropdown but check anyway)
+            if ($prize->special) {
+                return redirect()->back()->withErrors(['Prix invalide sélectionné.']);
+            }
+            
+            // Delete any existing regular award for this user/project
+            Award::where('contest_id', $this->contest->id)
+                ->where('project_id', $project->id)
+                ->whereHas('prize', function($q) {
+                    $q->whereNull('special');
+                })
+                ->delete();
+            
+            // Create new award
             $award = new Award();
             $award->contest_id = $this->contest->id;
             $award->project_id = $project->id;
             $award->user_id = $user->id;
-        }
-        $award->prize_id = $awarded['prize_id'];
-        $award->region_id = $awarded['region_id'];
-        $award->comment = $comment;
-        $award->save();
+            $award->prize_id = $awarded['prize_id'];
+            $award->region_id = $awarded['region_id'];
+            $award->comment = $comment;
+            $award->save();
 
-        $other_awarded = Award::where('contest_id', $this->contest->id)->where('user_id', $user->id)->where('prize_id', $awarded['prize_id'])->where('region_id', $awarded['region_id'])->where('id', '!=', $award->id)->get();
-        foreach($other_awarded as $other) {
-            $other->delete();
+            // Ensure only ONE award per prize per region/national level (across all users)
+            $other_awarded = Award::where('contest_id', $this->contest->id)
+                ->where('prize_id', $awarded['prize_id'])
+                ->where('region_id', $awarded['region_id'])
+                ->where('id', '!=', $award->id)
+                ->get();
+            foreach($other_awarded as $other) {
+                $other->delete();
+            }
+        }
+        
+        // Remove all special prizes for this user first, then re-add checked ones
+        Award::where('contest_id', $this->contest->id)
+            ->where('project_id', $project->id)
+            ->where('user_id', $user->id)
+            ->whereHas('prize', function($q) {
+                $q->whereNotNull('special');
+            })
+            ->delete();
+        
+        // Process special prizes from checkboxes
+        foreach($special_prize_ids as $special_id) {
+            if(!isset($awardable[$special_id])) {
+                continue;
+            }
+            
+            $awarded = $awardable[$special_id];
+            $prize = Prize::find($awarded['prize_id']);
+            if (!$prize || !$prize->special) {
+                continue;
+            }
+            
+            // Validation for special prizes (laureat type)
+            if ($prize->special == 'laureat') {
+                // Check if project has exactly 1 regular (non-special) award (across all users)
+                $regularAwardsCount = Award::where('contest_id', $this->contest->id)
+                    ->where('project_id', $project->id)
+                    ->whereHas('prize', function($q) {
+                        $q->whereNull('special');
+                    })
+                    ->count();
+                
+                if ($regularAwardsCount != 1) {
+                    continue; // Skip this special prize if validation fails
+                }
+            }
+            
+            // Create new special award
+            $award = new Award();
+            $award->contest_id = $this->contest->id;
+            $award->project_id = $project->id;
+            $award->user_id = $user->id;
+            $award->prize_id = $awarded['prize_id'];
+            $award->region_id = $awarded['region_id'];
+            $award->comment = ''; // Special prizes don't have comments
+            $award->save();
+
+            // Ensure only ONE award per prize per region/national level (across all users)
+            $other_awarded = Award::where('contest_id', $this->contest->id)
+                ->where('prize_id', $awarded['prize_id'])
+                ->where('region_id', $awarded['region_id'])
+                ->where('id', '!=', $award->id)
+                ->get();
+            foreach($other_awarded as $other) {
+                $other->delete();
+            }
         }
 
-        return redirect('/awards');
+        return redirect()->route('projects.show', ['project' => $project->id]);
     }
-
-    public function delete(Request $request, Award $award) {
-        $user = $request->user();
-        if(!$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
-            return redirect('/projects');
-        }
-        $phase = $this->contest->status;
-        if(($phase != 'deliberating-territorial' && $phase != 'deliberating-national')
-            || ($phase == 'deliberating-territorial' && !$user->hasRole('president-territorial'))
-            || ($phase == 'deliberating-national' && !$user->hasRole('president-prize'))
-            || $award->user_id != $user->id) {
-            return redirect('/awards');
-        }
-
-        $award->delete();
-        return redirect('/awards');
-    }
-
 
     public function export(Request $request)
     {

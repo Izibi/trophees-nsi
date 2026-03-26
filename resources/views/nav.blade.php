@@ -35,12 +35,12 @@
                             <a class="nav-link" href="/awards">Lauréats</a>
                         </li>
                     @endif
-                    @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator'))
+                    @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator') || Auth::user()->hasRole('president-territorial') || Auth::user()->hasRole('president-prize'))
                         <li class="nav-item">
                             <a class="nav-link" href="/jury">Coordination</a>
                         </li>
                     @endif
-                    @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator'))
+                    @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator') || Auth::user()->hasRole('president-territorial'))
                         <li class="nav-item">
                             <a class="nav-link" href="/statistics">Statistiques</a>
                         </li>

@@ -7,11 +7,11 @@
         <tbody>
             <tr>
                 <td class="col-10">Compétences Techniques</td>
-                <td class="col-2">{{ $project->score_operationality }}</td>
+                <td class="col-2">{{ is_null($project->score_operationality) ? 'Non évalué' : $project->score_operationality }}</td>
             </tr>
             <tr>
                 <td>Compétences Non Techniques</td>
-                <td>{{ $project->score_communication }}</td>
+                <td>{{ is_null($project->score_communication) ? 'Non évalué' : $project->score_communication }}</td>
             </tr>
             <tr>
                 <td><strong>Total</strong></td>

@@ -44,9 +44,9 @@ class Award extends Model
         } else {
             $region = Region::find($region_id);
             if(!$region) {
-                return "Prix " . $prize->name;
+                return $prize->name;
             }
-            return "Prix " . $prize->name . " pour le territoire " . $region->name;
+            return $prize->name . " pour le territoire " . $region->name;
         }
     }
 

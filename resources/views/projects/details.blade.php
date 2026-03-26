@@ -115,10 +115,6 @@
     @endif
 </div>
 
-<div class="mt-3">
-    Statut : soumis le {{ $project->created_at }}, @lang('project_status.'.$project->status)
-</div>
-
 @if(!is_null($project->code_notes))
     <div class="mt-3">
         <b>Nature du code et usage de l'IA :</b><br>
@@ -133,17 +129,17 @@
     </div>
 @endif
 
+<div class="mt-3">
+    Statut : soumis le {{ $project->created_at }}, @lang('project_status.'.$project->status)
+</div>
+
+<hr>
+
 @foreach($awards as $award)
     <div class="mt-3">
-        <b>Nommé pour le {{ $award->getPrizeTitle() }} par {{ $award->user->name }} :</b><br>
-        {{ $award->comment }}
+        <b>Nommé pour le {{ $award->getPrizeTitle() }} par {{ $award->user->name }}{{ $award->comment ? ' :' : '' }}</b><br>
+        @if($award->comment)
+            {{ $award->comment }}
+        @endif
     </div>
-    @if($award->can_edit)
-    <p>
-        <a href="{{ route('awards.edit', ['award' => $award->id]) }}" class="btn btn-primary">
-            Modifier le commentaire
-        </a>
-    </p>
-    @endif
-
 @endforeach

@@ -151,7 +151,7 @@ class ProjectsController extends Controller
         if($user_role == 'teacher') {
             $views[] = ['type' => 'own', 'create' => $phase == 'open', 'edit' => $phase == 'open' || $phase == 'instruction', 'status' => false, 'rate' => false, 'view_rating' => false, 'view_all' => true];
             if($coordinator) {
-                $views[] = ['type' => 'region', 'target_id' => $user->region_id, 'name' => Region::find($user->region_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => false, 'view_rating' => $phase == 'deliberating-territorial', 'view_all' => true];
+                $views[] = ['type' => 'region', 'target_id' => $user->region_id, 'name' => Region::find($user->region_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => false, 'view_rating' => in_array($phase, ['grading-territorial', 'deliberating-territorial']), 'view_all' => true];
             }
         } elseif($user_role == 'jury' && $user->hasRole('teacher')) {
             $views[] = ['type' => 'own', 'create' => $phase == 'open', 'edit' => $phase == 'open' || $phase == 'instruction', 'status' => false, 'rate' => false, 'view_rating' => false, 'view_all' => true];
@@ -161,12 +161,14 @@ class ProjectsController extends Controller
 
         foreach($user->roles as $role) {
             if($role->type == 'territorial' && ($coordinator || $phase == 'grading-territorial' || $phase == 'deliberating-territorial')) {
-                $views[] = ['type' => 'region', 'target_id' => $role->target_id, 'name' => Region::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-territorial', 'view_rating' => $phase == 'deliberating-territorial', 'view_all' => false];
+                $isPresident = $user->hasRole('president-territorial', $role->target_id);
+                $views[] = ['type' => 'region', 'target_id' => $role->target_id, 'name' => Region::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-territorial', 'view_rating' => $phase == 'deliberating-territorial' || (($coordinator || $isPresident) && $phase == 'grading-territorial'), 'view_all' => false];
             }
         }
         foreach($user->roles as $role) {
             if($role->type == 'prize' && ($coordinator || $phase == 'grading-national' || $phase == 'deliberating-national')) {
-                $views[] = ['type' => 'prize', 'target_id' => $role->target_id, 'name' => Prize::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-national', 'view_rating' => $phase == 'deliberating-national', 'view_all' => false];
+                $isPresident = $user->hasRole('president-prize', $role->target_id);
+                $views[] = ['type' => 'prize', 'target_id' => $role->target_id, 'name' => Prize::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-national', 'view_rating' => $phase == 'deliberating-national' || (($coordinator || $isPresident) && $phase == 'grading-national'), 'view_all' => false];
             }
         }
 
@@ -197,6 +199,7 @@ class ProjectsController extends Controller
     {
         $user = $request->user();
         $coordinator = $user->roles()->where('type', 'coordinator')->exists();
+        $isPresident = $user->hasRole('president-territorial') || $user->hasRole('president-prize');
         $phase = $this->contest->status;
         $has_info = false;
 
@@ -204,7 +207,7 @@ class ProjectsController extends Controller
             $has_notes = true;
             $has_info = true;
             $q = Project::where('contest_id', $this->contest->id);
-        } elseif($coordinator) {
+        } elseif($coordinator || $isPresident) {
             $has_notes = in_array($phase, ['grading-territorial', 'deliberating-territorial', 'grading-national', 'deliberating-national', 'closed']);
             $q = null;
             $views = $this->getUserViews($request);
@@ -222,6 +225,11 @@ class ProjectsController extends Controller
             if(!$q) {
                 return redirect('/projects');
             }
+            
+            // Wrap union query in subquery to allow ORDER BY in chunk()
+            if($q->getQuery()->unions) {
+                $q = Project::fromSub($q, 'projects');
+            }
         } else {
             return redirect('/projects');
         }
@@ -234,7 +242,7 @@ class ProjectsController extends Controller
             }
             $header = array_merge($header, ['Etablissement scolaire', 'Académie']);
             if($has_notes) {
-                $header = array_merge($header, ['Nombre de notes', 'Opérationnalité', 'Communication', 'Total']);
+                $header = array_merge($header, ['Nombre de notes', 'C. Techniques', 'C. Non Techniques', 'Total']);
             }
             if($has_info) {
                 $header = array_merge($header, ['Filles dans l\'équipe', 'Garçons dans l\'équipe', 'Elèves de genre non renseigné dans l\'équipe', 'Filles dans la classe NSI', 'Garçons dans la classe NSI', 'Elèves de genre non renseigné dans la classe NSI', 'Membres de l\'équipe (prénom, nom, genre sur plusieurs colonnes)']);
@@ -464,12 +472,18 @@ class ProjectsController extends Controller
         } else if($view['type'] == 'region') {
             $q->where('schools.region_id', '=', $view['target_id']);
             $needsSchoolJoin = true;
+            if($user->role != 'admin') {
+                $q->where('projects.user_id', '!=', $user->id);
+            }
         } else if($view['type'] == 'prize') {
             $q->join('awards', function($join) use ($view) {
                 $join->on('projects.id', '=', 'awards.project_id')
                      ->where('awards.contest_id', '=', $this->contest->id);
             });
             $q->where('awards.prize_id', '=', $view['target_id'])->where('region_id', '!=', 0);
+            if($user->role != 'admin') {
+                $q->where('projects.user_id', '!=', $user->id);
+            }
         }
 
         if($request->has('filter')) {
@@ -570,6 +584,9 @@ class ProjectsController extends Controller
 
     private function canAward(Request $request, Project $project) {
         $user = $request->user();
+        if($user->role == 'admin') {
+            return true;
+        }
         if($this->contest->status != 'deliberating-territorial' && $this->contest->status != 'deliberating-national') {
             return false;
         }
@@ -630,10 +647,11 @@ class ProjectsController extends Controller
             'contest' => $this->contest,
             'can_award' => $can_award,
             'can_rate' => $can_rate,
-            'awards' => $awards
+            'awards' => $awards,
+            'user' => $user
         ];
         if($user->role == 'jury') {
-            $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
+            $data['rating'] = Rating::getActive()->where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
         }
         return view('projects.show.'.$user->role, $data);
     }
@@ -682,10 +700,11 @@ class ProjectsController extends Controller
             'contest' => $this->contest,
             'can_rate' => $can_rate,
             'can_award' => $can_award,
-            'awards' => $awards
+            'awards' => $awards,
+            'user' => $user
         ];
         if($user->role == 'jury') {
-            $data['rating'] = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
+            $data['rating'] = Rating::getActive()->where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
         }
         return view('projects.show.'.$user->role, $data);
     }
@@ -756,7 +775,7 @@ class ProjectsController extends Controller
         if(!$this->accessible($request, $project, 'rate')) {
             return $this->accessDeniedResponse();
         }
-        $rating = Rating::where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
+        $rating = Rating::getActive()->where('project_id', '=', $project->id)->where('user_id', '=', $user->id)->first();
         if(!$rating) {
             $rating = new Rating([
                 'user_id' => $user->id,
@@ -764,6 +783,8 @@ class ProjectsController extends Controller
             ]);
         }
         $rating->fill($request->all());
+        
+        // Phase is automatically set by Rating model's boot() method
         $rating->save();
         //$url = $request->get('refer_page', '/projects');
         return redirect()->back()->withMessage('Notes enregistrées');
@@ -957,16 +978,16 @@ class ProjectsController extends Controller
             return false;
         }
 
-        $res = DB::table('ratings')
+        $res = Rating::getActive()
             ->select(DB::raw('
-                SUM(ratings.award_mixed) as award_mixed,
-                SUM(ratings.award_citizenship) as award_citizenship,
-                SUM(ratings.award_engineering) as award_engineering,
-                SUM(ratings.award_heart) as award_heart,
-                SUM(ratings.award_originality) as award_originality,
+                SUM(award_mixed) as award_mixed,
+                SUM(award_citizenship) as award_citizenship,
+                SUM(award_engineering) as award_engineering,
+                SUM(award_heart) as award_heart,
+                SUM(award_originality) as award_originality,
                 COUNT(*) as rows_total
             '))
-            ->where('ratings.user_id', '=', $user->id)
+            ->where('user_id', '=', $user->id)
             ->first();
         if(!$res || !$res->rows_total) {
             return false;

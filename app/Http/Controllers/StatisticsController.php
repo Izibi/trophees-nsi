@@ -7,7 +7,6 @@ use App\Models\Contest;
 use App\Models\Region;
 use App\Models\User;
 use App\Models\Project;
-use App\Models\Rating;
 use App\Models\Grade;
 use App\Classes\ActiveContest;
 
@@ -21,7 +20,10 @@ class StatisticsController extends Controller
 
     public function index(Request $request) {
         $isAdmin = $request->user()->role == 'admin';
-        if(!$isAdmin && !$request->user()->hasRole('coordinator')) { 
+        $isCoordinator = $request->user()->hasRole('coordinator');
+        $isPresidentTerritorial = $request->user()->hasRole('president-territorial');
+        
+        if(!$isAdmin && !$isCoordinator && !$isPresidentTerritorial) { 
             return redirect('/');
         }
         $data = [
@@ -39,10 +41,13 @@ class StatisticsController extends Controller
             if($user->role === 'admin') {
                 $regions = Region::get();
             } elseif($user->role === 'jury') {
-                $roles = $user->roles()->where('type', 'territorial')->get();
+                $roles = $user->roles()->whereIn('type', ['territorial', 'president-territorial'])->get();
                 $regions = [];
                 foreach($roles as $role) {
-                    $regions[] = Region::find($role->target_id);
+                    $region = Region::find($role->target_id);
+                    if($region && !in_array($region, $regions)) {
+                        $regions[] = $region;
+                    }
                 }
             } else {
                 $regions = [Region::find($user->region_id)];
@@ -145,7 +150,10 @@ class StatisticsController extends Controller
     public function export(Request $request, $detail = false)
     {
         $isAdmin = $request->user()->role == 'admin';
-        if(!$isAdmin && !$request->user()->hasRole('coordinator')) { 
+        $isCoordinator = $request->user()->hasRole('coordinator');
+        $isPresidentTerritorial = $request->user()->hasRole('president-territorial');
+        
+        if(!$isAdmin && !$isCoordinator && !$isPresidentTerritorial) { 
             return redirect('/');
         }
         $data = $this->getData($detail ? $request->user() : null);

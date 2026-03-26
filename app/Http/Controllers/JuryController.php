@@ -7,7 +7,6 @@ use App\Models\Contest;
 use App\Models\Region;
 use App\Models\User;
 use App\Models\Project;
-use App\Models\Rating;
 use App\Models\Grade;
 use App\Models\Prize;
 use App\Classes\ActiveContest;
@@ -22,7 +21,11 @@ class JuryController extends Controller
 
     public function index(Request $request) {
         $isAdmin = $request->user()->role == 'admin';
-        if(!$isAdmin && !$request->user()->hasRole('coordinator')) { 
+        $isCoordinator = $request->user()->hasRole('coordinator');
+        $isPresidentTerritorial = $request->user()->hasRole('president-territorial');
+        $isPresidentPrize = $request->user()->hasRole('president-prize');
+        
+        if(!$isAdmin && !$isCoordinator && !$isPresidentTerritorial && !$isPresidentPrize) { 
             return redirect('/');
         }
         if($isAdmin) {
@@ -32,36 +35,54 @@ class JuryController extends Controller
             $regions = [Region::find($request->user()->region_id)];
             $prizes = [];
         } else {
-            $roles = $request->user()->roles()->where('type', 'territorial')->get();
+            // Get regions for territorial jury members and presidents
+            $territorialRoles = $request->user()->roles()->whereIn('type', ['territorial', 'president-territorial'])->get();
             $regions = [];
-            foreach($roles as $role) {
-                $regions[] = Region::find($role->target_id);
+            foreach($territorialRoles as $role) {
+                $region = Region::find($role->target_id);
+                if($region && !in_array($region, $regions)) {
+                    $regions[] = $region;
+                }
             }
-            $prizes = $request->user()->prizes()->get();
+            // Get prizes for prize jury members and presidents
+            $prizeRoles = $request->user()->roles()->whereIn('type', ['prize', 'president-prize'])->get();
+            $prizes = [];
+            foreach($prizeRoles as $role) {
+                $prize = Prize::find($role->target_id);
+                if($prize && !in_array($prize, $prizes)) {
+                    $prizes[] = $prize;
+                }
+            }
         }
 
         $data = [];
         foreach($regions as $region) {
             $members = $this->getMembers('territorial', $region->id);
             $president = $this->getPresident($members, 'territorial');
+            $projectsCount = $this->countEvaluableProjects('territorial', $region->id);
+            $membersWithStats = $this->addRatingStats($members, 'territorial', $region->id);
             $data[] = [
                 'id' => $region->id,
                 'type' => 'territorial',
                 'name' => $region->name,
                 'president' => $president,
-                'members' => $members
+                'members' => $membersWithStats,
+                'projects_count' => $projectsCount
             ];
         }
 
         foreach($prizes as $prize) {
             $members = $this->getMembers('prize', $prize->id);
             $president = $this->getPresident($members, 'prize');
+            $projectsCount = $this->countEvaluableProjects('prize', $prize->id);
+            $membersWithStats = $this->addRatingStats($members, 'prize', $prize->id);
             $data[] = [
                 'id' => $prize->id,
                 'type' => 'prize',
                 'name' => $prize->name,
                 'president' => $president,
-                'members' => $members
+                'members' => $membersWithStats,
+                'projects_count' => $projectsCount
             ];
         }
 
@@ -70,7 +91,8 @@ class JuryController extends Controller
 
     public function nominate(Request $request) {
         $isAdmin = $request->user()->role == 'admin';
-        if(!$isAdmin && !$request->user()->hasRole('coordinator')) { 
+        $isCoordinator = $request->user()->hasRole('coordinator');
+        if(!$isAdmin && !$isCoordinator) { 
             return redirect('/');
         }
 
@@ -87,7 +109,7 @@ class JuryController extends Controller
         if(!$target || !$target_user) {
             return redirect('/jury');
         }
-        if(!$isAdmin && !$request->user()->hasRole('coordinator') && !$request->user()->hasRole($type, $target->id)) {
+        if(!$isAdmin && !$isCoordinator && !$request->user()->hasRole($type, $target->id)) {
             return redirect('/jury');
         }
 
@@ -119,9 +141,64 @@ class JuryController extends Controller
         return null;
     }
 
+    private function countEvaluableProjects($type, $target_id) {
+        if($type == 'territorial') {
+            return Project::where('projects.contest_id', $this->contest->id)
+                ->where('projects.status', 'validated')
+                ->join('schools', 'projects.school_id', '=', 'schools.id')
+                ->where('schools.region_id', '=', $target_id)
+                ->count();
+        } elseif($type == 'prize') {
+            return Project::where('projects.contest_id', $this->contest->id)
+                ->where('projects.status', 'validated')
+                ->join('awards', function($join) use ($target_id) {
+                    $join->on('projects.id', '=', 'awards.project_id')
+                         ->where('awards.contest_id', '=', $this->contest->id)
+                         ->where('awards.prize_id', '=', $target_id)
+                         ->where('awards.region_id', '!=', 0);
+                })
+                ->count();
+        }
+        return 0;
+    }
+
+    private function addRatingStats($members, $type, $target_id) {
+        $currentPhase = \App\Models\Rating::getCurrentPhase();
+        
+        foreach($members as $member) {
+            $query = \App\Models\Rating::where('ratings.user_id', $member->id)
+                ->where('ratings.phase', $currentPhase)
+                ->join('projects', 'ratings.project_id', '=', 'projects.id')
+                ->where('projects.contest_id', $this->contest->id)
+                ->where('projects.status', 'validated');
+            
+            if($type == 'territorial') {
+                $query->join('schools', 'projects.school_id', '=', 'schools.id')
+                      ->where('schools.region_id', '=', $target_id);
+            } elseif($type == 'prize') {
+                $query->join('awards', function($join) use ($target_id) {
+                    $join->on('projects.id', '=', 'awards.project_id')
+                         ->where('awards.contest_id', '=', $this->contest->id)
+                         ->where('awards.prize_id', '=', $target_id)
+                         ->where('awards.region_id', '!=', 0);
+                });
+            }
+            
+            $member->ratings_published = (clone $query)->where('ratings.published', 1)->count();
+            $member->ratings_draft = (clone $query)->where('ratings.published', 0)->count();
+            $member->ratings_total = $member->ratings_published + $member->ratings_draft;
+        }
+        
+        return $members;
+    }
+
     public function export(Request $request) {
         $isAdmin = $request->user()->role == 'admin';
-        if(!$isAdmin && !$request->user()->hasRole('coordinator')) { 
+        $isCoordinator = $request->user()->hasRole('coordinator');
+        $isPresidentTerritorial = $request->user()->hasRole('president-territorial');
+        $isPresidentPrize = $request->user()->hasRole('president-prize');
+        
+        if(!$isAdmin && !$isCoordinator && !$isPresidentTerritorial && !$isPresidentPrize) { 
             return redirect('/');
         }
 
@@ -141,13 +218,15 @@ class JuryController extends Controller
         }
 
         // Check if user has rights to access this target
-        if(!$isAdmin && !$request->user()->hasRole('coordinator') && !$request->user()->hasRole($type, $target->id)) {
+        $hasAccessToTarget = $request->user()->hasRole($type, $target->id) || 
+                             $request->user()->hasRole('president-' . $type, $target->id);
+        if(!$isAdmin && !$isCoordinator && !$hasAccessToTarget) {
             return redirect('/jury');
         }
 
         $callback = function() use ($type, $target_id) {
             $fh = fopen('php://output', 'w');
-            $columns = ['ID', 'Nom', 'Email', 'Email secondaire', 'Région', 'Pays', 'Dernière connexion', 'Estimation du nombre de projets', 'Date de mise à jour de l\'estimation', 'Etablissements scolaires'];
+            $columns = ['ID', 'Nom', 'Email', 'Email secondaire', 'Région', 'Pays', 'Dernière connexion', 'Estimation du nombre de projets', 'Date de mise à jour de l\'estimation', 'Etablissement scolaire'];
             fputcsv($fh, $columns);
 
             $loginCutoff = now()->subMonths(5);
@@ -268,7 +347,7 @@ class JuryController extends Controller
 
         $callback = function() {
             $fh = fopen('php://output', 'w');
-            $columns = ['ID', 'Nom', 'Email', 'Email secondaire', 'Région', 'Pays', 'Dernière connexion', 'Estimation du nombre de projets', 'Date de mise à jour de l\'estimation', 'Etablissements scolaires'];
+            $columns = ['ID', 'Nom', 'Email', 'Email secondaire', 'Région', 'Pays', 'Dernière connexion', 'Estimation du nombre de projets', 'Date de mise à jour de l\'estimation', 'Etablissement scolaire'];
             fputcsv($fh, $columns);
 
             $loginCutoff = now()->subMonths(5);

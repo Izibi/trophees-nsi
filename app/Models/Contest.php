@@ -15,4 +15,16 @@ class Contest extends Model
         'status',
         'message'
     ];
+
+    protected static function boot() {
+        parent::boot();
+        
+        static::updated(function($contest) {
+            // Check if status was changed
+            if ($contest->isDirty('status')) {
+                // Recompute all project ratings for this contest when phase changes
+                \App\Models\Rating::refreshAllProjectsForContest($contest->id);
+            }
+        });
+    }
 }

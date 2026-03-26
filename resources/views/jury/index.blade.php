@@ -24,6 +24,9 @@
                 {{ $target['name'] }}
             </h3>
             <div class="mb-2">
+                <strong>Projets évaluables :</strong> {{ $target['projects_count'] }}
+            </div>
+            <div class="mb-2">
                 <a href="{{ route('jury.export', ['target' => $target['id'], 'type' => $target['type']]) }}" class="btn btn-sm btn-primary">
                     Exporter les enseignants
                 </a>
@@ -43,8 +46,15 @@
                                 (Président)</b>
                             @else
                                 {{ $member->name }}
-                                <a href="{{ route('jury.nominate', ['target' => $target['id'], 'type' => $target['type'], 'user' => $member->id]) }}">Nommer président(e) du jury</a>
+                                @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator'))
+                                    <a href="{{ route('jury.nominate', ['target' => $target['id'], 'type' => $target['type'], 'user' => $member->id]) }}">Nommer président(e) du jury</a>
+                                @endif
                             @endif
+                            - 
+                            <span title="Évaluations dans la phase actuelle">
+                                Notes : <strong>{{ $member->ratings_total }}</strong>
+                                ({{ $member->ratings_published }} publiées, {{ $member->ratings_draft }} brouillons)
+                            </span>
                         </li>
                     @endforeach
                 </ul>

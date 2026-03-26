@@ -4,7 +4,7 @@
 
 <p>Le dossier n°{{ $id }} - {{ $name }} a bien été enregistré. Malheureusement, le dossier comporte des anomalies, et ne peut être transmis en l'état au jury.</p>
 
-<p>Voici les anomalies à corriger :<br>
+<p>Voici la liste des corrections à effectuer :<br>
 {!! nl2br(e($msg)) !!}
 </p>
 

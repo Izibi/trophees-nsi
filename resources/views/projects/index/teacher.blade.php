@@ -18,7 +18,9 @@
 
     <p>@include('projects.contest-status')</p>
 
-    @include('projects.index.teacher_banner')
+    @if(false)
+        @include('projects.index.teacher_banner')
+    @endif
 
     @if(count($other_views))
         @foreach($other_views as $other_view)
