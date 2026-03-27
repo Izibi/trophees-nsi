@@ -42,6 +42,8 @@
                     @include('projects.index.common.list_ratings')
                 @elseif($coordinator)
                     @include('projects.index.jury_coordinator_list_details')
+                @elseif($view['type'] == 'own')
+                    @include('projects.index.teacher_list_details')
                 @else
                     @include('projects.index.jury_list_details')
                 @endif
