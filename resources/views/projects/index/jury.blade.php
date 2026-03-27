@@ -40,6 +40,8 @@
             <div class="table-responsive">
                 @if($rating_mode)
                     @include('projects.index.common.list_ratings')
+                @elseif($coordinator)
+                    @include('projects.index.jury_coordinator_list_details')
                 @else
                     @include('projects.index.jury_list_details')
                 @endif

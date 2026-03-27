@@ -162,13 +162,13 @@ class ProjectsController extends Controller
         foreach($user->roles as $role) {
             if($role->type == 'territorial' && ($coordinator || $phase == 'grading-territorial' || $phase == 'deliberating-territorial')) {
                 $isPresident = $user->hasRole('president-territorial', $role->target_id);
-                $views[] = ['type' => 'region', 'target_id' => $role->target_id, 'name' => Region::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-territorial', 'view_rating' => $phase == 'deliberating-territorial' || (($coordinator || $isPresident) && $phase == 'grading-territorial'), 'view_all' => false];
+                $views[] = ['type' => 'region', 'target_id' => $role->target_id, 'name' => Region::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-territorial', 'view_rating' => $phase == 'deliberating-territorial' || (($coordinator || $isPresident) && $phase == 'grading-territorial'), 'view_all' => $coordinator];
             }
         }
         foreach($user->roles as $role) {
             if($role->type == 'prize' && ($coordinator || $phase == 'grading-national' || $phase == 'deliberating-national')) {
                 $isPresident = $user->hasRole('president-prize', $role->target_id);
-                $views[] = ['type' => 'prize', 'target_id' => $role->target_id, 'name' => Prize::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-national', 'view_rating' => $phase == 'deliberating-national' || (($coordinator || $isPresident) && $phase == 'grading-national'), 'view_all' => false];
+                $views[] = ['type' => 'prize', 'target_id' => $role->target_id, 'name' => Prize::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-national', 'view_rating' => $phase == 'deliberating-national' || (($coordinator || $isPresident) && $phase == 'grading-national'), 'view_all' => $coordinator];
             }
         }
 
