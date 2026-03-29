@@ -798,9 +798,11 @@ class ProjectsController extends Controller
             return $this->accessDeniedResponse();
         }
         $oldStatus = $project->status;
+        $message = $request->get('message');
         $project->status = $request->get('status');
+        $project->status_message = $message ?? '';
         $project->save();
-        $this->sendMail($project, $oldStatus, $request->get('message'));
+        $this->sendMail($project, $oldStatus, $message);
         //$url = $request->get('refer_page', '/projects');
         return redirect()->back()->withMessage('Statut enregistré');
     }

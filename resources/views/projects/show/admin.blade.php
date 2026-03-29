@@ -13,6 +13,12 @@
             </p>
             @endif
 
+            @if($project->status_message)
+            <div class="alert alert-info">
+                <strong>Message envoyé à l'enseignant :</strong> {{ $project->status_message }}
+            </div>
+            @endif
+
             <div class="mt-5">
                 {!! Form::open()->route('projects.set_status', ['project' => $project])->fill($project) !!}
                     {!! Form::select('status', 'Statut')->options(trans('project_status')) !!}

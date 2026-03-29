@@ -30,7 +30,8 @@ class Project extends Model
         'class_boys',
         'class_not_provided',
         'teacher_notes',
-        'code_notes'
+        'code_notes',
+        'status_message'
     ];
 
     public $upload_attributes = [
