@@ -33,7 +33,7 @@
         </div>
         <div class="col-5">
             <div class="card">
-                <div class="card-header">Notes aggrégées</div>
+                <div class="card-header">Moyenne des notes</div>
                 <div class="card-body p-1">
                     @include('projects.rating.show')
                 </div>

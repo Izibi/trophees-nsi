@@ -24,7 +24,7 @@
                         </li>
                         @if(($contest->status == 'deliberating-territorial' || $contest->status == 'deliberating-national') || (($user->hasRole('coordinator') || $user->hasRole('president-territorial') || $user->hasRole('president-prize')) && ($contest->status == 'grading-territorial' || $contest->status == 'grading-national')))
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#panel-aggregated-ratings" role="tab">Notes aggrégées</a>
+                                <a class="nav-link" data-toggle="tab" href="#panel-aggregated-ratings" role="tab">Moyenne des notes</a>
                             </li>
                         @endif
                     </ul>
