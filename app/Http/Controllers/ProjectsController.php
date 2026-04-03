@@ -719,9 +719,11 @@ class ProjectsController extends Controller
             return $this->accessDeniedResponse();
         }
         if($user->role == 'teacher' &&
-            (!in_array($project->status, ['draft', 'incomplete']) ||
-            ($project->status == 'draft' && $phase != 'open')) ||
-            ($project->status == 'incomplete' && !in_array($phase, ['open', 'instruction']))) {
+            (
+                !in_array($project->status, ['draft', 'incomplete']) ||
+                ($project->status == 'draft' && $phase != 'open') ||
+                ($project->status == 'incomplete' && !in_array($phase, ['open', 'instruction']))
+            )) {
             return redirect('/projects');
         }
         return view('projects.edit.index', [
