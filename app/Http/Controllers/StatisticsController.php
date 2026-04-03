@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Academy;
 use App\Models\Contest;
 use App\Models\Region;
 use App\Models\User;
@@ -59,6 +60,7 @@ class StatisticsController extends Controller
         $i = 0;
         $premiere = Grade::where('name', 'Première')->get()->first()->id;
         $terminale = Grade::where('name', 'Terminale')->get()->first()->id;
+        $estimated = $this->getEstimated();
         foreach($regions as $region) {
             if(!count($region->academies)) {
                 continue;
@@ -74,7 +76,7 @@ class StatisticsController extends Controller
                 $academy_data = [
                     'name' => $academy->name,
                     'teachers' => $this->countTeachers($projects),
-                    'estimated' => $this->getEstimated($academy),
+                    'estimated' => $estimated[$academy->id],
                     'projects_draft_premiere' => $this->countProjects($projects, 'draft', $premiere),
                     'projects_draft_terminale' => $this->countProjects($projects, 'draft', $terminale),
                     'projects_draft' => $this->countProjects($projects, 'draft'),
@@ -109,24 +111,31 @@ class StatisticsController extends Controller
         return $projects->groupBy('user_id')->count();
     }
 
-    private function getEstimated($academy) {
-        $total = 0;
+    private function getEstimated() {
+        $estimatedPerAcademy = [];
         
         $users = User::whereNotNull('estimated')->get();
-        
+
+        foreach(Academy::get() as $academy) {
+            $estimatedPerAcademy[$academy->id] = 0;
+        }
+
         foreach ($users as $user) {
             $estimated = $user->estimated;
             $userSchools = $user->schools;
+            $userSchoolsCount = $userSchools->count();
             
-            if ($userSchools->count() > 0) {
-                $total += ceil($estimated * $userSchools->where('academy_id', $academy->id)->count() / $userSchools->count());
+            if ($userSchoolsCount > 0) {
+                foreach($userSchools as $userSchool) {
+                    $estimatedPerAcademy[$userSchool->academy_id] += ceil($estimated / $userSchoolsCount);
+                }
             } elseif ($user->region_id) {
                 $academiesInRegion = $academy->region->academies->count();
                 $total += ceil($estimated / $academiesInRegion);
             }
         }
 
-        return $total;
+        return $estimatedPerAcademy;
     }
 
     private function countProjects($projects, $status = null, $grade = null) {
