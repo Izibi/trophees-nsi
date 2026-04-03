@@ -27,6 +27,13 @@
             Niveau : {{ $project->grade->name }}<br>
         @endif
 
+        @if(Auth::user()->role == 'jury' && count($project->team_members))
+            Équipe :
+            @foreach($project->team_members as $member)
+                {{ $member->first_name }} {{ $member->last_name }}@if(!$loop->last), @endif
+            @endforeach
+            <br>
+        @endif
         Composition de l'équipe :
         @if(!is_null($project->team_girls))
             {{ $project->team_girls }} filles;
