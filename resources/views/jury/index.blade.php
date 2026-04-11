@@ -26,11 +26,13 @@
             <div class="mb-2">
                 <strong>Projets évaluables :</strong> {{ $target['projects_count'] }}
             </div>
+            @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator'))
             <div class="mb-2">
                 <a href="{{ route('jury.export', ['target' => $target['id'], 'type' => $target['type']]) }}" class="btn btn-sm btn-primary">
                     Exporter les enseignants
                 </a>
             </div>
+            @endif
             @if($target['president'])
                 <div>Président du jury : {{ $target['president']->name }}</div>
             @else

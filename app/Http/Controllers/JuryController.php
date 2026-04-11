@@ -195,10 +195,8 @@ class JuryController extends Controller
     public function export(Request $request) {
         $isAdmin = $request->user()->role == 'admin';
         $isCoordinator = $request->user()->hasRole('coordinator');
-        $isPresidentTerritorial = $request->user()->hasRole('president-territorial');
-        $isPresidentPrize = $request->user()->hasRole('president-prize');
         
-        if(!$isAdmin && !$isCoordinator && !$isPresidentTerritorial && !$isPresidentPrize) { 
+        if(!$isAdmin && !$isCoordinator) { 
             return redirect('/');
         }
 

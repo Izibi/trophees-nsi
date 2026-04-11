@@ -30,7 +30,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/projects">Projets</a>
                     </li>
-                    @if(Auth::user()->role == 'admin' || (Auth::user()->role == 'jury' && (Auth::user()->hasRole('president-territorial') || Auth::user()->hasRole('president-prize'))))
+                    @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator') || (Auth::user()->role == 'jury' && (Auth::user()->hasRole('president-territorial') || Auth::user()->hasRole('president-prize'))))
                         <li class="nav-item">
                             <a class="nav-link" href="/awards">Lauréats</a>
                         </li>
@@ -40,7 +40,7 @@
                             <a class="nav-link" href="/jury">Coordination</a>
                         </li>
                     @endif
-                    @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator') || Auth::user()->hasRole('president-territorial'))
+                    @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator'))
                         <li class="nav-item">
                             <a class="nav-link" href="/statistics">Statistiques</a>
                         </li>

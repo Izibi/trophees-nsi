@@ -23,16 +23,20 @@ class AwardsController extends Controller
     public function index(Request $request) {
         $role = $request->user()->role;
         $isAdmin = $role == 'admin';
-        if(!$isAdmin && !$request->user()->hasRole('president-territorial') && !$request->user()->hasRole('president-prize')) { 
+        $isCoordinator = $request->user()->hasRole('coordinator');
+        if(!$isAdmin && !$isCoordinator && !$request->user()->hasRole('president-territorial') && !$request->user()->hasRole('president-prize')) { 
             return redirect('/projects');
         }
-        $territorialData = $this->getPresidentTerritorialData($request, $isAdmin);
+        $territorialData = $this->getPresidentTerritorialData($request, $isAdmin, $isCoordinator);
         $nationalData = $this->getPresidentNationalData($request, $isAdmin);
         if(count($territorialData) == 0 && count($nationalData) == 0) {
             return redirect('/projects');
         }
-        return view('awards.'.$role, [
+        // Coordinators are teachers by base role but should see jury view for laureates
+        $viewRole = $isAdmin ? 'admin' : 'jury';
+        return view('awards.'.$viewRole, [
             'isAdmin' => $isAdmin,
+            'isCoordinator' => $isCoordinator,
             'phase' => $this->contest->status,
             'prizes' => Prize::get(),
             'territorial' => $territorialData,
@@ -44,7 +48,7 @@ class AwardsController extends Controller
         return Award::where('contest_id', $this->contest->id)->where('prize_id', $prize->id)->where('region_id', $region_id)->first();
     }
 
-    private function getPresidentTerritorialData($request, $isAdmin) {
+    private function getPresidentTerritorialData($request, $isAdmin, $isCoordinator = false) {
         if($isAdmin) {
             $regions = Region::get();
         } else {
@@ -52,6 +56,13 @@ class AwardsController extends Controller
             $regions = [];
             foreach($roles as $role) {
                 $regions[] = Region::find($role->target_id);
+            }
+            if($isCoordinator) {
+                // Coordinators can see their own region's laureates
+                $regions = [];
+                if($request->user()->region_id && !in_array(Region::find($request->user()->region_id), $regions)) {
+                    $regions[] = Region::find($request->user()->region_id);
+                }
             }
         }
         $prizes = Prize::get();
@@ -382,7 +393,8 @@ class AwardsController extends Controller
     public function export(Request $request)
     {
         $user = $request->user();
-        if(!$user->role == 'admin' && !$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
+        $isCoordinator = $user->hasRole('coordinator');
+        if($user->role != 'admin' && !$isCoordinator && !$user->hasRole('president-territorial') && !$user->hasRole('president-prize')) { 
             return redirect('/projects');
         }
 

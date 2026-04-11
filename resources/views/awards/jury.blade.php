@@ -6,7 +6,11 @@
             <h2>Sélection des projets lauréats</h2>
         </div>
 
-        @if(($phase == 'deliberating-territorial' && count($territorial) > 0) || ($phase == 'deliberating-national' && count($national) > 0))
+        @if(isset($isCoordinator) && $isCoordinator)
+        <p>
+            Cette page vous permet de suivre les projets lauréats sélectionnés par le président du jury pour chaque prix.
+        </p>
+        @elseif(($phase == 'deliberating-territorial' && count($territorial) > 0) || ($phase == 'deliberating-national' && count($national) > 0))
         <p>
             En tant que président du jury, vous devez sélectionner
             @if(count($territorial) > 0 || count($national) > 1)

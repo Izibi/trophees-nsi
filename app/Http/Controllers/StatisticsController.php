@@ -22,9 +22,8 @@ class StatisticsController extends Controller
     public function index(Request $request) {
         $isAdmin = $request->user()->role == 'admin';
         $isCoordinator = $request->user()->hasRole('coordinator');
-        $isPresidentTerritorial = $request->user()->hasRole('president-territorial');
         
-        if(!$isAdmin && !$isCoordinator && !$isPresidentTerritorial) { 
+        if(!$isAdmin && !$isCoordinator) { 
             return redirect('/');
         }
         $data = [
@@ -160,9 +159,8 @@ class StatisticsController extends Controller
     {
         $isAdmin = $request->user()->role == 'admin';
         $isCoordinator = $request->user()->hasRole('coordinator');
-        $isPresidentTerritorial = $request->user()->hasRole('president-territorial');
         
-        if(!$isAdmin && !$isCoordinator && !$isPresidentTerritorial) { 
+        if(!$isAdmin && !$isCoordinator) { 
             return redirect('/');
         }
         $data = $this->getData($detail ? $request->user() : null);
