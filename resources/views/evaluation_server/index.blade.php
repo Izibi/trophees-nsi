@@ -37,9 +37,10 @@
         </div>
         <hr>
         <div>
-            <p><b>Informations pratiques supplémentaires :</b></p>
+            <p><b>Informations pratiques supplémentaires :</b> (dernière mise à jour 11 avril 2026)</p>
             <ul>
                 <li>Session :<ul>
+                    <li><b>En cas de problème avec votre session</b> (programme qui bloque, écran noir, etc.), fermez la page du navigateur, puis attendez une demie heure, votre session et tous les programmes lancés seront automatiquement fermés.</li>
                     <li>Votre session est individuelle, les fichiers hors du dossier TropheesNSI sont donc privés à votre compte.</li>
                     <li>En cas d'inactivité, votre session sera déconnectée et fermée après quelques minutes.</li>
                     <li>Pour vous déconnecter, vous pouvez simplement fermer la page de votre navigateur.</li>
