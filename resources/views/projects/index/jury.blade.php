@@ -33,6 +33,7 @@
     <div class="card mt-3 mb-3">
         <div class="card-header">
             <h2>Projets</h2>
+            @include('projects.index.common.coordinator_mode_switcher')
             @include('projects.index.common.rating_mode_switcher')
             @include('projects.index.common.filter')
         </div>
@@ -40,7 +41,7 @@
             <div class="table-responsive">
                 @if($rating_mode)
                     @include('projects.index.common.list_ratings')
-                @elseif($coordinator)
+                @elseif($coordinator && $coordinator_mode)
                     @include('projects.index.jury_coordinator_list_details')
                 @elseif($view['type'] == 'own')
                     @include('projects.index.teacher_list_details')

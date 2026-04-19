@@ -44,6 +44,7 @@ class ProjectsController extends Controller
     public function index(Request $request)
     {
     	$user = $request->user();
+        $coordinator = $user->hasRole('coordinator');
         $views = $this->getUserViews($request);
         $view = $this->selectView($request, $views);
 
@@ -74,6 +75,7 @@ class ProjectsController extends Controller
         $views = array_filter($views, function($v) use ($view) {
             return $v['type'] != $view['type'] || (isset($v['target_id']) && isset($view['target_id']) && $v['target_id'] != $view['target_id']);
         });
+        $coordinator_mode = $request->get('coordinator') == '1';
         $data = [
             'user' => $user,
             'rows' => $projects,
@@ -87,7 +89,10 @@ class ProjectsController extends Controller
             'regions' => Region::orderBy('country_id', 'desc')->orderBy('name')->get()->pluck('name', 'id')->toArray(),
             'awards_count' => $this->countJuryMemberAwards($request),
             'awards_limit' => config('nsi.awards_limit_per_jury_member'),
-	        'coordinator' => $user->hasRole('coordinator'),
+	        'coordinator' => $coordinator,
+            'coordinator_mode' => $coordinator_mode,
+            'url_coordinatorjury' => '/projects?'.http_build_query(array_merge($request->all(), ['coordinator' => 1])),
+            'url_noncoordinatorjury' => '/projects?'.http_build_query(array_diff_key($request->all(), ['coordinator' => ''])),
             'zip_name' => $this->getViewZipName($view),
             'needs_estimated' => $needs_estimated
         ];
@@ -149,26 +154,82 @@ class ProjectsController extends Controller
         $coordinator = $user->roles()->where('type', 'coordinator')->exists();
 
         if($user_role == 'teacher') {
-            $views[] = ['type' => 'own', 'create' => $phase == 'open', 'edit' => $phase == 'open' || $phase == 'instruction', 'status' => false, 'rate' => false, 'view_rating' => false, 'view_all' => true];
+            $views[] = [
+                'type' => 'own',
+                'create' => $phase == 'open',
+                'edit' => $phase == 'open' || $phase == 'instruction',
+                'status' => false,
+                'rate' => false,
+                'view_rating' => false,
+                'view_all' => true
+            ];
             if($coordinator) {
-                $views[] = ['type' => 'region', 'target_id' => $user->region_id, 'name' => Region::find($user->region_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => false, 'view_rating' => in_array($phase, ['grading-territorial', 'deliberating-territorial']), 'view_all' => true];
+                $views[] = [
+                    'type' => 'region',
+                    'target_id' => $user->region_id,
+                    'name' => Region::find($user->region_id)->name,
+                    'create' => false,
+                    'edit' => false,
+                    'status' => false,
+                    'rate' => false,
+                    'view_rating' => in_array($phase, ['grading-territorial', 'deliberating-territorial']),
+                    'view_all' => true
+                ];
             }
         } elseif($user_role == 'jury' && $user->hasRole('teacher')) {
-            $views[] = ['type' => 'own', 'create' => $phase == 'open', 'edit' => $phase == 'open' || $phase == 'instruction', 'status' => false, 'rate' => false, 'view_rating' => false, 'view_all' => true];
+            $views[] = [
+                'type' => 'own',
+                'create' => $phase == 'open',
+                'edit' => $phase == 'open' || $phase == 'instruction',
+                'status' => false,
+                'rate' => false,
+                'view_rating' => false,
+                'view_all' => true
+            ];
         } elseif($user_role == 'admin') {
-            return [['type' => 'all', 'create' => false, 'edit' => true, 'status' => true, 'rate' => true, 'view_rating' => true, 'view_all' => true]];
+            return [[
+                'type' => 'all',
+                'create' => false,
+                'edit' => true,
+                'status' => true,
+                'rate' => true,
+                'view_rating' => true,
+                'view_all' => true
+            ]];
         }
+
+        $coordinatorJury = $coordinator && $request->get('coordinator') == '1';
 
         foreach($user->roles as $role) {
             if($role->type == 'territorial' && ($coordinator || $phase == 'grading-territorial' || $phase == 'deliberating-territorial')) {
                 $isPresident = $user->hasRole('president-territorial', $role->target_id);
-                $views[] = ['type' => 'region', 'target_id' => $role->target_id, 'name' => Region::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-territorial', 'view_rating' => $phase == 'deliberating-territorial' || (($coordinator || $isPresident) && $phase == 'grading-territorial'), 'view_all' => $coordinator];
+                $views[] = [
+                    'type' => 'region',
+                    'target_id' => $role->target_id,
+                    'name' => Region::find($role->target_id)->name,
+                    'create' => false,
+                    'edit' => false,
+                    'status' => false,
+                    'rate' => $phase == 'grading-territorial',
+                    'view_rating' => $phase == 'deliberating-territorial' || (($coordinator || $isPresident) && $phase == 'grading-territorial'),
+                    'view_all' => $coordinatorJury
+                ];
             }
         }
         foreach($user->roles as $role) {
             if($role->type == 'prize' && ($coordinator || $phase == 'grading-national' || $phase == 'deliberating-national')) {
                 $isPresident = $user->hasRole('president-prize', $role->target_id);
-                $views[] = ['type' => 'prize', 'target_id' => $role->target_id, 'name' => Prize::find($role->target_id)->name, 'create' => false, 'edit' => false, 'status' => false, 'rate' => $phase == 'grading-national', 'view_rating' => $phase == 'deliberating-national' || (($coordinator || $isPresident) && $phase == 'grading-national'), 'view_all' => $coordinator];
+                $views[] = [
+                    'type' => 'prize',
+                    'target_id' => $role->target_id,
+                    'name' => Prize::find($role->target_id)->name,
+                    'create' => false,
+                    'edit' => false,
+                    'status' => false,
+                    'rate' => $phase == 'grading-national',
+                    'view_rating' => $phase == 'deliberating-national' || (($coordinator || $isPresident) && $phase == 'grading-national'),
+                    'view_all' => $coordinatorJury
+                ];
             }
         }
 
