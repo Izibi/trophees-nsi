@@ -1,4 +1,4 @@
-@if($coordinator)
+@if($coordinator && $view['type'] != 'own')
     @if($coordinator_mode)
         <a href="{{ $url_noncoordinatorjury }}" class="right-link">Voir les projets à évaluer</a>
     @else
