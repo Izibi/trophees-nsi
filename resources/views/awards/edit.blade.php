@@ -71,7 +71,17 @@
                 </div>
             @endif
             
-            {!! Form::textarea('comment', 'Commentaire')->value($currentComment) !!}
+            <div class="mt-4">
+                <h5>Commentaire pour le jury (obligatoire)</h5>
+                <small class="form-text text-muted">Visible par les membres du jury uniquement.</small>
+                {!! Form::textarea('comment')->value($currentComment) !!}
+            </div>
+            
+            <div class="mt-4">
+                <h5>Commentaire pour l'équipe lauréate (facultatif)</h5>
+                <small class="form-text text-muted">Visible par le professeur déposant uniquement.</small>
+                {!! Form::textarea('comment_team')->value($currentCommentTeam) !!}
+            </div>
 
             <div class="mt-5">
                 <a class="btn btn-primary" id="btn-ok" href="#">

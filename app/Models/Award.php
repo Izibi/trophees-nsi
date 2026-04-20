@@ -15,7 +15,8 @@ class Award extends Model
         'prize_id',
         'region_id',
         'user_id',
-        'comment'
+        'comment',
+        'comment_team'
     ];
 
     public function contest()

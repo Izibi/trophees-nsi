@@ -693,7 +693,7 @@ class ProjectsController extends Controller
             return $this->accessDeniedResponse();
         }
         $awards = [];
-        if($user->role == 'jury' || $user->role == 'admin') {
+        if($user->role == 'jury' || $user->role == 'admin' || $user->role == 'teacher') {
             $awards = Award::where('contest_id', $this->contest->id)->where('project_id', '=', $project->id)->get();
         }
         $can_award = $this->canAward($request, $project);
@@ -746,7 +746,7 @@ class ProjectsController extends Controller
         }
 
         $awards = [];
-        if($user->role == 'jury' || $user->role == 'admin') {
+        if($user->role == 'jury' || $user->role == 'admin' || $user->role == 'teacher') {
             $awards = Award::where('contest_id', $this->contest->id)->where('project_id', '=', $project->id)->get();
         }
         $can_award = $this->canAward($request, $project);

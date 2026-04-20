@@ -190,6 +190,7 @@ class AwardsController extends Controller
         $currentSpecialAwardIndices = [];
         $currentRegularAward = null;
         $currentComment = '';
+        $currentCommentTeam = '';
         
         foreach($currentAwards as $currentAward) {
             foreach($awardable as $idx => $aw) {
@@ -201,6 +202,7 @@ class AwardsController extends Controller
                         $currentRegularAwardIndex = $idx;
                         $currentRegularAward = $currentAward;
                         $currentComment = $currentAward->comment;
+                        $currentCommentTeam = $currentAward->comment_team;
                     }
                     break;
                 }
@@ -232,7 +234,8 @@ class AwardsController extends Controller
             'currentRegularAwardIndex' => $currentRegularAwardIndex,
             'currentSpecialAwardIndices' => $currentSpecialAwardIndices,
             'currentRegularAward' => $currentRegularAward,
-            'currentComment' => $currentComment
+            'currentComment' => $currentComment,
+            'currentCommentTeam' => $currentCommentTeam
         ]);
     }
 
@@ -257,6 +260,7 @@ class AwardsController extends Controller
         // Handle regular prize from dropdown
         $awardable_id = $request->get('awardable_id');
         $comment = $request->get('comment');
+        $comment_team = $request->get('comment_team');
         
         // Handle special prizes from checkboxes
         $special_prize_ids = $request->get('special_prize_ids', []);
@@ -317,6 +321,7 @@ class AwardsController extends Controller
             $award->prize_id = $awarded['prize_id'];
             $award->region_id = $awarded['region_id'];
             $award->comment = $comment;
+            $award->comment_team = $comment_team;
             $award->save();
 
             // Ensure only ONE award per prize per region/national level (across all users)

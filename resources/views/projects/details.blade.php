@@ -144,9 +144,18 @@
 
 @foreach($awards as $award)
     <div class="mt-3">
-        <b>Nommé pour le {{ $award->getPrizeTitle() }} par {{ $award->user->name }}{{ $award->comment ? ' :' : '' }}</b><br>
-        @if($award->comment)
-            {{ $award->comment }}
+        <b>Nommé pour le {{ $award->getPrizeTitle() }} par {{ $award->user->name }}</b><br>
+        @if($award->comment && Auth::user()->role == 'jury')
+            <div class="mt-2">
+                <i>Commentaire pour le jury :</i><br>
+                {{ $award->comment }}
+            </div>
+        @endif
+        @if($award->comment_team && (Auth::user()->role == 'teacher' || (isset($can_award) && $can_award)))
+            <div class="mt-2">
+                <i>Commentaire pour l'équipe lauréate :</i><br>
+                {{ $award->comment_team }}
+            </div>
         @endif
     </div>
 @endforeach
