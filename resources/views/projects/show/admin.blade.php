@@ -8,7 +8,7 @@
             <br>
             <p>
                 <a href="{{ route('awards.edit', ['project' => $project->id]) }}" class="btn btn-primary">
-                    {{ count($awards) > 0 ? 'Modifier l\'attribution de prix' : 'Attribuer un prix' }}
+                    {{ count($relevant_awards ?? $awards) > 0 ? 'Modifier l\'attribution de prix' : 'Attribuer un prix' }}
                 </a>
             </p>
             @endif

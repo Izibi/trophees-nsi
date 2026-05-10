@@ -145,7 +145,7 @@
 @foreach($awards as $award)
     <div class="mt-3">
         <b>Nommé pour le {{ $award->getPrizeTitle() }} par {{ $award->user->name }}</b><br>
-        @if($award->comment && Auth::user()->role == 'jury')
+        @if($award->comment && (Auth::user()->role == 'jury' || (isset($can_award) && $can_award)))
             <div class="mt-2">
                 <i>Commentaire pour le jury :</i><br>
                 {{ $award->comment }}

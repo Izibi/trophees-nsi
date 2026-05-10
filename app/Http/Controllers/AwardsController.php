@@ -235,7 +235,8 @@ class AwardsController extends Controller
             'currentSpecialAwardIndices' => $currentSpecialAwardIndices,
             'currentRegularAward' => $currentRegularAward,
             'currentComment' => $currentComment,
-            'currentCommentTeam' => $currentCommentTeam
+            'currentCommentTeam' => $currentCommentTeam,
+            'phase' => $phase
         ]);
     }
 
@@ -268,9 +269,19 @@ class AwardsController extends Controller
         // Check if awardable_id is set (including 0 which is valid)
         $hasRegularPrize = $awardable_id !== null && $awardable_id !== '' && $awardable_id !== 'Aucun prix';
         
-        // Comment is required if regular prize is selected
-        if($hasRegularPrize && !trim($comment)) {
-            return redirect()->back()->withErrors(['Le commentaire est requis pour attribuer un prix.']);
+        // Validation: appropriate comment is required if regular prize is selected
+        if($hasRegularPrize) {
+            if($phase == 'deliberating-national') {
+                // In national phase, comment_team is required
+                if(!trim($comment_team)) {
+                    return redirect()->back()->withErrors(['Le commentaire pour l\'équipe lauréate est requis pour attribuer un prix national.']);
+                }
+            } else {
+                // In territorial phase, comment is required
+                if(!trim($comment)) {
+                    return redirect()->back()->withErrors(['Le commentaire pour le jury est requis pour attribuer un prix.']);
+                }
+            }
         }
         
         // Remove existing regular award for this user if "Aucun prix" is selected or nothing selected

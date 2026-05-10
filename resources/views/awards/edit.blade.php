@@ -71,14 +71,16 @@
                 </div>
             @endif
             
+            @if($phase != 'deliberating-national')
             <div class="mt-4">
                 <h5>Commentaire pour le jury (obligatoire)</h5>
                 <small class="form-text text-muted">Visible par les membres du jury uniquement.</small>
                 {!! Form::textarea('comment')->value($currentComment) !!}
             </div>
+            @endif
             
             <div class="mt-4">
-                <h5>Commentaire pour l'équipe lauréate (facultatif)</h5>
+                <h5>Commentaire pour l'équipe lauréate ({{ $phase == 'deliberating-national' ? 'obligatoire' : 'facultatif' }})</h5>
                 <small class="form-text text-muted">Visible par le professeur déposant uniquement.</small>
                 {!! Form::textarea('comment_team')->value($currentCommentTeam) !!}
             </div>
@@ -99,6 +101,8 @@
             var regularPrizeSelect = $('select[name="awardable_id"]');
             var laureatCheckboxes = $('.laureat-checkbox');
             var commentField = $('textarea[name="comment"]');
+            var commentTeamField = $('textarea[name="comment_team"]');
+            var isNationalPhase = {{ $phase == 'deliberating-national' ? 'true' : 'false' }};
 
             function updateLaureatCheckboxes() {
                 // Check if a regular prize is selected (not null/empty/Aucun prix)
@@ -116,11 +120,16 @@
                     }
                 });
                 
-                // Make comment required only if a regular prize is selected
+                // Make appropriate comment field required based on phase
                 if (regularPrizeSelected) {
-                    commentField.prop('required', true);
+                    if (isNationalPhase) {
+                        commentTeamField.prop('required', true);
+                    } else {
+                        commentField.prop('required', true);
+                    }
                 } else {
                     commentField.prop('required', false);
+                    commentTeamField.prop('required', false);
                 }
             }
 

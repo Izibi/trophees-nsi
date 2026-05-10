@@ -701,6 +701,13 @@ class ProjectsController extends Controller
         foreach($awards as &$award) {
             $award->can_edit = $this->canEditAward($request, $award);
         }
+        // Filter awards by current phase for button text logic
+        $relevant_awards = $awards;
+        if($this->contest->status == 'deliberating-national' && $can_award) {
+            $relevant_awards = $awards->filter(function($award) { return $award->region_id == 0; });
+        } elseif($this->contest->status == 'deliberating-territorial' && $can_award) {
+            $relevant_awards = $awards->filter(function($award) { return $award->region_id != 0; });
+        }
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project,
@@ -709,6 +716,7 @@ class ProjectsController extends Controller
             'can_award' => $can_award,
             'can_rate' => $can_rate,
             'awards' => $awards,
+            'relevant_awards' => $relevant_awards,
             'user' => $user
         ];
         if($user->role == 'jury') {
@@ -754,6 +762,13 @@ class ProjectsController extends Controller
         foreach($awards as &$award) {
             $award->can_edit = $this->canEditAward($request, $award);
         }
+        // Filter awards by current phase for button text logic
+        $relevant_awards = $awards;
+        if($this->contest->status == 'deliberating-national' && $can_award) {
+            $relevant_awards = $awards->filter(function($award) { return $award->region_id == 0; });
+        } elseif($this->contest->status == 'deliberating-territorial' && $can_award) {
+            $relevant_awards = $awards->filter(function($award) { return $award->region_id != 0; });
+        }
         $data = [
             'refer_page' => $request->get('refer_page', '/projects'),
             'project' => $project,
@@ -762,6 +777,7 @@ class ProjectsController extends Controller
             'can_rate' => $can_rate,
             'can_award' => $can_award,
             'awards' => $awards,
+            'relevant_awards' => $relevant_awards,
             'user' => $user
         ];
         if($user->role == 'jury') {

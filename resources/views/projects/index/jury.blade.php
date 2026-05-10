@@ -12,7 +12,7 @@
     @elseif($view['type'] == 'region')
         Liste des projets de la région {{ $view['name'] }}
     @elseif($view['type'] == 'prize')
-        Liste des projets nominés pour le prix {{ $view['name'] }}
+        Liste des projets nominés pour le {{ $view['name'] }}
     @endif
     </h3>
 
