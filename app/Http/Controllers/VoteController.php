@@ -74,7 +74,7 @@ class VoteController extends Controller
             'confirmed' => false
         ]);
 
-        $confirmationLink = 'https://depot-test.trophees-nsi.fr/vote-du-public/confirmation?confirmation=' . $confirmationString;
+        $confirmationLink = 'https://depot.trophees-nsi.fr/vote-du-public/confirmation?confirmation=' . $confirmationString;
         Mail::to($email)->send(new VoteConfirmation($confirmationLink));
 
         return response()->json(['success' => true])
