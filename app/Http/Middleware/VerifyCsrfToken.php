@@ -16,5 +16,6 @@ class VerifyCsrfToken extends Middleware
         'user_schools/remove',
         'user_schools/create',
         'evaluation_server/user_log',
+        'vote-du-public/vote',
     ];
 }
