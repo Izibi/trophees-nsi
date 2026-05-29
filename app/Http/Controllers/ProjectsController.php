@@ -657,7 +657,7 @@ class ProjectsController extends Controller
         if($user->hasRole('president-prize') && $this->contest->status == 'deliberating-national') {
             foreach($user->roles()->where('type', 'president-prize')->get() as $role) {
                 $prize = Prize::find($role->target_id);
-                if($prize && $prize->grade_id == $project->grade_id) {
+                if($prize && (!$prize->grade_id || $prize->grade_id == $project->grade_id)) {
                     return true;
                 }
             }
