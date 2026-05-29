@@ -9,6 +9,7 @@ function init() {
 
     function select(tr) {
         var id = tr.data('row-id');
+        var url = tr.data('redirect-url');
         if(isNaN(id)) {
             return;
         }
@@ -21,6 +22,7 @@ function init() {
         }
         selection = {
             id: id,
+            url: url,
             el: tr
         }
         tr.addClass('active-row')
@@ -70,7 +72,10 @@ function init() {
 
     function callAction(action, method) {
         //console.log(action, method, selection)
-        if(action.indexOf(':id') !== -1) {
+        if (action == '/projects/:id/view' && selection && selection.url) {
+            window.location.href = selection.url;
+            return;
+        } else if (action.indexOf(':id') !== -1) {
             if(!selection) {
                 return;
             }
