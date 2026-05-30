@@ -16,8 +16,8 @@ Route::get('/evaluation_server/recreate_mapping', [App\Http\Controllers\Evaluati
 Route::get('/evaluation_server/user_data', [App\Http\Controllers\EvaluationServerController::class, 'getUserData']);
 Route::post('/evaluation_server/user_log', [App\Http\Controllers\EvaluationServerController::class, 'receiveQueryUser']);
 
-Route::match(['post', 'options'], '/vote-du-public/vote', [App\Http\Controllers\VoteController::class, 'vote']);
-Route::get('/vote-du-public/confirmation', [App\Http\Controllers\VoteController::class, 'confirmation']);
+//Route::match(['post', 'options'], '/vote-du-public/vote', [App\Http\Controllers\VoteController::class, 'vote']);
+//Route::get('/vote-du-public/confirmation', [App\Http\Controllers\VoteController::class, 'confirmation']);
 
 Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
 
