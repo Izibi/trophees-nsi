@@ -286,12 +286,20 @@ class AwardsController extends Controller
         
         // Remove existing regular award for this user if "Aucun prix" is selected or nothing selected
         if(!$hasRegularPrize) {
-            $existingRegularAward = Award::where('contest_id', $this->contest->id)
+            $query = Award::where('contest_id', $this->contest->id)
                 ->where('project_id', $project->id)
                 ->whereHas('prize', function($q) {
                     $q->whereNull('special');
-                })
-                ->first();
+                });
+            
+            // Only delete awards from the current phase
+            if($phase == 'deliberating-territorial') {
+                $query->where('region_id', '!=', 0);
+            } elseif($phase == 'deliberating-national') {
+                $query->where('region_id', '=', 0);
+            }
+            
+            $existingRegularAward = $query->first();
             
             if($existingRegularAward) {
                 $existingRegularAward->delete();
@@ -317,12 +325,20 @@ class AwardsController extends Controller
             }
             
             // Delete any existing regular award for this user/project
-            Award::where('contest_id', $this->contest->id)
+            // Only delete awards from the current phase
+            $deleteQuery = Award::where('contest_id', $this->contest->id)
                 ->where('project_id', $project->id)
                 ->whereHas('prize', function($q) {
                     $q->whereNull('special');
-                })
-                ->delete();
+                });
+            
+            if($phase == 'deliberating-territorial') {
+                $deleteQuery->where('region_id', '!=', 0);
+            } elseif($phase == 'deliberating-national') {
+                $deleteQuery->where('region_id', '=', 0);
+            }
+            
+            $deleteQuery->delete();
             
             // Create new award
             $award = new Award();
