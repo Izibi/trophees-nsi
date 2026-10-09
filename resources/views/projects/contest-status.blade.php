@@ -2,6 +2,8 @@
 Le dépôt de projets n'est pas encore ouvert.
 @elseif($contest->status == 'open')
 Le dépôt de projets est ouvert jusqu'au 27 mars 2026 à 20h (heure de Paris).
+@elseif($contest->status == 'completion')
+Le dépôt de projets est terminé : les élèves ne peuvent plus modifier leur projet, les enseignants peuvent encore le finaliser.
 @elseif($contest->status == 'instruction')
 Le dépôt de projets est clôturé, les projets sont en cours d'instruction.
 @elseif($contest->status == 'grading-territorial')

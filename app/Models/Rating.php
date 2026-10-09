@@ -58,7 +58,7 @@ class Rating extends Model
         }
         
         $contestStatus = $contest->status;
-        $territorialPhases = ['preparing', 'open', 'instruction', 'grading-territorial', 'deliberating-territorial'];
+        $territorialPhases = ['preparing', 'open', 'completion', 'instruction', 'grading-territorial', 'deliberating-territorial'];
         
         return in_array($contestStatus, $territorialPhases) ? 'territorial' : 'national';
     }

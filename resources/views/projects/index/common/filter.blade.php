@@ -35,6 +35,7 @@
             {!! Form::select('filter_status', 'Statut')->options([
                 '' => '',
                 'draft' => 'Brouillon',
+                'completed' => 'Terminé',
                 'finalized' => 'Finalisé',
                 'validated' => 'Validé',
                 'incomplete' => 'Incomplet',

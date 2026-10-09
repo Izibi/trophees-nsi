@@ -14,8 +14,8 @@
     @foreach ($rows as $project)
         <tr data-row-id="{{ $project->id }}" data-redirect-url="{{ $project->view_url }}"
             @if($project->status == 'incomplete') class="row-alert" @endif
-            @if($project->status != 'draft' && $project->status != 'incomplete') data-actions-disabled="edit" @endif
-            @if($project->status == 'draft' && $contest->status != 'open') data-actions-disabled="edit" @endif
+            @if(!in_array($project->status, ['draft', 'completed', 'incomplete'])) data-actions-disabled="edit" @endif
+            @if(in_array($project->status, ['draft', 'completed']) && !in_array($contest->status, ['open', 'completion'])) data-actions-disabled="edit" @endif
             @if($project->status == 'incomplete' && $contest->status != 'open' && $contest->status != 'instruction') data-actions-disabled="edit" @endif
             >
             <td>{{ $project->id }}</td>

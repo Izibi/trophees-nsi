@@ -24,7 +24,7 @@ class SetProjectStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            'status' => 'required|in:draft,finalized,validated,incomplete,masked'
+            'status' => 'required|in:draft,completed,finalized,validated,incomplete,masked'
         ];
     }
 }
