@@ -67,6 +67,7 @@ class Kernel extends HttpKernel
         'right' => \App\Http\Middleware\UserRightMiddleware::class,
         'attribute' => \App\Http\Middleware\UserAttributeMiddleware::class,
         'relogin' => \App\Http\Middleware\ReloginUser::class,
-        'refresh' => \App\Http\Middleware\RefreshUser::class
+        'refresh' => \App\Http\Middleware\RefreshUser::class,
+        'student' => \App\Http\Middleware\CheckStudentCode::class
     ];
 }

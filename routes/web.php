@@ -9,6 +9,15 @@ Route::get('/ressources', [App\Http\Controllers\RessourcesController::class, 'in
 Route::get('/login', [App\Http\Controllers\AuthController::class, 'login']);
 Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile']);
+
+Route::get('/connexion-eleve', [App\Http\Controllers\StudentController::class, 'loginForm']);
+Route::post('/connexion-eleve', [App\Http\Controllers\StudentController::class, 'login'])->name('student.login.submit');
+Route::get('/deconnexion-eleve', [App\Http\Controllers\StudentController::class, 'logout'])->name('student.logout');
+
+Route::middleware(['student'])->group(function() {
+    Route::get('/eleve/projet', [App\Http\Controllers\StudentController::class, 'edit'])->name('student.project.edit');
+    Route::post('/eleve/projet', [App\Http\Controllers\StudentController::class, 'update'])->name('student.project.update');
+});
 Route::get('/oauth_callback/login', [App\Http\Controllers\OAuthCallbackController::class, 'login']);
 Route::get('/oauth_callback/profile', [App\Http\Controllers\OAuthCallbackController::class, 'profile']);
 
@@ -27,6 +36,7 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::get('/projects/{project}/view', [App\Http\Controllers\ProjectsController::class, 'redirectPaginated']);
     Route::get('/projects/{project}/finalize', [App\Http\Controllers\ProjectsController::class, 'showFinalize'])->name('projects.finalize');
     Route::post('/projects/{project}/confirm-finalize', [App\Http\Controllers\ProjectsController::class, 'confirmFinalize'])->name('projects.confirm_finalize');
+    Route::post('/projects/{project}/renew-code', [App\Http\Controllers\ProjectsController::class, 'renewCode'])->name('projects.renew_code');
     Route::get('/projects_export', [App\Http\Controllers\ProjectsController::class, 'export']);
     Route::get('/projects_zips_generate', [App\Http\Controllers\ProjectsController::class, 'getGenerateZipScript']);
     Route::get('/projects/zips/{zipName}', [App\Http\Controllers\ProjectsController::class, 'downloadZip']);

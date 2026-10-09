@@ -41,6 +41,18 @@ class Project extends Model
     ];
 
 
+    public static function generateStudentCode() {
+        $alphabet = 'abcdefghjkmnpqrstuvwxyz23456789'; // avoid ambiguous characters
+        do {
+            $code = '';
+            for($i = 0; $i < 8; $i++) {
+                $code .= $alphabet[random_int(0, strlen($alphabet) - 1)];
+            }
+        } while(self::where('student_code', $code)->exists());
+        return $code;
+    }
+
+
     protected static function boot() {
         parent::boot();
         static::deleting(function($project) {

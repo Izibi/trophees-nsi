@@ -18,6 +18,8 @@
     <body>
         @if (Auth::check())
             @include('nav')
+        @elseif(Session::has('student_project_id'))
+            @include('student.nav')
         @endif
 	<main class="container mt-5 mb-5" style="{{ $containerstyle ?? '' }}">
             @if (\Session::has('message'))
