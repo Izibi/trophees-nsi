@@ -32,17 +32,17 @@ class StoreProjectRequest extends FormRequest
             'description' => 'required_if:finalize,1|max:'.config('nsi.project.description_max_length'),
             'teacher_notes' => [
                 'required_if:finalize,1',
-                function ($attribute, $value, $fail) {
-                    if ($this->input('finalize') == 1 && strlen($value) < 50) {
-                        $fail(__('validation.min.string', ['attribute' => $attribute, 'min' => 50]));
+                function ($attribute, $value, $fail) use ($conf) {
+                    if ($this->input('finalize') == 1 && mb_strlen(trim((string)$value)) < $conf['notes_min_length']) {
+                        $fail(__('validation.min.string', ['attribute' => $attribute, 'min' => $conf['notes_min_length']]));
                     }
                 },
             ],
             'code_notes' => [
                 'required_if:finalize,1',
-                function ($attribute, $value, $fail) {
-                    if ($this->input('finalize') == 1 && strlen($value) < 50) {
-                        $fail(__('validation.min.string', ['attribute' => $attribute, 'min' => 50]));
+                function ($attribute, $value, $fail) use ($conf) {
+                    if ($this->input('finalize') == 1 && mb_strlen(trim((string)$value)) < $conf['code_notes_min_length']) {
+                        $fail(__('validation.min.string', ['attribute' => $attribute, 'min' => $conf['code_notes_min_length']]));
                     }
                 },
             ],

@@ -11,20 +11,35 @@ trait ManagesProjectSubmissions
      * Completeness checks run when a project is marked as completed (student)
      * or finalized (teacher).
      *
-     * $for_teacher is reserved for checks that will only apply when the teacher
-     * finalizes the project. It is undecided for now : all checks currently
-     * apply to both students and teachers.
+     * All dossier fields are mandatory except the AI fields ("Part de l'IA" /
+     * ai_usage_percent and "Usage de l'IA" / ai_usage_notes), and several
+     * free-text fields also have a minimum number of characters (see the
+     * minimum lengths in config/nsi.php).
+     *
+     * $for_teacher gates the checks that can only be satisfied by the teacher
+     * (class gender split, teacher comment and certifications). Students
+     * cannot edit these fields, so they are enforced at finalization but not
+     * when the students mark the project as completed.
      */
     private function projectCompletenessErrors(Project $project, bool $for_teacher = false)
     {
         $errors = [];
         $config = config('nsi.project');
 
+        if(empty($project->name)) {
+            $errors[] = 'Nom du projet manquant.';
+        }
         if(empty($project->school_id)) {
             $errors[] = 'Établissement scolaire manquant.';
         }
         if(empty($project->grade_id)) {
             $errors[] = 'Niveau scolaire manquant.';
+        }
+        if($for_teacher) {
+            $class_size = $project->class_girls + $project->class_boys + $project->class_not_provided;
+            if($class_size == 0) {
+                $errors[] = 'La répartition filles/garçons de la classe n\'est pas renseignée.';
+            }
         }
 
         $team_size = $project->team_girls + $project->team_boys + $project->team_not_provided;
@@ -48,9 +63,56 @@ trait ManagesProjectSubmissions
             }
         }
         if(empty($project->url)) {
-            $errors[] = 'URL du projet manquant.';
+            $errors[] = 'URL du dossier technique manquant.';
         }
+        if(empty($project->video)) {
+            $errors[] = 'URL de la vidéo de démonstration manquante.';
+        }
+        if(empty($project->description)) {
+            $errors[] = 'Résumé du projet manquant.';
+        }
+
+        // Long free-text fields with a minimum number of characters.
+        $notes_min = $config['notes_min_length'];
+        $notes_fields = [
+            'work_organisation' => 'Organisation du travail et répartition des tâches',
+            'project_description' => 'Description du projet',
+            'project_steps' => 'Étapes de réalisation du projet',
+            'project_outlook' => 'Ouverture',
+            'operationality_notes' => 'Validation de l\'opérationnalité du projet',
+        ];
+        foreach($notes_fields as $field => $label) {
+            $this->checkMinLength($errors, $project->$field, $notes_min, $label);
+        }
+        // "Nature du code" : minimum length revised down from 50.
+        $this->checkMinLength($errors, $project->code_notes, $config['code_notes_min_length'], 'Nature du code');
+
+        if($for_teacher) {
+            $this->checkMinLength($errors, $project->teacher_notes, $notes_min, 'Commentaire de l\'enseignant sur le projet et l\'équipe');
+            if(!$project->tested_by_teacher) {
+                $errors[] = 'La certification « projet testé par l\'enseignant » n\'est pas cochée.';
+            }
+            if(!$project->video_authorization) {
+                $errors[] = 'La certification « autorisations de diffusion de l\'image et de la voix » n\'est pas cochée.';
+            }
+            if(!$project->reglament_accepted) {
+                $errors[] = 'L\'acceptation du règlement du concours n\'est pas cochée.';
+            }
+        }
+
         return $errors;
+    }
+
+
+    /**
+     * Push an error when a free-text field is empty or shorter than the
+     * required minimum number of characters.
+     */
+    private function checkMinLength(array &$errors, $value, int $min, string $label) {
+        $len = mb_strlen(trim((string)$value));
+        if($len < $min) {
+            $errors[] = $label.' : au moins '.$min.' caractères sont requis ('.$len.' actuellement).';
+        }
     }
 
 

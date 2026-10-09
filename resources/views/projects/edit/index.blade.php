@@ -131,7 +131,7 @@
 
             {!! Form::textarea('work_organisation', 'Organisation du travail et répartition des tâches')
                 ->attrs(['style' => 'height: 200px'])
-                ->help('Pouvez-vous présenter chaque membre de l\'équipe et préciser son rôle dans ce projet ? Pourquoi cette organisation du travail et comment avez-vous réparti les tâches ? Combien de temps avez-vous passé sur le projet (estimation) ? Attention ! Chaque membre de l\'équipe doit impérativement réaliser un aspect technique du projet présenté (hors design, gestion de projet, rédaction de la documentation technique ou montage vidéo). Une attention particulière sera également accordée aux efforts engagés pour intégrer les valeurs d\'inclusion et de mixité dans la composition de l\'équipe et la répartition des tâches (dans la mesure du possible).') !!}
+                ->help('Pouvez-vous présenter chaque membre de l\'équipe et préciser son rôle dans ce projet ? Pourquoi cette organisation du travail et comment avez-vous réparti les tâches ? Combien de temps avez-vous passé sur le projet (estimation) ? Attention ! Chaque membre de l\'équipe doit impérativement réaliser un aspect technique du projet présenté (hors design, gestion de projet, rédaction de la documentation technique ou montage vidéo). Une attention particulière sera également accordée aux efforts engagés pour intégrer les valeurs d\'inclusion et de mixité dans la composition de l\'équipe et la répartition des tâches (dans la mesure du possible). <b>Minimum 50 caractères.</b>') !!}
 
             </div>
             <div class="tab-pane fade" id="tab-presentation">
@@ -142,15 +142,15 @@
 
             {!! Form::textarea('project_description', 'Description du projet')
                 ->attrs(['style' => 'height: 200px'])
-                ->help('Comment est né ce projet ? Quelle était votre problématique initiale ? Quels sont les objectifs ? À quels besoins répondez-vous ?') !!}
+                ->help('Comment est né ce projet ? Quelle était votre problématique initiale ? Quels sont les objectifs ? À quels besoins répondez-vous ? <b>Minimum 50 caractères.</b>') !!}
 
             {!! Form::textarea('project_steps', 'Étapes de réalisation du projet')
                 ->attrs(['style' => 'height: 200px'])
-                ->help('Précisez les différentes étapes de réalisation de votre projet, de l\'idée jusqu\'au développement de votre solution.') !!}
+                ->help('Précisez les différentes étapes de réalisation de votre projet, de l\'idée jusqu\'au développement de votre solution. <b>Minimum 50 caractères.</b>') !!}
 
             {!! Form::textarea('project_outlook', 'Ouverture')
                 ->attrs(['style' => 'height: 200px'])
-                ->help('Quelles sont les nouvelles fonctionnalités à moyen terme ? Avez-vous des idées d\'amélioration de votre projet ? Pourriez-vous apporter une analyse critique de votre projet ? Si c\'était à refaire, que changeriez-vous dans votre organisation, les fonctionnalités du projet et les choix techniques ? Quelles compétences/appétences/connaissances avez-vous développées grâce à ce concours ? En quoi votre projet favorise-t-il l\'inclusion ?') !!}
+                ->help('Quelles sont les nouvelles fonctionnalités à moyen terme ? Avez-vous des idées d\'amélioration de votre projet ? Pourriez-vous apporter une analyse critique de votre projet ? Si c\'était à refaire, que changeriez-vous dans votre organisation, les fonctionnalités du projet et les choix techniques ? Quelles compétences/appétences/connaissances avez-vous développées grâce à ce concours ? En quoi votre projet favorise-t-il l\'inclusion ? <b>Minimum 50 caractères.</b>') !!}
 
             <div class="row">
                 @include('projects.edit.file-input', [
@@ -176,11 +176,11 @@
 
             {!! Form::textarea('code_notes', 'Nature du code')
                 ->attrs(['style' => 'height: 200px'])
-                ->help('Précisez si le projet est une création originale. Si non, l\'exploitation de codes existants est clairement énoncée, les autrices ou les auteurs sont identifiés et mentionnés.') !!}
+                ->help('Précisez si le projet est une création originale. Si non, l\'exploitation de codes existants est clairement énoncée, les autrices ou les auteurs sont identifiés et mentionnés. <b>Minimum 20 caractères.</b>') !!}
 
             {!! Form::textarea('operationality_notes', 'Validation de l\'opérationnalité du projet / de son fonctionnement')
                 ->attrs(['style' => 'height: 200px'])
-                ->help('Pouvez-vous présenter l\'état d\'avancement du projet au moment du dépôt ? (ce qui est terminé, en cours de réalisation, reste à faire). Quelles approches avez-vous mis en œuvre pour vérifier l\'absence de bugs et garantir une facilité d\'utilisation de votre projet ? Quelles sont les difficultés rencontrées et les solutions apportées ?') !!}
+                ->help('Pouvez-vous présenter l\'état d\'avancement du projet au moment du dépôt ? (ce qui est terminé, en cours de réalisation, reste à faire). Quelles approches avez-vous mis en œuvre pour vérifier l\'absence de bugs et garantir une facilité d\'utilisation de votre projet ? Quelles sont les difficultés rencontrées et les solutions apportées ? <b>Minimum 50 caractères.</b>') !!}
 
             {!! Form::text('ai_usage_percent', 'Part d\'utilisation de l\'IA')
                 ->help('Précisez le pourcentage d\'utilisation de l\'Intelligence Artificielle (ou une estimation) sur l\'ensemble du projet développé.') !!}
@@ -193,9 +193,9 @@
             @if($editor_type == 'teacher')
             <div class="tab-pane fade" id="tab-validation">
 
-            {!! Form::textarea('teacher_notes', 'Commentaire du professeur sur le projet et l\'équipe')
+            {!! Form::textarea('teacher_notes', 'Informations complémentaires (commentaire de l\'enseignant sur le projet et l\'équipe)')
                 ->attrs(['style' => 'height: 200px'])
-                ->help("Préciser le contexte de réalisation du projet, le degré de motivation et d'implication des élèves, la progression des élèves durant l'année scolaire... et toute information utile à porter à la connaissance des membres du jury. Ce commentaire n'est pas visible par les élèves.") !!}
+                ->help("Préciser le contexte de réalisation du projet, le degré de motivation et d'implication des élèves, la progression des élèves durant l'année scolaire... et toute information utile à porter à la connaissance des membres du jury. Ce commentaire n'est pas visible par les élèves. Minimum 50 caractères.") !!}
 
             <div class="mt-5">
                 <i>Taille maximum des fichiers : 20Mo</i>
