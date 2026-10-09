@@ -19,11 +19,13 @@ use App\Http\Requests\SetProjectStatusRequest;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\SortableTable;
 use App\Classes\ActiveContest;
+use App\Http\Controllers\Concerns\ManagesProjectSubmissions;
 use App\Models\Academy;
 use App\Mail\StatusChanged;
 
 class ProjectsController extends Controller
 {
+    use ManagesProjectSubmissions;
 
     public function __construct(ActiveContest $active_contest)
     {
@@ -157,7 +159,7 @@ class ProjectsController extends Controller
             $views[] = [
                 'type' => 'own',
                 'create' => $phase == 'open',
-                'edit' => $phase == 'open' || $phase == 'instruction',
+                'edit' => in_array($phase, ['open', 'completion', 'instruction']),
                 'status' => false,
                 'rate' => false,
                 'view_rating' => false,
@@ -180,7 +182,7 @@ class ProjectsController extends Controller
             $views[] = [
                 'type' => 'own',
                 'create' => $phase == 'open',
-                'edit' => $phase == 'open' || $phase == 'instruction',
+                'edit' => in_array($phase, ['open', 'completion', 'instruction']),
                 'status' => false,
                 'rate' => false,
                 'view_rating' => false,
@@ -608,6 +610,8 @@ class ProjectsController extends Controller
         }
         $data = [
             'project' => null,
+            'editor_type' => 'teacher',
+            'submit_route' => 'projects.store',
             'grades' => Grade::orderBy('name')->get(),
             'refer_page' => $request->get('refer_page', '/projects')
         ];
@@ -626,6 +630,7 @@ class ProjectsController extends Controller
         $project->uploadFiles($request);
         $project->user_id = $user->id;
         $project->contest_id = $this->contest->id;
+        $project->student_code = Project::generateStudentCode();
         $project->save();
         $this->syncTeamMembers($project, $request);
         if($request->has('finalize')) {
@@ -795,16 +800,12 @@ class ProjectsController extends Controller
         if(!$this->accessible($request, $project, 'edit')) {
             return $this->accessDeniedResponse();
         }
-        if($user->role == 'teacher' &&
-            (
-                !in_array($project->status, ['draft', 'incomplete']) ||
-                ($project->status == 'draft' && $phase != 'open') ||
-                ($project->status == 'incomplete' && !in_array($phase, ['open', 'instruction']))
-            )) {
+        if($this->teacherEditBlocked($project)) {
             return redirect('/projects');
         }
         return view('projects.edit.index', [
             'submit_route' => 'projects.update',
+            'editor_type' => 'teacher',
             'project' => $project,
             'schools' => $this->getUserSchools($user->role != 'admin' ? $user : $project->user),
             'grades' => Grade::orderBy('name')->get(),
@@ -822,7 +823,7 @@ class ProjectsController extends Controller
         if(!$this->accessible($request, $project, 'edit')) {
             return $this->accessDeniedResponse();
         }
-        if($user->role == 'teacher' && !in_array($project->status, ['draft', 'incomplete'])) {
+        if($this->teacherEditBlocked($project)) {
             return redirect('/projects');
         }
 
@@ -887,6 +888,21 @@ class ProjectsController extends Controller
     }
 
 
+    public function renewCode(Request $request, Project $project)
+    {
+        $user = $request->user();
+        // The owning teacher or an admin can renew the code : the owner's role
+        // is not necessarily 'teacher' (jury teachers, admins...).
+        if($user->id != $project->user_id && $user->role != 'admin') {
+            return $this->accessDeniedResponse();
+        }
+        $project->student_code = Project::generateStudentCode();
+        $project->save();
+        session()->flash('message', 'Nouveau code élève généré : <strong>'.$project->student_code.'</strong>');
+        return redirect()->back();
+    }
+
+
     public function destroy(Request $request, Project $project)
     {
         if(!$this->accessible($request, $project, 'edit')) {
@@ -906,33 +922,8 @@ class ProjectsController extends Controller
         }
         
         // Verify project can be finalized
-        $errors = [];
-        $config = config('nsi.project');
+        $errors = $this->projectCompletenessErrors($project, true);
 
-        $team_size = $project->team_girls + $project->team_boys + $project->team_not_provided;
-        if($team_size == 0) {
-            $errors[] = 'Les membres de l\'équipe ne sont pas renseignés.';
-        } elseif($team_size < $config['team_size_min'] || $team_size > $config['team_size_max']) {
-            $errors[] = strtr('La taille totale de l\'équipe doit être entre team_size_min et team_size_max.', $config);
-        }
-
-        if(empty($project->image_file)) {
-            $errors[] = 'Image manquante.';
-        }
-        foreach($project->team_members as $team_member) {
-            if(empty($team_member->parental_permissions_file)) {
-                $errors[] = 'Autorisations parentales manquantes.';
-                break;
-            }
-            if(empty($team_member->first_name) || empty($team_member->last_name)) {
-                $errors[] = 'Il manque des informations dans la liste des membres de l\'équipe.';
-                break;
-            }
-        }
-        if(empty($project->url)) {
-            $errors[] = 'URL du projet manquant.';
-        }
-        
         if(count($errors)) {
             return redirect()->route('projects.edit', ['project' => $project])
                 ->withErrors($errors)
@@ -1005,33 +996,32 @@ class ProjectsController extends Controller
     }
 
 
+    /**
+     * Teachers can only edit draft/completed projects while the deposit is
+     * open or being finalized ('completion'), and incomplete projects while
+     * the deposit is open or under instruction.
+     */
+    private function teacherEditBlocked(Project $project) {
+        $user = request()->user();
+        $phase = $this->contest ? $this->contest->status : null;
+        if(!$user || $user->role != 'teacher') {
+            return false;
+        }
+        if(!in_array($project->status, ['draft', 'completed', 'incomplete'])) {
+            return true;
+        }
+        if(in_array($project->status, ['draft', 'completed']) && !in_array($phase, ['open', 'completion'])) {
+            return true;
+        }
+        if($project->status == 'incomplete' && !in_array($phase, ['open', 'instruction'])) {
+            return true;
+        }
+        return false;
+    }
+
+
     private function finalizeProject(&$project, $request, $actually_finalize = false) {
-        $errors = [];
-        $config = config('nsi.project');
-
-        $team_size = $project->team_girls + $project->team_boys + $project->team_not_provided;
-        if($team_size == 0) {
-            $errors[] = 'Les membres de l\'équipe ne sont pas renseignés.';
-        } elseif($team_size < $config['team_size_min'] || $team_size > $config['team_size_max']) {
-            $errors[] = strtr('La taille totale de l\'équipe doit être entre team_size_min et team_size_max.', $config);
-        }
-
-        if(empty($project->image_file)) {
-            $errors[] = 'Image manquante.';
-        }
-        foreach($project->team_members as $team_member) {
-            if(empty($team_member->parental_permissions_file)) {
-                $errors[] = 'Autorisations parentales manquantes.';
-                break;
-            }
-            if(empty($team_member->first_name) || empty($team_member->last_name)) {
-    		    $errors[] = 'Il manque des informations dans la liste des membres de l\'équipe.';
-                break;
-            }
-        }
-        if(empty($project->url)) {
-            $errors[] = 'URL du projet manquant.';
-        }
+        $errors = $this->projectCompletenessErrors($project, true);
         if(count($errors)) {
             return response()->json([
                 'finalization_errors' => $errors
@@ -1074,73 +1064,6 @@ class ProjectsController extends Controller
             return false;
         }
         return (array) $res;
-    }
-
-
-    private function syncTeamMembers($project, $request) {
-        $members = $project->team_members->keyBy('id')->all();
-
-        $team_member_id = $request->get('team_member_id') ?? [];
-        $parental_permissions_file = $request->file('team_member_parental_permissions_file');
-
-        $saved_ids = [];
-
-        $project->team_girls = 0;
-        $project->team_boys = 0;
-        $project->team_not_provided = 0;
-        for($i=0; $i<count($team_member_id); $i++) {
-            $data = [
-                'project_id' => $project->id,
-                'first_name' => $request->get('team_member_first_name')[$i] ?? '',
-                'last_name' => $request->get('team_member_last_name')[$i] ?? '',
-                'gender' => $request->get('team_member_gender')[$i] ?? ''
-            ];
-            $id = $team_member_id[$i];
-
-            if(empty($id)) {
-                $member = new TeamMember($data);
-            } else if(isset($members[$id])) {
-                $saved_ids[$id] = true;
-                $member = $members[$id];
-                $member->fill($data);
-            }
-            if(isset($parental_permissions_file[$i])) {
-                $member->uploadFile($request->file('team_member_parental_permissions_file')[$i]);
-            }
-            $member->save();
-
-            if($member->gender == 'male') {
-                $project->team_boys++;
-            } else if($member->gender == 'female') {
-                $project->team_girls++;
-            } else {
-                $project->team_not_provided++;
-            }
-        }
-        $project->save();
-
-        foreach($members as $member) {
-            if(!isset($saved_ids[$member->id])) {
-                $member->delete();
-            }
-        }
-    }
-
-
-    private function deleteUploads($project, $request) {
-        if($request->has('delete_uploads')) {
-            $to_delete = $request->get('delete_uploads');
-            foreach($to_delete as $attr) {
-                list($target, $pointer) = explode('.', $attr);
-                if($target == 'project') {
-                    $project->$pointer = null;
-                } else if($target == 'team_member') {
-                    $team_member = $project->team_members()->where('id', $pointer)->first();
-                    $team_member->parental_permissions_file = null;
-                    $team_member->save();
-                }
-            }
-        }
     }
 
 }
