@@ -57,22 +57,8 @@
             {{ $project->class_not_provided }} non renseigné
         @endif
         <br>
-
-        @if(!is_null($project->video))
-            Vidéo : <a href="{{ $project->video }}" target="_blank">{{ $project->video }}</a>
-            <br>
-        @endif
-
-        @if(!is_null($project->url))
-            URL : <a href="{{ $project->url }}" target="_blank">{{ $project->url }}</a>
-            <br>
-        @endif
     </div>
 </div>
-
-@if(!is_null($project->description))
-    <div class="mt-3">{!! nl2br($project->description) !!}</div>
-@endif
 
 <div class="row mt-3">
     @if(!is_null($project->presentation_file))
@@ -122,19 +108,99 @@
     @endif
 </div>
 
-@if(!is_null($project->code_notes))
-    <div class="mt-3">
-        <b>Nature du code et usage de l'IA :</b><br>
-        {!! nl2br($project->code_notes) !!}
-    </div>
-@endif
+<div class="card mb-4">
+    <div class="card-body">
+        @if(!is_null($project->work_organisation))
+            <div class="mb-3">
+                <b>Organisation du travail et répartition des tâches :</b><br>
+                {!! nl2br($project->work_organisation) !!}
+            </div>
+        @endif
 
-@if(!is_null($project->teacher_notes))
-    <div class="mt-3">
-        <b>Informations complémentaires (commentaire de l'enseignant sur le projet et l'équipe) :</b><br>
-        {!! nl2br($project->teacher_notes) !!}
+        @if(!is_null($project->teacher_notes))
+            <div>
+                <b>Informations complémentaires (commentaire de l'enseignant sur le projet et l'équipe) :</b><br>
+                {!! nl2br($project->teacher_notes) !!}
+            </div>
+        @endif
     </div>
-@endif
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Présentation du projet</h4>
+    </div>
+    <div class="card-body">
+        @if(!is_null($project->description))
+            <div class="mb-3">
+                <b>Résumé du projet :</b><br>
+                {!! nl2br($project->description) !!}
+            </div>
+        @endif
+        @if(!is_null($project->project_description))
+            <div class="mb-3">
+                <b>Description du projet :</b><br>
+                {!! nl2br($project->project_description) !!}
+            </div>
+        @endif
+        @if(!is_null($project->project_steps))
+            <div class="mb-3">
+                <b>Étapes de réalisation du projet :</b><br>
+                {!! nl2br($project->project_steps) !!}
+            </div>
+        @endif
+        @if(!is_null($project->project_outlook))
+            <div class="mb-3">
+                <b>Ouverture :</b><br>
+                {!! nl2br($project->project_outlook) !!}
+            </div>
+        @endif
+        @if(!is_null($project->video))
+            <div class="mb-3">
+                <b>Démonstration vidéo :</b>
+                <a href="{{ $project->video }}" target="_blank">{{ $project->video }}</a>
+            </div>
+        @endif
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Informations techniques</h4>
+    </div>
+    <div class="card-body">
+        @if(!is_null($project->url))
+            <div class="mb-3">
+                <b>Dossier technique :</b>
+                <a href="{{ $project->url }}" target="_blank">{{ $project->url }}</a>
+            </div>
+        @endif
+        @if(!is_null($project->code_notes))
+            <div class="mb-3">
+                <b>Nature du code :</b><br>
+                {!! nl2br($project->code_notes) !!}
+            </div>
+        @endif
+        @if(!is_null($project->operationality_notes))
+            <div class="mb-3">
+                <b>Validation de l'opérationnalité du projet / de son fonctionnement :</b><br>
+                {!! nl2br($project->operationality_notes) !!}
+            </div>
+        @endif
+        @if(!is_null($project->ai_usage_percent))
+            <div class="mb-3">
+                <b>Part d'utilisation de l'IA :</b>
+                {{ $project->ai_usage_percent }}{{ is_numeric($project->ai_usage_percent) ? ' %' : '' }}
+            </div>
+        @endif
+        @if(!is_null($project->ai_usage_notes))
+            <div class="mb-3">
+                <b>Usage de l'IA :</b><br>
+                {!! nl2br($project->ai_usage_notes) !!}
+            </div>
+        @endif
+    </div>
+</div>
 
 <div class="mt-3">
     Statut : soumis le {{ $project->created_at }}, @lang('project_status.'.$project->status)
