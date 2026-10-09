@@ -1,6 +1,6 @@
 table.active-table tr.active-row,
 table.active-table tr[data-row-id]:hover {
-    background-color: $primary;
+    background-color: $primary-interface;
     color: $white;
     cursor: default;
 }

@@ -2,7 +2,7 @@
     height: 300px;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    border: 2px solid $primary;
+    border: 2px solid $primary-interface;
     border-radius: $border-radius;
 }
 
@@ -14,6 +14,6 @@
 
 .list-select .list-item:hover,
 .list-select .list-item-selected {
-    background-color: $primary;
+    background-color: $primary-interface;
     color: $white;
 }

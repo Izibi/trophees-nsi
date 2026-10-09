@@ -36,8 +36,8 @@
 }
 
 .navbar-light {
-    border-bottom: 2px solid $primary;
-    background-color: rgba(0, 57, 71, 0.05);
+    border-bottom: 2px solid $primary-interface;
+    background-color: $primary-interface-tint;
 }
 .navbar-light .navbar-nav a,
 .navbar-light .navbar-nav a:active,
@@ -55,7 +55,7 @@
 }
 
 .modal-header {
-    border-bottom: 2px solid $primary;
+    border-bottom: 2px solid $primary-interface;
 }
 
 
@@ -65,7 +65,7 @@
 
 .card .card-header {
     color: $white;
-    background-color: $primary;
+    background-color: $primary-interface;
 }
 
 
@@ -91,7 +91,7 @@ table.table-vertical-headers th a:hover {
 }
 
 tr.accent td {
-    background-color: rgba(0, 57, 71, 0.05);
+    background-color: $primary-interface-tint;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -116,7 +116,7 @@ h1,h2,h3,h4,h5,h6 {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-link.active:hover {
-    color: $primary;
+    color: $primary-text;
 }
 
 

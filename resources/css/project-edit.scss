@@ -2,10 +2,10 @@
    The theme sets $nav-tabs-border-width: 0, which removes Bootstrap's
    tab borders and active-state highlighting, so style them manually. */
 #project-edit-tabs {
-    border-bottom: 2px solid $primary;
+    border-bottom: 2px solid $primary-interface;
 }
 #project-edit-tabs .nav-item .nav-link {
-    color: $primary;
+    color: $primary-text;
     background-color: transparent;
     border: none;
     border-radius: 0.5rem 0.5rem 0 0;
@@ -15,17 +15,17 @@
 }
 #project-edit-tabs .nav-item .nav-link:hover,
 #project-edit-tabs .nav-item .nav-link:focus {
-    background-color: rgba($primary, 0.08);
+    background-color: rgba($primary-interface, 0.08);
     border: none;
 }
 #project-edit-tabs .nav-item .nav-link.active {
-    background-color: $primary;
+    background-color: $primary-interface;
     color: $white;
     border: none;
 }
 #project-edit-tabs .nav-item .nav-link.active:hover,
 #project-edit-tabs .nav-item .nav-link.active:focus {
-    background-color: $primary;
+    background-color: $primary-interface;
     color: $white;
 }
 
