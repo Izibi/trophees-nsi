@@ -40,11 +40,13 @@
                             <a class="nav-link" href="/jury">Coordination</a>
                         </li>
                     @endif
+                    {{-- Lien "Statistiques" masqué temporairement
                     @if(Auth::user()->role == 'admin' || Auth::user()->hasRole('coordinator'))
                         <li class="nav-item">
                             <a class="nav-link" href="/statistics">Statistiques</a>
                         </li>
                     @endif
+                    --}}
 
                     @if(Auth::user()->role == 'admin')
                         <li class="nav-item">
@@ -57,9 +59,11 @@
                             <a class="nav-link" href="/contests">Concours</a>
                         </li>
                     @endif
+                    {{-- Lien "Ressources" masqué temporairement
                     <li class="nav-item">
                         <a class="nav-link" href="/ressources">Ressources</a>
                     </li>
+                    --}}
                 </ul>
 
                 <ul class="navbar-nav ml-auto">
