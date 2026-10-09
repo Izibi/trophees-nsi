@@ -96,29 +96,109 @@ window.ProjectEditor = function(options) {
         div.find('.form-control,.form-check-input,.custom-file-input').removeClass('is-invalid');
     }
 
+    // Mark the tab headers whose panes contain fields with validation errors.
+    // Recomputed from scratch each time so the state never gets stale.
+    function refreshTabErrors() {
+        options.form.find('.tab-pane').each(function () {
+            var pane = $(this);
+            var pane_id = pane.attr('id');
+            if (!pane_id) {
+                return;
+            }
+            options.form.find('.nav-link[href="#' + pane_id + '"]').toggleClass(
+                'has-errors',
+                pane.find('.is-invalid').length > 0
+            );
+        });
+    }
+
     options.form.find('.form-control,.form-check-input,.custom-file-input').on('focus', function() {
         setTimeout(function() {
             hideGroupError($(this).closest('div'));
+            refreshTabErrors();
         }, 100);
     })
 
+    function getGroupLabel(group) {
+        // Standard form groups and checks have a <label>; raw file boxes
+        // (file-input partial) have a .file-box-title instead.
+        var label = group.find('label').first();
+        if (label.length) {
+            return label.text().trim();
+        }
+        var title = group.find('.file-box-title').first();
+        if (title.length) {
+            return title.text().trim();
+        }
+        return null;
+    }
+
+    function focusField(control) {
+        var pane = control.closest('.tab-pane');
+        if (pane.length && options.activateTab) {
+            options.activateTab(pane.attr('id'));
+        }
+        if (control.length) {
+            control[0].scrollIntoView({ block: 'center' });
+            control.focus();
+        }
+    }
+
     function displayErrors(errors) {
+        var field_errors = [];
         options.form.find('.form-group,.form-check,.custom-file').each(function() {
             var group = $(this);
             var control = group.find('.form-control,.form-check-input,.custom-file-input');
             var name = control.attr('name');
             if(name in errors) {
                 showGroupError(group, errors[name][0])
+                field_errors.push({
+                    label: getGroupLabel(group) || name,
+                    message: errors[name][0],
+                    control: control.first()
+                });
                 delete(errors[name]);
             } else {
                 hideGroupError(group)
             }
         });
+        refreshTabErrors();
         var missed_errors = [];
         for(var k in errors) {
             missed_errors.push(errors[k]);
         }
-        displayErrorsAlert(missed_errors);
+        displayErrorsSummary(field_errors, missed_errors);
+    }
+
+    function displayErrorsSummary(field_errors, missed_errors) {
+        var div = $('#project-errors-box');
+        if (!field_errors.length && !missed_errors.length) {
+            div.remove();
+            return;
+        }
+        if (!div.length) {
+            div = $('<div class="alert alert-danger" id="project-errors-box"></div>');
+            div.insertBefore(options.form);
+        }
+        div.empty();
+        if (field_errors.length) {
+            // Summary list of fields with errors ; clicking an item switches
+            // to the tab containing the field and focuses it.
+            var ul = $('<ul class="mb-0 pl-3"></ul>');
+            $.each(field_errors, function (i, error) {
+                var link = $('<a href="#"></a>').text(error.label).on('click', function (e) {
+                    e.preventDefault();
+                    focusField(error.control);
+                });
+                ul.append($('<li></li>').append(link).append(
+                    document.createTextNode(' : ' + error.message)
+                ));
+            });
+            div.append(ul);
+        }
+        $.each(missed_errors, function (i, message) {
+            div.append($('<div class="mt-1"></div>').text(message));
+        });
     }
 
 

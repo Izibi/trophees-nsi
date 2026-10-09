@@ -2,6 +2,9 @@
     @if($title)
         <span class="file-box-title mb-2">{{ $title }}</span>
     @endif
+    @if($description)
+        <small>{!! $description !!}</small>
+    @endif
     @if($file)
         <div class="custom-file-controls">
             <a href="{{ Storage::disk('uploads')->url($file) }}" target="_blank">Télécharger</a> ou
@@ -9,6 +12,14 @@
             <input style="display: none;" name="{{ $key }}" type="file"
                 accept="{{ $extensions }}"
                 class="custom-file-input {{ $errors->get($key) ? 'is-invalid' : '' }}">
+            @if($key === 'image_file')
+                <div class="mt-2">
+                    <img src="{{ Storage::disk('uploads')->url($file) }}"
+                        alt="Image du projet"
+                        class="img-fluid"
+                        style="max-width: 200px;">
+                </div>
+            @endif
         </div>
     @else
         <div class="custom-file">
@@ -23,8 +34,5 @@
                 <small>{{ $message }}</small>
             </div>
         @enderror
-        @if($description)
-            <small>{!! $description !!}</small>
-        @endif
     @endif
 </div>

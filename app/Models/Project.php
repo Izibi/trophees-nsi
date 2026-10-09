@@ -31,6 +31,13 @@ class Project extends Model
         'class_not_provided',
         'teacher_notes',
         'code_notes',
+        'work_organisation',
+        'project_description',
+        'project_steps',
+        'project_outlook',
+        'operationality_notes',
+        'ai_usage_percent',
+        'ai_usage_notes',
         'status_message'
     ];
 

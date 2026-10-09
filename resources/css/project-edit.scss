@@ -1,0 +1,97 @@
+/* Project edition tabs.
+   The theme sets $nav-tabs-border-width: 0, which removes Bootstrap's
+   tab borders and active-state highlighting, so style them manually. */
+#project-edit-tabs {
+    border-bottom: 2px solid $primary;
+}
+#project-edit-tabs .nav-item .nav-link {
+    color: $primary;
+    background-color: transparent;
+    border: none;
+    border-radius: 0.5rem 0.5rem 0 0;
+    margin-right: 2px;
+    padding: 0.65rem 1.25rem;
+    font-weight: 600;
+}
+#project-edit-tabs .nav-item .nav-link:hover,
+#project-edit-tabs .nav-item .nav-link:focus {
+    background-color: rgba($primary, 0.08);
+    border: none;
+}
+#project-edit-tabs .nav-item .nav-link.active {
+    background-color: $primary;
+    color: $white;
+    border: none;
+}
+#project-edit-tabs .nav-item .nav-link.active:hover,
+#project-edit-tabs .nav-item .nav-link.active:focus {
+    background-color: $primary;
+    color: $white;
+}
+
+/* Help text above its input (project edition only).
+   The form builder renders label, input, help, error in that DOM order;
+   flexbox `order` reorders them visually without touching the DOM, so
+   form submission and the is-invalid ~ .invalid-feedback selectors are
+   unaffected. */
+#edit-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+#edit-form .form-group > label {
+    order: 1;
+    font-weight: bold;
+}
+#edit-form .form-group > small.form-text {
+    order: 2;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+#edit-form .form-group > .form-control {
+    order: 3;
+}
+#edit-form .form-group > .invalid-feedback {
+    order: 4;
+}
+
+/* Same for the raw file-input partials (e.g. the project image) */
+#edit-form .file-box {
+    display: flex;
+    flex-direction: column;
+}
+#edit-form .file-box > .file-box-title {
+    order: 1;
+    font-weight: bold;
+}
+#edit-form .file-box > small {
+    order: 2;
+    margin-bottom: 0.5rem;
+}
+#edit-form .file-box > .custom-file,
+#edit-form .file-box > .custom-file-controls {
+    order: 3;
+}
+#edit-form .file-box > .text-danger {
+    order: 4;
+}
+
+/* Tab headers with validation errors (has-errors class set by
+   project-editor.js when the tab pane contains an is-invalid field). */
+#project-edit-tabs .nav-item .nav-link.has-errors {
+    color: $danger;
+}
+#project-edit-tabs .nav-item .nav-link.has-errors:hover,
+#project-edit-tabs .nav-item .nav-link.has-errors:focus {
+    color: $danger;
+    background-color: rgba($danger, 0.08);
+}
+#project-edit-tabs .nav-item .nav-link.active.has-errors {
+    background-color: $danger;
+    color: $white;
+}
+
+/* Validation error summary list above the project form */
+#project-errors-box ul {
+    margin-bottom: 0;
+    padding-left: 1.25rem;
+}
