@@ -5,7 +5,7 @@ $font-family-base: "Roboto Slab";
 // text and UI chrome can be re-colored independently:
 // - $primary-text: color of text (body, muted, inputs, active tab labels...)
 // - $primary-interface: non-text UI chrome (backgrounds, borders, highlights...)
-$primary-text: #003947;
+$primary-text: black;
 $primary-interface: #2E69FF;
 $primary-interface-tint: rgba($primary-interface, 0.05);
 
