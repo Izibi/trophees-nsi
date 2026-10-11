@@ -117,7 +117,10 @@ class StudentController extends Controller
         if($request->has('complete')) {
             $errors = $this->projectCompletenessErrors($project, false);
             if(count($errors)) {
-                return response()->json(['finalization_errors' => $errors]);
+                // 422 with field-keyed errors, like validation failures : the
+                // editor displays the linked error summary and highlights the
+                // fields and tabs concerned.
+                return response()->json(['errors' => $errors], 422);
             }
             $project->status = 'completed';
             $project->save();

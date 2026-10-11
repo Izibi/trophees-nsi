@@ -121,14 +121,17 @@ window.ProjectEditor = function(options) {
 
     function getGroupLabel(group) {
         // Standard form groups and checks have a <label>; raw file boxes
-        // (file-input partial) have a .file-box-title instead.
-        var label = group.find('label').first();
-        if (label.length) {
-            return label.text().trim();
-        }
+        // (file-input partial) have a .file-box-title instead. The
+        // .custom-file-label ("Choisir un fichier...") is only a placeholder,
+        // not a field label. Returns null when no meaningful label exists
+        // (e.g. team member rows).
         var title = group.find('.file-box-title').first();
         if (title.length) {
             return title.text().trim();
+        }
+        var label = group.find('label').not('.custom-file-label').first();
+        if (label.length) {
+            return label.text().trim();
         }
         return null;
     }
@@ -153,7 +156,7 @@ window.ProjectEditor = function(options) {
             if(name in errors) {
                 showGroupError(group, errors[name][0])
                 field_errors.push({
-                    label: getGroupLabel(group) || name,
+                    label: getGroupLabel(group),
                     message: errors[name][0],
                     control: control.first()
                 });
@@ -186,33 +189,23 @@ window.ProjectEditor = function(options) {
             // to the tab containing the field and focuses it.
             var ul = $('<ul class="mb-0 pl-3"></ul>');
             $.each(field_errors, function (i, error) {
-                var link = $('<a href="#"></a>').text(error.label).on('click', function (e) {
+                // Without a meaningful label, the message itself becomes the
+                // link, with no "label : " prefix.
+                var link = $('<a href="#"></a>').text(error.label || error.message).on('click', function (e) {
                     e.preventDefault();
                     focusField(error.control);
                 });
-                ul.append($('<li></li>').append(link).append(
-                    document.createTextNode(' : ' + error.message)
-                ));
+                var li = $('<li></li>').append(link);
+                if (error.label) {
+                    li.append(document.createTextNode(' : ' + error.message));
+                }
+                ul.append(li);
             });
             div.append(ul);
         }
         $.each(missed_errors, function (i, message) {
             div.append($('<div class="mt-1"></div>').text(message));
         });
-    }
-
-
-    function displayErrorsAlert(errors) {
-        var div = $('#project-errors-box');
-        if(!errors.length) {
-            div.remove();
-            return;
-        }
-        if(!div.length) {
-            div = $('<div class="alert alert-danger" id="project-errors-box"></div>');
-            div.insertBefore(options.form);
-        }
-        div.html(errors.join('<br>'));
     }
 
     function handleUnauthorizedResponse(xhr) {
@@ -243,10 +236,7 @@ window.ProjectEditor = function(options) {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(res) {
-                if(res.finalization_errors) {
-                    displayErrorsAlert(res.finalization_errors);
-                    options.onError && options.onError();
-                } else if(res.location) {
+                if (res.location) {
                     window.location = res.location;
                 }
             },

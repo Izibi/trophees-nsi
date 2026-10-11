@@ -1023,9 +1023,12 @@ class ProjectsController extends Controller
     private function finalizeProject(&$project, $request, $actually_finalize = false) {
         $errors = $this->projectCompletenessErrors($project, true);
         if(count($errors)) {
+            // 422 with field-keyed errors, like validation failures : the
+            // editor displays the linked error summary and highlights the
+            // fields and tabs concerned.
             return response()->json([
-                'finalization_errors' => $errors
-            ]);
+                'errors' => $errors
+            ], 422);
         }
 
         if($actually_finalize) {
