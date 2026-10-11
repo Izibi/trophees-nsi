@@ -61,22 +61,6 @@
 </div>
 
 <div class="row mt-3">
-    @if(!is_null($project->presentation_file))
-        <div class="col-6">
-            <a href="{{ Storage::disk('uploads')->url($project->presentation_file) }}" target="_blank">
-                <i class="icon-file-pdf"></i>
-                PDF de presentation
-            </a>
-        </div>
-    @endif
-    @if(!is_null($project->zip_file))
-        <div class="col-6">
-            <a href="{{ Storage::disk('uploads')->url($project->zip_file) }}" target="_blank">
-                <i class="icon-file-archive"></i>
-                Fichier ZIP
-            </a>
-        </div>
-    @endif
     @if(!is_null($project->parental_permissions_file) && Auth::user()->role != 'jury')
         <div class="col-6">
             <a href="{{ Storage::disk('uploads')->url($project->parental_permissions_file) }}" target="_blank">
