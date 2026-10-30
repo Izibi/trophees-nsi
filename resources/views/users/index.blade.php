@@ -49,6 +49,6 @@
         @if(count($rows))
             <button class="btn btn-primary active-button" data-action="/users/:id/edit" data-method="GET">Modifier l'utilisateur sélectionné</button>
         @endif
-        <a class="btn btn-primary" href="export/users" target="_blank">Télécharger au format CSV</a>
+        <a class="btn btn-primary" href="/export/users">Exporter au format CSV</a>
     </div>
 @endsection

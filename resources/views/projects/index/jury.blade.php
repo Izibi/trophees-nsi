@@ -68,7 +68,7 @@
                 <button class="btn btn-primary active-button" data-action="/projects/:id/view" data-method="GET">Afficher le projet sélectionné</button>
             @endif
             @if($view['type'] != 'own' && ($coordinator || $view['type'] == 'region' && Auth::user()->hasRole('president-territorial', $view['target_id']) || $view['type'] == 'prize' && Auth::user()->hasRole('president-prize', $view['target_id'])))
-                <a class="btn btn-primary active-button" data-action="" target="_blank" href="/projects_export">Télécharger au format CSV</a>
+                <a class="btn btn-primary active-button" data-action="" href="/export/projects">Exporter au format CSV</a>
 		    @endif
         @endif
         @if($view['create'])

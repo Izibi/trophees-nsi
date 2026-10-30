@@ -37,7 +37,8 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::get('/projects/{project}/finalize', [App\Http\Controllers\ProjectsController::class, 'showFinalize'])->name('projects.finalize');
     Route::post('/projects/{project}/confirm-finalize', [App\Http\Controllers\ProjectsController::class, 'confirmFinalize'])->name('projects.confirm_finalize');
     Route::post('/projects/{project}/renew-code', [App\Http\Controllers\ProjectsController::class, 'renewCode'])->name('projects.renew_code');
-    Route::get('/projects_export', [App\Http\Controllers\ProjectsController::class, 'export']);
+    Route::get('/export/{export}', [App\Http\Controllers\ExportController::class, 'show'])->where('export', '[a-z]+')->name('export.show');
+    Route::get('/export/{export}/download', [App\Http\Controllers\ExportController::class, 'download'])->where('export', '[a-z]+')->name('export.download');
     Route::get('/projects_zips_generate', [App\Http\Controllers\ProjectsController::class, 'getGenerateZipScript']);
     Route::get('/projects/zips/{zipName}', [App\Http\Controllers\ProjectsController::class, 'downloadZip']);
 
@@ -51,7 +52,6 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
     Route::get('/jury/exportAll', [App\Http\Controllers\JuryController::class, 'exportAll'])->name('jury.exportAll');
 
     Route::get('/awards', [App\Http\Controllers\AwardsController::class, 'index']);
-    Route::get('/awards/export', [App\Http\Controllers\AwardsController::class, 'export']);
     Route::post('/awards/update', [App\Http\Controllers\AwardsController::class, 'update'])->name('awards.update');
     Route::get('/awards/{project}', [App\Http\Controllers\AwardsController::class, 'edit'])->name('awards.edit');
 
@@ -70,7 +70,6 @@ Route::middleware(['auth', 'relogin', 'refresh'])->group(function() {
         Route::resource('contests', App\Http\Controllers\ContestsController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
         Route::post('contests/{contest_id}/activate', [App\Http\Controllers\ContestsController::class, 'activate'])->name('contests.activate');
         Route::get('results', [App\Http\Controllers\ResultsController::class, 'index']);
-        Route::get('export/users', [App\Http\Controllers\ExportController::class, 'users']);
 
         Route::get('admin/users', [App\Http\Controllers\AdminController::class, 'users']);
 

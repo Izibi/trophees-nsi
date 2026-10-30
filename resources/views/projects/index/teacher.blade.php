@@ -67,7 +67,7 @@
                 <button class="btn btn-primary active-button" data-action="/projects/:id" data-method="GET">Afficher le projet sélectionné</button>
             @endif
             @if($coordinator)
-                <a class="btn btn-primary active-button" data-action="" target="_blank" href="/projects_export">Télécharger au format CSV</a>
+                <a class="btn btn-primary active-button" data-action="" href="/export/projects">Exporter au format CSV</a>
 		    @endif
         @endif
         @if($view['create'])
