@@ -852,10 +852,12 @@ class ProjectsController extends Controller
         $options = [];
         foreach($data as $school) {
             $title = $school->name.', '.$school->zip.' '.$school->city.', ';
-            if(!is_null($school->region->country_id)) {
+            if($school->region && !is_null($school->region->country_id)) {
                 $title .= $school->region->name.', ';
             }
-            $title .= $school->country->name;
+            if($school->country) {
+                $title .= $school->country->name;
+            }
             $options[$school->id] = $title;
         }
         return [
