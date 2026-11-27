@@ -88,6 +88,7 @@ class ExportCatalog
 
         $columns = [
             new ExportColumn('id', 'ID', 'general', $all),
+            new ExportColumn('territory', 'Territoire', 'general', $admin),
             new ExportColumn('name', 'Nom du projet', 'general', $all),
             new ExportColumn('status', 'Statut du projet', 'general', $all),
             new ExportColumn('teacher_first_name', 'Prénom du professeur', 'general', $all),
@@ -151,7 +152,7 @@ class ExportCatalog
 
         $columns = [
             new ExportColumn('project_name', 'Nom du projet', 'general', $all),
-            new ExportColumn('territory', '[Sélection territoriale] Territoire de rattachement', 'territorial', $all),
+            new ExportColumn('territory', 'Territoire', 'territorial', $all),
             new ExportColumn('school_name', 'Nom du lycée', 'general', $all),
             new ExportColumn('school_city', 'Ville du lycée', 'general', $all),
             new ExportColumn('teacher_name', 'Prénom et nom du professeur', 'general', $all),

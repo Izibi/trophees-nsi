@@ -91,7 +91,7 @@ class ProjectsExportBuilder
 
         $q->with([
             'user',
-            'school',
+            'school.region',
             'grade',
             'team_members' => function ($query) {
                 $query->orderBy('id');
@@ -121,28 +121,14 @@ class ProjectsExportBuilder
     }
 
     /**
-     * Territory / prize scopes of the user, deduplicated:
-     *  - coordinator: their own region;
-     *  - every territorial / président-territorial role: that region;
-     *  - every prize / président-prize role: those territorial awards.
+     * Territory / prize scopes of the user, deduplicated — see
+     * UserScopeViews (shared with the laureates export).
      *
      * @return array[] list of ['type' => region|prize, 'target_id' => int]
      */
     private function scopeViews()
     {
-        $views = [];
-        if ($this->user->hasRole('coordinator') && $this->user->region_id) {
-            $views['region:' . $this->user->region_id] = ['type' => 'region', 'target_id' => $this->user->region_id];
-        }
-        foreach ($this->user->roles as $role) {
-            if (in_array($role->type, ['territorial', 'president-territorial'], true) && $role->target_id) {
-                $views['region:' . $role->target_id] = ['type' => 'region', 'target_id' => $role->target_id];
-            }
-            if (in_array($role->type, ['prize', 'president-prize'], true) && $role->target_id) {
-                $views['prize:' . $role->target_id] = ['type' => 'prize', 'target_id' => $role->target_id];
-            }
-        }
-        return array_values($views);
+        return UserScopeViews::for($this->user);
     }
 
     /**
@@ -301,6 +287,7 @@ class ProjectsExportBuilder
             'school_address' => $school ? ($school->address ?? '') : '',
             'school_zip' => $school ? ($school->zip ?? '') : '',
             'school_city' => $school ? ($school->city ?? '') : '',
+            'territory' => ($school && $school->region) ? $school->region->name : '',
             'grade' => $project->grade ? $project->grade->name : '',
             'team_girls' => $project->team_girls ?? '',
             'team_boys' => $project->team_boys ?? '',

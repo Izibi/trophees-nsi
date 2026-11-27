@@ -47,10 +47,32 @@ class AwardsExportBuilder
             ->orderBy('region_id')
             ->orderBy('project_id');
 
-        // Same scoping as the legacy /awards/export link: admins export every
-        // award of the contest, other roles only the awards they granted.
+        // Admins export every award of the contest; other roles only the
+        // awards falling inside their rights (their territory and/or their
+        // prizes), as computed by UserScopeViews — the same source of truth
+        // as the projects export.
         if ($this->user->role != 'admin') {
-            $q->where('user_id', $this->user->id);
+            $views = UserScopeViews::for($this->user);
+            if (!count($views)) {
+                return;
+            }
+            $regionIds = [];
+            $prizeIds = [];
+            foreach ($views as $view) {
+                if ($view['type'] == 'region') {
+                    $regionIds[] = $view['target_id'];
+                } else {
+                    $prizeIds[] = $view['target_id'];
+                }
+            }
+            $q->where(function ($query) use ($regionIds, $prizeIds) {
+                if (count($regionIds)) {
+                    $query->whereIn('region_id', $regionIds);
+                }
+                if (count($prizeIds)) {
+                    $query->orWhereIn('prize_id', $prizeIds);
+                }
+            });
         }
 
         $regionNames = Region::pluck('name', 'id');
