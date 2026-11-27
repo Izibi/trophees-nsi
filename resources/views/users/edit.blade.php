@@ -85,7 +85,7 @@
         }
 
         function generateRoleSelector(data) {
-            var select = $('<div class="form-group form-inline"></div>');
+            var select = $('<div class="form-group form-inline" style="flex-direction: row;"></div>');
             // Roles have a type and a target_id
             var id = $('<input type="hidden">').attr('name', 'roles_id[]');
             var type = $('<select class="form-control roles-type" name="roles_type[]" onchange="updateRoleSelector($(this).parent(), null)"></select>');
