@@ -126,9 +126,7 @@ class StudentController extends Controller
             $project->save();
 
             // Mail de notification à l'enseignant lorsque les élèves marquent le projet comme terminé :
-            // à réactiver plus tard (prévoir les vues mails.status_change.completed et
-            // mails.status_change.completed_plain, et l'entrée 'completed' dans App\Mail\StatusChanged).
-            // \Mail::to($project->user->email)->send(new \App\Mail\StatusChanged($project));
+            \Mail::to($project->user->email)->send(new \App\Mail\StatusChanged($project));
 
             session()->flash('message', 'Projet marqué comme terminé');
             return response()->json(['location' => '/eleve/projet']);

@@ -30,11 +30,12 @@ class StatusChanged extends Mailable
     public function build()
     {
         $statusNames = [
+            'completed' => 'marqué comme terminé',
             'finalized' => 'enregistré',
             'validated' => 'validé',
             'incomplete' => 'incomplet, modifications nécessaires'
         ];
-        $subject = 'Trophées NSI 2026 - Projet ' . $statusNames[$this->project->status];
+        $subject = 'Trophées NSI 2027 - Projet ' . $statusNames[$this->project->status];
         return $this->view('mails.status_change.'.$this->project->status)
                     ->text('mails.status_change.'.$this->project->status.'_plain')
                     ->subject($subject)

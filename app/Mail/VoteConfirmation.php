@@ -30,7 +30,7 @@ class VoteConfirmation extends Mailable
      */
     public function build()
     {
-        $subject = 'Trophées NSI 2026 - Confirmation de votre vote pour le Prix du Public';
+        $subject = 'Trophées NSI 2027 - Confirmation de votre vote pour le Prix du Public';
         return $this->view('mails.vote_confirmation')
                     ->text('mails.vote_confirmation_plain')
                     ->subject($subject)

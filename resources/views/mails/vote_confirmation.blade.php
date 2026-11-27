@@ -1,6 +1,6 @@
 <p>Bonjour,</p>
 
-<p>Merci de votre vote pour le Prix du Public des Trophées NSI 2026.</p>
+<p>Merci de votre vote pour le Prix du Public des Trophées NSI 2027.</p>
 
 <p>Afin de confirmer votre vote, cliquez sur ce lien :</p>
 

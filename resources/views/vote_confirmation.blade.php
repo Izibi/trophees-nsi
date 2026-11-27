@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation de vote - Trophées NSI 2026</title>
+    <title>Confirmation de vote - Trophées NSI 2027</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,7 +38,7 @@
     <div class="message {{ $success ? 'success' : 'error' }}">
         @if($success)
             <h1>Vote enregistré !</h1>
-            <p>Merci pour votre vote pour le Prix du Public des Trophées NSI 2026 !</p>
+            <p>Merci pour votre vote pour le Prix du Public des Trophées NSI 2027 !</p>
         @else
             <h1>Erreur</h1>
             <p>Erreur lors de la confirmation de votre adresse e-mail, veuillez réessayer.</p>
